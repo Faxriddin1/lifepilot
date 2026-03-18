@@ -6,7 +6,7 @@
 ![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![License](https://img.shields.io/badge/License-NonCommercial-orange)
 
 ---
 
@@ -368,4 +368,9 @@ npm run lint
 
 ## 📝 Лицензия
 
-MIT License. Свободное использование в коммерческих и некоммерческих проектах.
+Этот проект распространяется по лицензии **только для некоммерческого использования**.
+
+- Разрешено: использование, изучение и модификация в личных, учебных и иных некоммерческих проектах.
+- Запрещено: коммерческое использование, перепродажа, включение в платные продукты/сервисы без письменного разрешения автора.
+
+Подробные условия см. в файле `LICENSE`.
