@@ -34,7 +34,8 @@ export function validateEmail(email: string): string | null {
 }
 
 /**
- * Валидация пароля (минимум 8 символов).
+ * Валидация пароля с требованиями безопасности.
+ * Требования: минимум 8 символов, заглавная буква, строчная, цифра, спецсимвол.
  * @param password - Пароль для проверки
  * @returns Сообщение об ошибке или null
  */
@@ -45,7 +46,44 @@ export function validatePassword(password: string): string | null {
   if (password.length < 8) {
     return t('errors.passwordTooShort');
   }
+  if (!/[A-Z]/.test(password)) {
+    return t('errors.passwordNoUppercase');
+  }
+  if (!/[a-z]/.test(password)) {
+    return t('errors.passwordNoLowercase');
+  }
+  if (!/[0-9]/.test(password)) {
+    return t('errors.passwordNoNumber');
+  }
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    return t('errors.passwordNoSpecial');
+  }
   return null;
+}
+
+/**
+ * Проверяет отдельные требования к паролю для визуального индикатора.
+ * @param password - Пароль для проверки
+ * @returns Объект с результатами проверок
+ */
+export function getPasswordRequirements(password: string) {
+  return {
+    minLength: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+    hasSpecial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+  };
+}
+
+/**
+ * Вычисляет силу пароля (0-5).
+ * @param password - Пароль
+ * @returns Число от 0 до 5
+ */
+export function getPasswordStrength(password: string): number {
+  const reqs = getPasswordRequirements(password);
+  return Object.values(reqs).filter(Boolean).length;
 }
 
 /**

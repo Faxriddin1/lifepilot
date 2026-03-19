@@ -1,93 +1,116 @@
-# 🚀 ProductFlow
+# LifePilot
 
-**All-in-one SaaS платформа** для управления задачами, продуктивностью и финансами.
+**All-in-one platform for task management, productivity tracking, and personal finance.** Free to use, no subscriptions.
 
-![Django](https://img.shields.io/badge/Django-5.0-green?logo=django)
-![React](https://img.shields.io/badge/React-18-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
-![License](https://img.shields.io/badge/License-NonCommercial-orange)
+[![Django](https://img.shields.io/badge/Django-5.0-green?logo=django)](https://www.djangoproject.com/)
+[![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://www.postgresql.org/)
+[![License](https://img.shields.io/badge/License-NonCommercial-orange)](#license)
 
----
-
-## 📋 О проекте
-
-ProductFlow объединяет три ключевых направления в одном приложении:
-
-- **Задачи и проекты** — Kanban-доска, календарь, подзадачи, bulk-операции
-- **Продуктивность** — Pomodoro/Deep Work таймер, привычки, дневник, аналитика
-- **Финансы** — Счета, транзакции, бюджеты, финансовые цели, отчёты
-
-Плюс полноценная **админ-панель** для управления всей системой.
+**Live:** [https://lifepilot.uz](https://lifepilot.uz)
 
 ---
 
-## ✨ Возможности
+## About
 
-### Задачи
-- Создание, редактирование, удаление задач
-- Kanban-доска с drag & drop
-- Месячный календарь с задачами по дедлайнам
-- Подзадачи до 3 уровней вложенности
-- Inbox — быстрый сбор входящих задач
-- Проекты с прогресс-баром
-- Фильтры, поиск, bulk actions
+LifePilot combines task management, productivity tools, and personal finance into a single application. It supports 4 languages with full localization, dark/light themes, and a comprehensive admin panel.
 
-### Продуктивность
-- Pomodoro / Deep Work / Short Break / Long Break таймер
-- Привязка таймера к задаче
-- Привычки с 7-дневной сеткой
-- Дневник (сделано/планы/заметки, настроение, энергия)
-- Графики продуктивности, heatmap, bar charts
-
-### Финансы
-- Счета с балансами
-- Транзакции (доход/расход/перевод) с фильтрами
-- Бюджеты с прогресс-баром
-- Финансовые цели с circular progress
-- Cashflow график, pie chart по категориям
-
-### Общее
-- Google OAuth 2.0 вход
-- Двуязычный интерфейс (Русский / English)
-- Тёмная и светлая тема
-- Настройка валюты и часового пояса
-- Адаптивный дизайн
-
-### Админ-панель (`/admin`)
-- Dashboard с метриками системы
-- Управление пользователями (блокировка, назначение админов)
-- CRUD всех сущностей с поиском, фильтрами, пагинацией
-- Детальный просмотр любой записи
+- Completely free -- no subscriptions, no paid plans, no billing
+- Anonymous usage data collected for platform improvement only
 
 ---
 
-## 🛠 Tech Stack
+## Features
 
-| Слой | Технологии |
-|------|-----------|
+### Tasks & Projects
+- Task CRUD with priorities, deadlines, and subtasks (up to 3 levels)
+- Kanban board with drag-and-drop between status columns
+- Monthly calendar view with side panel for task details
+- Inbox for quick task capture (Enter to add, move menu, delete)
+- Projects with template cards (icons, colors), progress bars, edit/delete
+- Filters, search, bulk actions, context menus
+
+### Productivity
+- Focus timer: Pomodoro, Deep Work, Short Break, Long Break modes with task binding
+- Habit tracker: templates with icons, target days (weekday selection), 7-day grid, weekly streak counter, toggle completion API
+- Daily journal: done/plans/notes, mood (5 variants), energy (0-5 scale), history browser
+- Analytics: GitHub-style contribution heatmap, habit progress report, peak hours chart, bar charts
+- WCAG-compliant blue/orange color palette for data visualization (avoids green/red)
+
+### Finance
+- Accounts with balances and multi-currency support (50+ currencies)
+- Transactions (income/expense/transfer) with type, category, and period filters
+- Budgets with bullet graph progress and color-coded alert badges (over/almost-reached)
+- Financial goals with circular progress ring, contribute action, and goal templates
+- Waterfall cashflow chart, category pie chart
+- Financial reports page
+
+### Dashboard
+- BI-optimized layout with StatCard component (sparklines, trend indicators, color-coded alerts)
+- Compact summary: today's tasks, focus time, account balance, charts
+
+### Settings
+- Profile management and change password
+- Theme: light and dark mode
+- Language: English, Russian, Uzbek (Latin), Uzbek (Cyrillic)
+- 50+ currencies, all IANA timezones
+- Date format, number format, first day of week (Monday/Sunday)
+- Export data, delete account
+
+### Landing Page
+- Animated intro screen with cursor particle effects
+- 3D tilt cards, gradient mesh backgrounds
+- Fully responsive, 4-language support
+
+### Admin Panel (11 pages at `/admin`)
+- Dashboard with system metrics, registration growth chart
+- User management: block/unblock, assign/remove admin roles
+- Full CRUD for all entities: tasks, projects, accounts, transactions, budgets, goals, focus sessions, habits, daily logs
+- Table search, filters, pagination (20/page), detail view modal
+- Requires `is_staff=True`
+
+### Internationalization
+- 4 languages: English (en), Russian (ru), Uzbek Latin (uz), Uzbek Cyrillic (uz-cyr)
+- Full coverage -- zero hardcoded strings, all UI text via react-i18next `t()` calls
+- Language switching in Settings
+
+---
+
+## Tech Stack
+
+| Layer | Technologies |
+|-------|-------------|
 | **Backend** | Django 5.0, Django REST Framework, PostgreSQL 16, Redis 7, Celery |
-| **Frontend** | React 18, TypeScript, Vite, TailwindCSS 3, Zustand, TanStack Query |
-| **Auth** | JWT (SimpleJWT) с ротацией refresh-токенов, Google OAuth 2.0 |
-| **i18n** | react-i18next (RU/EN) |
-| **Infra** | Docker Compose |
+| **Frontend** | React 18, TypeScript 5, Vite, TailwindCSS 3, Zustand, TanStack Query |
+| **Auth** | JWT (SimpleJWT) with refresh token rotation + blacklist, Google OAuth 2.0 |
+| **i18n** | react-i18next (EN, RU, UZ Latin, UZ Cyrillic) |
+| **Infra** | Docker Compose (db, redis, backend, frontend, celery) |
+| **Deploy** | Google Cloud VM, Nginx reverse proxy, SSL pending |
 
 ---
 
-## 🚀 Быстрый старт
+## Screenshots
 
-### С Docker (рекомендуется)
+> Screenshots coming soon.
+
+---
+
+## Quick Start
+
+### With Docker (recommended)
 
 ```bash
-git clone https://github.com/your-username/productflow.git
-cd productflow
+git clone <repository-url>
+cd PM
 cp .env.example .env
 docker-compose up --build
 ```
 
-### Без Docker
+### Without Docker
 
 **Backend:**
+
 ```bash
 cd backend
 python -m venv venv
@@ -100,16 +123,17 @@ python manage.py runserver 0.0.0.0:8000
 ```
 
 **Frontend:**
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### Доступ
+### Access Points
 
-| Сервис | URL |
-|--------|-----|
+| Service | URL |
+|---------|-----|
 | Frontend | http://localhost:3000 |
 | Backend API | http://localhost:8000 |
 | Admin Panel | http://localhost:3000/admin |
@@ -119,31 +143,70 @@ npm run dev
 
 ---
 
-## 📁 Структура проекта
+## Environment Variables
+
+Create a `.env` file in the project root (see `.env.example`):
+
+```env
+# Backend
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+DB_NAME=lifepilot
+DB_USER=postgres
+DB_PASSWORD=lifepilot_secret
+DB_HOST=localhost
+DB_PORT=5432
+REDIS_URL=redis://localhost:6379/0
+ALLOWED_HOSTS=localhost,127.0.0.1,lifepilot.uz
+CORS_ALLOWED_ORIGINS=http://localhost:3000,https://lifepilot.uz
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+
+# Frontend (VITE_ prefix required)
+VITE_API_URL=http://localhost:8000
+VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+```
+
+---
+
+## Project Structure
 
 ```
-productflow/
+PM/
 ├── backend/
 │   ├── config/                # Settings, URLs, WSGI/ASGI
 │   ├── apps/
-│   │   ├── users/             # User model (UUID, email auth, Google OAuth)
-│   │   ├── tasks/             # Task, Project (subtasks до 3 уровней)
-│   │   ├── productivity/      # FocusSession, Habit, HabitLog, DailyLog
-│   │   ├── finance/           # Account, Category, Transaction, Budget, Goal
-│   │   ├── analytics/         # Dashboard, Productivity/Finance агрегация
-│   │   └── admin_panel/       # Admin API (dashboard, CRUD всех моделей)
+│   │   ├── users/             # User model (UUID, email auth, Google OAuth, preferences)
+│   │   ├── tasks/             # Task, Project (subtasks up to 3 levels, templates)
+│   │   ├── productivity/      # FocusSession, Habit (target_days, templates), HabitLog, DailyLog
+│   │   ├── finance/           # Account, Category, Transaction, Budget, Goal (contribute, templates)
+│   │   ├── analytics/         # Dashboard, Productivity/Finance aggregation
+│   │   └── admin_panel/       # Admin API (dashboard, CRUD for all models)
 │   ├── manage.py
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── api/               # Axios client + API модули
-│   │   ├── components/        # UI компоненты + Layout
-│   │   ├── hooks/             # React Query хуки
-│   │   ├── i18n/              # Локализация (en.json, ru.json)
-│   │   ├── pages/             # 18 пользовательских + 11 админских страниц
+│   │   ├── api/               # Axios client + API modules
+│   │   ├── components/
+│   │   │   ├── ui/            # Button, Input, Modal, Card, Badge, Select, StatCard, BulletGraph, WaterfallChart, PasswordStrength
+│   │   │   └── layout/        # AppLayout, Sidebar, TopBar
+│   │   ├── hooks/             # React Query hooks (useTasks, useFinance, useFocus, etc.)
+│   │   ├── i18n/              # Localization config + locales (en, ru, uz, uz-cyr)
+│   │   ├── pages/
+│   │   │   ├── auth/          # LoginPage, RegisterPage
+│   │   │   ├── dashboard/     # DashboardPage (BI-optimized)
+│   │   │   ├── tasks/         # TaskListPage, KanbanPage, CalendarPage, ProjectsPage, InboxPage
+│   │   │   ├── productivity/  # FocusTimerPage, HabitsPage, AnalyticsPage, DailyLogPage
+│   │   │   ├── finance/       # FinanceOverviewPage, TransactionsPage, BudgetsPage, GoalsPage
+│   │   │   ├── reports/       # ReportsPage
+│   │   │   ├── settings/      # SettingsPage
+│   │   │   ├── landing/       # LandingPage, IntroScreen, AboutPage, LegalPage
+│   │   │   └── admin/         # AdminLayout, AdminDashboard, AdminResourcePage + 10 resource pages
 │   │   ├── store/             # Zustand stores (auth, ui)
-│   │   ├── types/             # TypeScript интерфейсы
-│   │   └── utils/             # Утилиты, валидация, обработка ошибок
+│   │   ├── types/             # TypeScript interfaces and enums
+│   │   └── utils/             # Formatters, constants, validation, errorHandler, alerts
 │   ├── vite.config.ts
 │   └── package.json
 ├── docker-compose.yml
@@ -153,224 +216,215 @@ productflow/
 
 ---
 
-## 📄 Страницы
+## Pages
 
-### Пользовательские (18)
+### User Pages (22+)
 
-| Маршрут | Описание |
-|---------|----------|
-| `/` | Dashboard — сводка задач, фокуса, баланса |
-| `/inbox` | Входящие задачи с quick add |
-| `/tasks` | Список задач с фильтрами и bulk actions |
-| `/tasks/kanban` | Kanban-доска |
-| `/tasks/calendar` | Месячный календарь |
-| `/projects` | Проекты с прогрессом |
-| `/focus` | Таймер фокусировки |
-| `/daily-log` | Дневник |
-| `/habits` | Привычки |
-| `/analytics` | Аналитика продуктивности |
-| `/finance` | Обзор финансов |
-| `/transactions` | Транзакции |
-| `/budgets` | Бюджеты |
-| `/goals` | Финансовые цели |
-| `/reports` | Отчёты |
-| `/settings` | Настройки профиля |
-| `/login` | Вход |
-| `/register` | Регистрация |
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | DashboardPage | BI-optimized summary with StatCard sparklines, trends, alerts |
+| `/inbox` | InboxPage | Quick task capture, move to project, delete |
+| `/tasks` | TaskListPage | Full task list with filters, search, bulk actions |
+| `/tasks/kanban` | KanbanPage | Kanban board with drag-and-drop |
+| `/tasks/calendar` | CalendarPage | Monthly calendar with side panel details |
+| `/projects` | ProjectsPage | Project cards with templates, icons, progress |
+| `/focus` | FocusTimerPage | Focus timer with task binding and history |
+| `/daily-log` | DailyLogPage | Journal with mood, energy, history |
+| `/habits` | HabitsPage | Habit tracker with templates, streaks, target days |
+| `/analytics` | AnalyticsPage | GitHub heatmap, habit progress, peak hours |
+| `/finance` | FinanceOverviewPage | Balance, waterfall chart, category breakdown |
+| `/transactions` | TransactionsPage | Transaction CRUD with filters and pagination |
+| `/budgets` | BudgetsPage | Budgets with bullet graphs and alert badges |
+| `/goals` | GoalsPage | Financial goals with progress ring and contribute |
+| `/reports` | ReportsPage | Financial reports |
+| `/settings` | SettingsPage | Profile, password, theme, language, currency, timezone |
+| `/login` | LoginPage | Email/password + Google OAuth |
+| `/register` | RegisterPage | Registration with password strength indicator |
+| `/welcome` | LandingPage | Animated landing with 4-language support |
+| `/about` | AboutPage | About the project |
+| `/privacy` | LegalPage | Privacy policy |
+| `/terms` | LegalPage | Terms of service |
 
-### Админ-панель (11)
+### Admin Panel (11 pages)
 
-| Маршрут | Описание |
-|---------|----------|
-| `/admin` | Dashboard с метриками системы |
-| `/admin/users` | Управление пользователями |
-| `/admin/tasks` | Все задачи |
-| `/admin/projects` | Все проекты |
-| `/admin/accounts` | Все счета |
-| `/admin/transactions` | Все транзакции |
-| `/admin/budgets` | Все бюджеты |
-| `/admin/goals` | Все цели |
-| `/admin/focus-sessions` | Все фокус-сессии |
-| `/admin/habits` | Все привычки |
-| `/admin/daily-logs` | Все дневники |
+| Route | Description |
+|-------|-------------|
+| `/admin` | Dashboard with system metrics and growth chart |
+| `/admin/users` | User management (block/unblock, admin roles) |
+| `/admin/tasks` | All tasks with status/priority filters |
+| `/admin/projects` | All projects with task counts |
+| `/admin/accounts` | All financial accounts |
+| `/admin/transactions` | All transactions with type filter |
+| `/admin/budgets` | All budgets |
+| `/admin/goals` | All financial goals |
+| `/admin/focus-sessions` | All focus sessions |
+| `/admin/habits` | All habits |
+| `/admin/daily-logs` | All journal entries |
 
 ---
 
-## 🔌 API
+## API
 
-Все эндпоинты под `/api/v1/`. Аутентификация через JWT Bearer token.
+All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination: 20 items/page. Rate limiting: 100/day anonymous, 1000/day authenticated.
 
 <details>
 <summary><b>Auth</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| POST | `/auth/login/` | Вход по email/пароль |
-| POST | `/auth/register/` | Регистрация |
-| POST | `/auth/google/` | Вход через Google OAuth |
-| POST | `/auth/logout/` | Выход (blacklist refresh) |
-| GET/PATCH | `/auth/me/` | Профиль |
-| POST | `/auth/token/refresh/` | Обновить JWT |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/login/` | Login by email/password |
+| POST | `/auth/register/` | Registration |
+| POST | `/auth/google/` | Login via Google OAuth |
+| POST | `/auth/logout/` | Logout (blacklist refresh token) |
+| GET/PATCH | `/auth/me/` | Profile (date_format, number_format, week_start) |
+| POST | `/auth/token/refresh/` | Refresh JWT |
 
 </details>
 
 <details>
 <summary><b>Tasks</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| CRUD | `/tasks/items/` | Задачи + фильтры + bulk update |
-| CRUD | `/tasks/projects/` | Проекты |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| CRUD | `/tasks/items/` | Tasks + filters + bulk update |
+| CRUD | `/tasks/projects/` | Projects (templates with icons/colors) |
 
 </details>
 
 <details>
 <summary><b>Productivity</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| CRUD | `/productivity/focus-sessions/` | Фокус-сессии (start/stop/history) |
-| CRUD | `/productivity/habits/` | Привычки |
-| CRUD | `/productivity/habit-logs/` | Логи привычек (today/streak) |
-| CRUD | `/productivity/daily-logs/` | Дневник (today) |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| CRUD | `/productivity/focus-sessions/` | Focus sessions (start/stop/history) |
+| CRUD | `/productivity/habits/` | Habits (target_days, templates, icons) |
+| CRUD | `/productivity/habit-logs/` | Habit logs (today/streak) |
+| POST | `/productivity/habit-logs/toggle/` | Toggle habit completion for a date |
+| CRUD | `/productivity/daily-logs/` | Daily journal |
 
 </details>
 
 <details>
 <summary><b>Finance</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| CRUD | `/finance/accounts/` | Счета |
-| CRUD | `/finance/categories/` | Категории |
-| CRUD | `/finance/transactions/` | Транзакции + фильтры |
-| CRUD | `/finance/budgets/` | Бюджеты |
-| CRUD | `/finance/goals/` | Финансовые цели |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| CRUD | `/finance/accounts/` | Accounts |
+| CRUD | `/finance/categories/` | Categories (default + user-created) |
+| CRUD | `/finance/transactions/` | Transactions + filters |
+| CRUD | `/finance/budgets/` | Budgets |
+| CRUD | `/finance/goals/` | Financial goals (templates) |
+| POST | `/finance/goals/{id}/contribute/` | Contribute amount to a goal |
 
 </details>
 
 <details>
 <summary><b>Analytics</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| GET | `/analytics/dashboard/` | Сводная статистика |
-| GET | `/analytics/productivity/` | Heatmap, daily focus |
-| GET | `/analytics/finance/` | Финансовая аналитика |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/analytics/dashboard/` | Summary statistics |
+| GET | `/analytics/productivity/` | Heatmap, daily focus, habit progress |
+| GET | `/analytics/finance/` | Financial analytics |
 
 </details>
 
 <details>
 <summary><b>Admin Panel (is_staff only)</b></summary>
 
-| Метод | Endpoint | Описание |
-|-------|----------|----------|
-| GET | `/admin-panel/dashboard/` | Системная статистика |
-| CRUD | `/admin-panel/users/` | Пользователи + toggle_active + toggle_staff |
-| CRUD | `/admin-panel/tasks/` | Задачи |
-| CRUD | `/admin-panel/projects/` | Проекты |
-| CRUD | `/admin-panel/accounts/` | Счета |
-| CRUD | `/admin-panel/categories/` | Категории |
-| CRUD | `/admin-panel/transactions/` | Транзакции |
-| CRUD | `/admin-panel/budgets/` | Бюджеты |
-| CRUD | `/admin-panel/goals/` | Цели |
-| CRUD | `/admin-panel/focus-sessions/` | Фокус-сессии |
-| CRUD | `/admin-panel/habits/` | Привычки |
-| CRUD | `/admin-panel/daily-logs/` | Дневники |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/admin-panel/dashboard/` | System statistics |
+| CRUD | `/admin-panel/users/` | Users + toggle_active + toggle_staff |
+| CRUD | `/admin-panel/tasks/` | All tasks |
+| CRUD | `/admin-panel/projects/` | All projects |
+| CRUD | `/admin-panel/accounts/` | All accounts |
+| CRUD | `/admin-panel/categories/` | All categories |
+| CRUD | `/admin-panel/transactions/` | All transactions |
+| CRUD | `/admin-panel/budgets/` | All budgets |
+| CRUD | `/admin-panel/goals/` | All goals |
+| CRUD | `/admin-panel/focus-sessions/` | All focus sessions |
+| CRUD | `/admin-panel/habits/` | All habits |
+| CRUD | `/admin-panel/daily-logs/` | All journal entries |
 
 </details>
 
 ---
 
-## ⚙️ Переменные окружения
+## Security
 
-Создайте `.env` файл в корне проекта:
-
-```env
-# Backend
-DEBUG=True
-SECRET_KEY=your-secret-key-here
-DB_NAME=productflow
-DB_USER=postgres
-DB_PASSWORD=productflow_secret
-DB_HOST=localhost
-DB_PORT=5432
-REDIS_URL=redis://localhost:6379/0
-ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:3000
-
-# Google OAuth (опционально)
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret
-
-# Frontend
-VITE_API_URL=http://localhost:8000
-VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-```
-
----
-
-## 🔒 Безопасность
-
-- JWT с ротацией refresh-токенов + blacklist
-- Google OAuth 2.0 (проверка id_token через google-auth)
-- Ownership validation на всех CRUD операциях
-- Atomic transactions для финансовых операций
-- `select_for_update` для предотвращения race conditions
-- Rate limiting (100/день anon, 1000/день auth)
+- JWT with refresh token rotation and blacklist
+- Google OAuth 2.0 with id_token verification (google-auth library)
+- Ownership validation on all CRUD operations
+- Atomic transactions with `select_for_update` for financial operations
+- Rate limiting (django-ratelimit): 100/day anonymous, 1000/day authenticated
 - CORS whitelist
-- CSRF, XSS, Clickjacking защита
-- Admin panel — доступ только `is_staff=True`
-- Валидация: serializers (бэкенд) + формы (фронтенд)
+- CSRF, XSS, Clickjacking protection
+- `SECURE_CONTENT_TYPE_NOSNIFF`, `X_FRAME_OPTIONS='DENY'`
+- Serializer-level validation + frontend form validation
+- PBKDF2 password hashing with password strength indicator
 - Circular reference prevention (subtasks max depth 3)
+- Admin panel restricted to `is_staff=True`
+- Change password, account deletion, data export in settings
 
 ---
 
-## 🔧 Google OAuth Setup
+## Google OAuth Setup
 
-1. Откройте [Google Cloud Console](https://console.cloud.google.com)
-2. Создайте проект → APIs & Services → OAuth consent screen → External → Publish
-3. Credentials → Create OAuth 2.0 Client ID (Web application)
-4. Authorized JavaScript origins: `http://localhost:3000`
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com)
+2. APIs & Services -> OAuth consent screen -> External -> Publish
+3. Credentials -> Create OAuth 2.0 Client ID (Web application)
+4. Authorized JavaScript origins: `http://localhost:3000` (dev), `https://lifepilot.uz` (prod)
 5. Authorized redirect URIs: `http://localhost:8000/api/v1/auth/google/callback/`
-6. Скопируйте Client ID и Client Secret в `.env`
+6. Copy Client ID and Client Secret to `.env`
 
 ---
 
-## 📊 Скриншоты
+## Deployment
 
-| Dashboard | Kanban | Calendar |
-|-----------|--------|----------|
-| Сводка задач, фокуса, баланса | Drag & drop между колонками | Месячный вид с задачами |
-
-| Focus Timer | Daily Log | Admin Panel |
-|-------------|-----------|-------------|
-| Pomodoro с круговым прогрессом | Дневник с настроением | Системная статистика |
+- **Hosting:** Google Cloud VM (Compute Engine) -- 34.122.146.176
+- **Stack:** Docker Compose (PostgreSQL, Redis, Django, React, Celery)
+- **Web server:** Nginx as reverse proxy
+- **SSL:** Pending -- Let's Encrypt (certbot) for https://lifepilot.uz
+- **Domain:** lifepilot.uz
 
 ---
 
-## 🤝 Разработка
+## Development
 
 ```bash
-# Backend — запуск тестов
+# Backend -- run tests
 cd backend
 python manage.py test
 
-# Frontend — проверка типов
+# Frontend -- type checking
 cd frontend
 npx tsc --noEmit
 
-# Frontend — линтинг
+# Frontend -- linting
 npm run lint
 ```
 
 ---
 
-## 📝 Лицензия
+## Contributing
 
-Этот проект распространяется по лицензии **только для некоммерческого использования**.
+LifePilot is currently a startup project and is **not accepting external contributions** at this time. If you have feedback or suggestions, reach out via email.
 
-- Разрешено: использование, изучение и модификация в личных, учебных и иных некоммерческих проектах.
-- Запрещено: коммерческое использование, перепродажа, включение в платные продукты/сервисы без письменного разрешения автора.
+---
 
-Подробные условия см. в файле `LICENSE`.
+## License
+
+This project is licensed for **non-commercial use only**.
+
+- **Allowed:** use, study, and modify for personal, educational, and other non-commercial purposes.
+- **Prohibited:** commercial use, resale, inclusion in paid products or services without written permission from the author.
+
+See the [LICENSE](LICENSE) file for full terms.
+
+---
+
+## Contact
+
+- **Email:** iamfakhriddin@gmail.com
+- **Website:** [lifepilot.uz](https://lifepilot.uz)

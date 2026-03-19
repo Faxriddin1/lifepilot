@@ -136,6 +136,40 @@ class HabitLogViewSet(viewsets.ModelViewSet):
             .select_related('habit')
         )
 
+    @action(detail=False, methods=['post'], url_path='toggle')
+    def toggle(self, request):
+        """Toggle привычки: если лог есть — удалить, если нет — создать."""
+        habit_id = request.data.get('habit')
+        date = request.data.get('date')
+        if not habit_id or not date:
+            return Response(
+                {'detail': 'habit and date are required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            habit = Habit.objects.get(id=habit_id, user=request.user)
+        except Habit.DoesNotExist:
+            return Response(
+                {'detail': 'Habit not found.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        log = HabitLog.objects.filter(habit=habit, date=date).first()
+        if log:
+            log.delete()
+        else:
+            HabitLog.objects.create(habit=habit, date=date, count=1)
+
+        # Refresh to clear cached prefetch/counts
+        habit = Habit.objects.get(id=habit_id)
+        data = HabitSerializer(habit).data
+        return Response({
+            'toggled': not bool(log),
+            'current_streak': data['current_streak'],
+            'completed_days': data['completed_days'],
+            'progress': data['progress'],
+        }, status=status.HTTP_200_OK if log else status.HTTP_201_CREATED)
+
     @action(detail=False, methods=['get'])
     def today(self, request):
         """Возвращает записи привычек за сегодня."""

@@ -164,6 +164,19 @@ export function useCreateBudget() {
   });
 }
 
+/** Хук для удаления бюджета. */
+export function useDeleteBudget() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => financeApi.deleteBudget(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+    onError: (error) => showApiError(error),
+  });
+}
+
 /**
  * Хук для получения списка финансовых целей.
  * @returns Результат запроса TanStack Query со списком целей
@@ -213,5 +226,18 @@ export function useContributeGoal() {
     onError: (error) => {
       showApiError(error);
     },
+  });
+}
+
+/** Хук для удаления финансовой цели. */
+export function useDeleteGoal() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => financeApi.deleteGoal(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+    onError: (error) => showApiError(error),
   });
 }

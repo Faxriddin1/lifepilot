@@ -161,48 +161,48 @@ export function TransactionsPage() {
                         <div
                           className={clsx(
                             'w-7 h-7 rounded flex items-center justify-center flex-shrink-0',
-                            tx.type === TransactionType.INCOME
+                            (tx.transaction_type || tx.type) === TransactionType.INCOME
                               ? 'bg-success-50 text-success-600'
-                              : tx.type === TransactionType.EXPENSE
+                              : (tx.transaction_type || tx.type) === TransactionType.EXPENSE
                                 ? 'bg-danger-50 text-danger-600'
                                 : 'bg-primary-50 text-primary-600'
                           )}
                         >
-                          {tx.type === TransactionType.INCOME ? (
+                          {(tx.transaction_type || tx.type) === TransactionType.INCOME ? (
                             <TrendingUp className="w-3.5 h-3.5" />
-                          ) : tx.type === TransactionType.EXPENSE ? (
+                          ) : (tx.transaction_type || tx.type) === TransactionType.EXPENSE ? (
                             <TrendingDown className="w-3.5 h-3.5" />
                           ) : (
                             <ArrowLeftRight className="w-3.5 h-3.5" />
                           )}
                         </div>
                         <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {tx.description}
+                          {tx.note || tx.description}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       <Badge variant="default" size="sm">
-                        {tx.category?.name ?? t('transactionsPage.uncategorized')}
+                        {tx.category_name ?? t('transactionsPage.uncategorized')}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
-                      {tx.account?.name ?? '--'}
+                      {tx.account_name ?? '--'}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span
                         className={clsx(
                           'text-sm font-semibold',
-                          tx.type === TransactionType.INCOME
+                          (tx.transaction_type || tx.type) === TransactionType.INCOME
                             ? 'text-success-600'
-                            : tx.type === TransactionType.EXPENSE
+                            : (tx.transaction_type || tx.type) === TransactionType.EXPENSE
                               ? 'text-danger-600'
                               : 'text-primary-600'
                         )}
                       >
-                        {tx.type === TransactionType.INCOME
+                        {(tx.transaction_type || tx.type) === TransactionType.INCOME
                           ? '+'
-                          : tx.type === TransactionType.EXPENSE
+                          : (tx.transaction_type || tx.type) === TransactionType.EXPENSE
                             ? '-'
                             : ''}
                         {formatCurrency(tx.amount)}

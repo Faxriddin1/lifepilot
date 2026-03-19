@@ -67,6 +67,17 @@ export const productivityApi = {
     return data;
   },
 
+  /** Обновление привычки. */
+  updateHabit: async (id: string, data: Partial<CreateHabitData>): Promise<Habit> => {
+    const { data: result } = await apiClient.patch<Habit>(`/productivity/habits/${id}/`, data);
+    return result;
+  },
+
+  /** Удаление привычки. */
+  deleteHabit: async (id: string): Promise<void> => {
+    await apiClient.delete(`/productivity/habits/${id}/`);
+  },
+
   /**
    * Запись выполнения привычки за дату.
    * @param habitId - UUID привычки
@@ -75,6 +86,15 @@ export const productivityApi = {
    */
   logHabit: async (habitId: string, logData: { date: string; count?: number; notes?: string }): Promise<HabitLog> => {
     const { data } = await apiClient.post<HabitLog>('/productivity/habit-logs/', { habit: habitId, ...logData });
+    return data;
+  },
+
+  /** Toggle привычки: если лог есть — удалить, если нет — создать. */
+  toggleHabitLog: async (habitId: string, date: string): Promise<{ toggled: boolean; current_streak: number; completed_days: number; progress: number }> => {
+    const { data } = await apiClient.post<{ toggled: boolean; current_streak: number; completed_days: number; progress: number }>('/productivity/habit-logs/toggle/', {
+      habit: habitId,
+      date,
+    });
     return data;
   },
 

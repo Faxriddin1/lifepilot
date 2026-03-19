@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Data colors — WCAG 1.4.1 accessible (not red/green) */
+    --color-income: #3B82F6;     /* blue-500 */
+    --color-expense: #F97316;    /* orange-500 */
+    --color-positive: #3B82F6;   /* trend up */
+    --color-negative: #F97316;   /* trend down */
+    /* Alert colors — ONLY for exception highlighting */
+    --color-alert-danger: #EF4444;   /* red-500 */
+    --color-alert-warning: #EAB308;  /* yellow-500 */
+    --color-alert-success: #22C55E;  /* green-500 */
+    /* Tooltip bg */
+    --tooltip-bg: white;
+  }
+
+  .dark {
+    --tooltip-bg: #1f2937;
+  }
+
   *,
   *::before,
   *::after {

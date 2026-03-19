@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import i18n from '@/i18n';
 
 type Theme = 'light' | 'dark';
-type Locale = 'en' | 'ru';
+type Locale = 'en' | 'ru' | 'uz' | 'uz-cyr';
 
 interface UiState {
   sidebarCollapsed: boolean;

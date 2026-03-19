@@ -73,4 +73,18 @@ export const authApi = {
     );
     return data.tokens;
   },
+
+  /** Смена пароля. */
+  changePassword: async (currentPassword: string, newPassword: string, newPasswordConfirm: string): Promise<void> => {
+    await apiClient.post('/auth/change-password/', {
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirm: newPasswordConfirm,
+    });
+  },
+
+  /** Удаление аккаунта. */
+  deleteAccount: async (password: string): Promise<void> => {
+    await apiClient.post('/auth/delete-account/', { password });
+  },
 };

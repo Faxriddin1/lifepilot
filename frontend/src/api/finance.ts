@@ -109,6 +109,11 @@ export const financeApi = {
     return data;
   },
 
+  /** Удаление бюджета. */
+  deleteBudget: async (id: string): Promise<void> => {
+    await apiClient.delete(`/finance/budgets/${id}/`);
+  },
+
   /**
    * Получение списка финансовых целей.
    * @returns Массив целей
@@ -132,5 +137,10 @@ export const financeApi = {
   contributeGoal: async (goalId: string, amount: number): Promise<Goal> => {
     const { data } = await apiClient.post<Goal>(`/finance/goals/${goalId}/contribute/`, { amount });
     return data;
+  },
+
+  /** Удаление финансовой цели. */
+  deleteGoal: async (id: string): Promise<void> => {
+    await apiClient.delete(`/finance/goals/${id}/`);
   },
 };

@@ -20,12 +20,12 @@ import { productivityApi } from '@/api/productivity';
 import { showApiError, showSuccess } from '@/utils/errorHandler';
 import type { DailyLogMood } from '@/types';
 
-const MOOD_OPTIONS: { value: DailyLogMood; icon: typeof Smile; label_en: string; label_ru: string; color: string }[] = [
-  { value: 'great', icon: Star, label_en: 'Great', label_ru: 'Отлично', color: '#22C55E' },
-  { value: 'good', icon: Smile, label_en: 'Good', label_ru: 'Хорошо', color: '#3B82F6' },
-  { value: 'okay', icon: Meh, label_en: 'Okay', label_ru: 'Нормально', color: '#F59E0B' },
-  { value: 'bad', icon: Frown, label_en: 'Bad', label_ru: 'Плохо', color: '#EF4444' },
-  { value: 'terrible', icon: Frown, label_en: 'Terrible', label_ru: 'Ужасно', color: '#7C3AED' },
+const MOOD_OPTIONS: { value: DailyLogMood; icon: typeof Smile; labelKey: string; color: string }[] = [
+  { value: 'great', icon: Star, labelKey: 'dailyLog.moodGreat', color: '#22C55E' },
+  { value: 'good', icon: Smile, labelKey: 'dailyLog.moodGood', color: '#3B82F6' },
+  { value: 'okay', icon: Meh, labelKey: 'dailyLog.moodOkay', color: '#F59E0B' },
+  { value: 'bad', icon: Frown, labelKey: 'dailyLog.moodBad', color: '#EF4444' },
+  { value: 'terrible', icon: Frown, labelKey: 'dailyLog.moodTerrible', color: '#7C3AED' },
 ];
 
 /** Форматирует Date в строку YYYY-MM-DD. */
@@ -34,8 +34,7 @@ const toDateStr = (d: Date) =>
 
 /** Страница дневника — ежедневные записи с итогами, планами, заметками и настроением. */
 export function DailyLogPage() {
-  const { i18n } = useTranslation();
-  const isRu = i18n.language === 'ru';
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -95,7 +94,7 @@ export function DailyLogPage() {
       setExistingId(saved.id || null);
       queryClient.invalidateQueries({ queryKey: ['daily-logs'] });
       queryClient.invalidateQueries({ queryKey: ['daily-log', dateStr] });
-      showSuccess(isRu ? 'Запись сохранена' : 'Entry saved');
+      showSuccess(t('dailyLog.entrySaved'));
     },
     onError: (err) => showApiError(err),
   });
@@ -115,7 +114,7 @@ export function DailyLogPage() {
   const todayStr = toDateStr(new Date());
   const isToday = dateStr === todayStr;
 
-  const formattedDate = currentDate.toLocaleDateString(isRu ? 'ru-RU' : 'en-US', {
+  const formattedDate = currentDate.toLocaleDateString(i18n.language === 'ru' ? 'ru-RU' : i18n.language === 'uz-cyr' ? 'uz-Cyrl' : i18n.language === 'uz' ? 'uz-Latn' : 'en-US', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -151,7 +150,7 @@ export function DailyLogPage() {
         <div className="flex gap-2">
           {!isToday && (
             <Button variant="secondary" size="sm" onClick={goToday}>
-              {isRu ? 'Сегодня' : 'Today'}
+              {t('dailyLog.today')}
             </Button>
           )}
           <Button
@@ -160,7 +159,7 @@ export function DailyLogPage() {
             onClick={() => saveMutation.mutate()}
             loading={saveMutation.isPending}
           >
-            {isRu ? 'Сохранить' : 'Save'}
+            {t('dailyLog.save')}
           </Button>
         </div>
       </div>
@@ -173,13 +172,13 @@ export function DailyLogPage() {
             <div className="flex items-center gap-2 mb-3">
               <div className="w-3 h-3 rounded-full bg-green-500" />
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {isRu ? 'Что сделано' : 'What was done'}
+                {t('dailyLog.whatWasDone')}
               </h3>
             </div>
             <textarea
               value={done}
               onChange={(e) => setDone(e.target.value)}
-              placeholder={isRu ? 'Перечислите основные достижения дня...' : 'List your main achievements today...'}
+              placeholder={t('dailyLog.whatWasDonePlaceholder')}
               rows={4}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
             />
@@ -190,13 +189,13 @@ export function DailyLogPage() {
             <div className="flex items-center gap-2 mb-3">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {isRu ? 'Планы на завтра' : 'Plans for tomorrow'}
+                {t('dailyLog.plansForTomorrow')}
               </h3>
             </div>
             <textarea
               value={planned}
               onChange={(e) => setPlanned(e.target.value)}
-              placeholder={isRu ? 'Что планируете сделать завтра...' : 'What do you plan to do tomorrow...'}
+              placeholder={t('dailyLog.plansPlaceholder')}
               rows={3}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
             />
@@ -207,13 +206,13 @@ export function DailyLogPage() {
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-purple-500" />
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {isRu ? 'Заметки' : 'Notes'}
+                {t('dailyLog.notes')}
               </h3>
             </div>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder={isRu ? 'Свободные мысли, идеи, рефлексия...' : 'Free thoughts, ideas, reflections...'}
+              placeholder={t('dailyLog.notesPlaceholder')}
               rows={3}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
             />
@@ -225,7 +224,7 @@ export function DailyLogPage() {
           {/* Mood */}
           <Card>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-              {isRu ? 'Настроение' : 'Mood'}
+              {t('dailyLog.mood')}
             </h3>
             <div className="grid grid-cols-5 gap-1">
               {MOOD_OPTIONS.map((m) => {
@@ -242,11 +241,11 @@ export function DailyLogPage() {
                         : 'hover:bg-gray-100 dark:hover:bg-gray-800 opacity-60 hover:opacity-100',
                     )}
                     style={isSelected ? { backgroundColor: `${m.color}15`, color: m.color, outlineColor: m.color } : {}}
-                    title={isRu ? m.label_ru : m.label_en}
+                    title={t(m.labelKey)}
                   >
                     <Icon className="w-5 h-5" style={isSelected ? { color: m.color } : {}} />
                     <span className={clsx('text-[10px] leading-tight font-medium truncate w-full text-center', !isSelected && 'text-gray-500')}>
-                      {isRu ? m.label_ru : m.label_en}
+                      {t(m.labelKey)}
                     </span>
                   </button>
                 );
@@ -259,7 +258,7 @@ export function DailyLogPage() {
             <div className="flex items-center gap-2 mb-3">
               <Zap className="w-4 h-4 text-amber-500" />
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {isRu ? 'Энергия' : 'Energy'}
+                {t('dailyLog.energy')}
               </h3>
               <span className="ml-auto text-sm font-bold text-amber-500">{energy}/5</span>
             </div>
@@ -282,12 +281,12 @@ export function DailyLogPage() {
           {/* History */}
           <Card>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-              {isRu ? 'Последние записи' : 'Recent entries'}
+              {t('dailyLog.recentEntries')}
             </h3>
             <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
               {pastLogs.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center py-3">
-                  {isRu ? 'Пока нет записей' : 'No entries yet'}
+                  {t('dailyLog.noEntries')}
                 </p>
               ) : (
                 pastLogs.slice(0, 15).map((log) => {
@@ -307,7 +306,7 @@ export function DailyLogPage() {
                       )}
                     >
                       <span className="text-gray-700 dark:text-gray-300 font-medium">
-                        {new Date(log.date + 'T00:00:00').toLocaleDateString(isRu ? 'ru-RU' : 'en-US', {
+                        {new Date(log.date + 'T00:00:00').toLocaleDateString(i18n.language === 'ru' ? 'ru-RU' : i18n.language === 'uz-cyr' ? 'uz-Cyrl' : i18n.language === 'uz' ? 'uz-Latn' : 'en-US', {
                           day: 'numeric',
                           month: 'short',
                         })}

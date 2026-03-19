@@ -13,6 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 logger = logging.getLogger(__name__)
 
 from .serializers import (
+    ChangePasswordSerializer,
     LoginSerializer,
     RegisterSerializer,
     UserProfileSerializer,
@@ -203,3 +204,31 @@ class GoogleAuthView(APIView):
                 {'detail': 'Invalid Google token.'},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+
+class ChangePasswordView(APIView):
+    """Смена пароля текущего пользователя."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        """Проверяет текущий пароль и устанавливает новый."""
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        request.user.set_password(serializer.validated_data['new_password'])
+        request.user.save(update_fields=['password'])
+        return Response({'detail': 'Password changed successfully.'})
+
+
+class DeleteAccountView(APIView):
+    """Удаление аккаунта текущего пользователя со всеми данными."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        """Удаляет аккаунт пользователя после проверки пароля."""
+        password = request.data.get('password')
+        if not password:
+            return Response({'detail': 'Password is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not request.user.check_password(password):
+            return Response({'detail': 'Incorrect password.'}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.delete()
+        return Response({'detail': 'Account deleted.'}, status=status.HTTP_200_OK)

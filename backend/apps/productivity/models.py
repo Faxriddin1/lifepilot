@@ -86,6 +86,7 @@ class Habit(models.Model):
         max_length=10, choices=Frequency.choices, default=Frequency.DAILY
     )
     target_count = models.PositiveIntegerField(default=1)  # Целевое кол-во выполнений за период
+    target_days = models.PositiveIntegerField(default=30, help_text='Цель: сколько дней длится привычка')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

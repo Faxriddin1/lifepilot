@@ -145,6 +145,37 @@ export function useCreateHabit() {
   });
 }
 
+/** Хук для обновления привычки. */
+export function useUpdateHabit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<{ name: string; description: string; color: string; icon: string }> }) =>
+      productivityApi.updateHabit(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
+    },
+    onError: (error) => {
+      showApiError(error);
+    },
+  });
+}
+
+/** Хук для удаления привычки. */
+export function useDeleteHabit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: productivityApi.deleteHabit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
+    },
+    onError: (error) => {
+      showApiError(error);
+    },
+  });
+}
+
 /**
  * Хук для логирования выполнения привычки за определённую дату.
  * Инвалидирует кеш привычек и дашборда.
@@ -159,6 +190,22 @@ export function useLogHabit() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+    onError: (error) => {
+      showApiError(error);
+    },
+  });
+}
+
+/** Хук для toggle привычки (создать/удалить лог). Обновляет streak после успешного toggle. */
+export function useToggleHabit() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ habitId, date }: { habitId: string; date: string }) =>
+      productivityApi.toggleHabitLog(habitId, date),
+    onSuccess: () => {
+      // Refresh habits to update streak counts
+      queryClient.invalidateQueries({ queryKey: ['habits'] });
     },
     onError: (error) => {
       showApiError(error);

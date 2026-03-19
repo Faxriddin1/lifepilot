@@ -165,3 +165,37 @@ export function useCreateProject() {
     },
   });
 }
+
+/** Хук для обновления проекта. */
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<import('@/types').CreateProjectData> }) =>
+      tasksApi.updateProject(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      showSuccess('errors.projectUpdated');
+    },
+    onError: (error) => {
+      showApiError(error);
+    },
+  });
+}
+
+/** Хук для удаления проекта. */
+export function useDeleteProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: tasksApi.deleteProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      showSuccess('errors.projectDeleted');
+    },
+    onError: (error) => {
+      showApiError(error);
+    },
+  });
+}

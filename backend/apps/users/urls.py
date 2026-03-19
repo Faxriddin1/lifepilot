@@ -10,4 +10,6 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('me/', views.ProfileView.as_view(), name='me'),
     path('google/', views.GoogleAuthView.as_view(), name='google-auth'),
+    path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
+    path('delete-account/', views.DeleteAccountView.as_view(), name='delete-account'),
 ]

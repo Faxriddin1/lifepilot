@@ -32,13 +32,18 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class SubtaskSerializer(serializers.ModelSerializer):
     """Облегчённый сериализатор для отображения вложенных подзадач."""
+    is_completed = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = [
             'id', 'title', 'status', 'priority', 'deadline',
-            'position', 'time_estimate', 'time_logged',
+            'position', 'time_estimate', 'time_logged', 'is_completed',
         ]
+
+    def get_is_completed(self, obj):
+        """Возвращает True если задача завершена."""
+        return obj.status == Task.Status.DONE
 
 
 class TaskSerializer(serializers.ModelSerializer):

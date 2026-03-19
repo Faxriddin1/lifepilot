@@ -21,12 +21,16 @@ import { TransactionsPage } from '@/pages/finance/TransactionsPage';
 import { BudgetsPage } from '@/pages/finance/BudgetsPage';
 import { GoalsPage } from '@/pages/finance/GoalsPage';
 import { SettingsPage } from '@/pages/settings/SettingsPage';
+import { ReportsPage } from '@/pages/reports/ReportsPage';
 import {
   AdminLayout, AdminDashboard,
   AdminUsersPage, AdminTasksPage, AdminProjectsPage,
   AdminAccountsPage, AdminTransactionsPage, AdminBudgetsPage,
   AdminGoalsPage, AdminFocusSessionsPage, AdminHabitsPage, AdminDailyLogsPage,
 } from '@/pages/admin';
+import { LandingPage } from '@/pages/landing/LandingPage';
+import { LegalPage } from '@/pages/landing/LegalPage';
+import { AboutPage } from '@/pages/landing/AboutPage';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
 
@@ -53,6 +57,9 @@ function AppContent() {
     <BrowserRouter>
       <Routes>
         {/* Public routes */}
+        <Route path="/welcome" element={<LandingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/legal/:type" element={<LegalPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
@@ -72,7 +79,7 @@ function AppContent() {
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/budgets" element={<BudgetsPage />} />
           <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/reports" element={<FinanceOverviewPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
 

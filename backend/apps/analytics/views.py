@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.finance.models import Account, Transaction
-from apps.productivity.models import FocusSession, HabitLog
+from apps.productivity.models import FocusSession, Habit, HabitLog
 from apps.tasks.models import Project, Task
 
 
@@ -162,49 +162,57 @@ class ProductivityAnalyticsView(APIView):
             start_time__date__gte=start_date,
         )
 
-        # Heatmap: focus minutes per day
-        heatmap_qs = (
+        # Heatmap: focus minutes per day (fill empty days with 0)
+        heatmap_qs = dict(
             sessions
             .annotate(day=TruncDate('start_time'))
             .values('day')
             .annotate(minutes=Sum('duration'))
-            .order_by('day')
+            .values_list('day', 'minutes')
         )
-        heatmap = [
-            {'date': str(entry['day']), 'minutes': entry['minutes'] or 0}
-            for entry in heatmap_qs
-        ]
+        heatmap = []
+        for i in range(days):
+            d = start_date + timedelta(days=i)
+            heatmap.append({
+                'date': str(d),
+                'minutes': heatmap_qs.get(d, 0) or 0,
+            })
 
-        # Daily focus (last 30 days for bar chart)
-        daily_start = today - timedelta(days=30)
-        daily_focus_qs = (
+        # Daily focus (last 30 days for bar chart, fill empty days)
+        daily_start = today - timedelta(days=29)
+        daily_focus_qs = dict(
             sessions.filter(start_time__date__gte=daily_start)
             .annotate(day=TruncDate('start_time'))
             .values('day')
             .annotate(minutes=Sum('duration'))
-            .order_by('day')
+            .values_list('day', 'minutes')
         )
-        daily_focus = [
-            {'date': str(entry['day']), 'minutes': entry['minutes'] or 0}
-            for entry in daily_focus_qs
-        ]
+        daily_focus = []
+        for i in range(30):
+            d = daily_start + timedelta(days=i)
+            daily_focus.append({
+                'date': str(d),
+                'minutes': daily_focus_qs.get(d, 0) or 0,
+            })
 
-        # Peak hours
+        # Peak hours (all 24 hours, fill missing with 0)
         from django.db.models.functions import ExtractHour
-        peak_qs = (
+        peak_qs = dict(
             sessions
             .annotate(hour=ExtractHour('start_time'))
             .values('hour')
             .annotate(minutes=Sum('duration'))
-            .order_by('hour')
+            .values_list('hour', 'minutes')
         )
         peak_hours = [
-            {'hour': entry['hour'], 'minutes': entry['minutes'] or 0}
-            for entry in peak_qs
+            {'hour': h, 'minutes': peak_qs.get(h, 0) or 0}
+            for h in range(24)
         ]
 
         total_focus_minutes = sessions.aggregate(total=Sum('duration'))['total'] or 0
-        avg_daily = round(total_focus_minutes / max(days, 1), 1)
+        # Average per day based on actual days with focus, not total period
+        days_with_focus = len([d for d in heatmap if d['minutes'] > 0])
+        avg_daily = round(total_focus_minutes / max(days_with_focus, 1), 1)
 
         # Focus streak (consecutive days with sessions)
         focus_dates = set(
@@ -229,6 +237,67 @@ class ProductivityAnalyticsView(APIView):
             (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0, 1
         )
 
+        # === Habits stats ===
+        habits = Habit.objects.filter(user=user, is_active=True)
+        total_habits = habits.count()
+
+        # Per-habit completion data
+        habit_stats = []
+        for habit in habits[:10]:
+            completed_days = habit.logs.count()
+            target = habit.target_days or 30
+            progress = round(min(completed_days / target * 100, 100), 1)
+
+            # Weekly completion (last 7 days)
+            week_start = today - timedelta(days=6)
+            week_logs = habit.logs.filter(date__gte=week_start).count()
+
+            # Current streak
+            dates = list(habit.logs.order_by('-date').values_list('date', flat=True)[:60])
+            streak = 0
+            if dates:
+                streak = 1
+                for i in range(1, len(dates)):
+                    if dates[i] == dates[i - 1] - timedelta(days=1):
+                        streak += 1
+                    else:
+                        break
+
+            habit_stats.append({
+                'id': str(habit.id),
+                'name': habit.name,
+                'color': habit.color,
+                'icon': habit.icon,
+                'completed_days': completed_days,
+                'target_days': target,
+                'progress': progress,
+                'week_completed': week_logs,
+                'current_streak': streak,
+            })
+
+        # Habit completion heatmap (last 30 days — how many habits completed per day)
+        habit_heatmap = []
+        for i in range(30):
+            d = today - timedelta(days=29 - i)
+            count = HabitLog.objects.filter(
+                habit__user=user, date=d
+            ).count()
+            habit_heatmap.append({
+                'date': str(d),
+                'count': count,
+            })
+
+        # Overall habit completion rate this week
+        week_start = today - timedelta(days=6)
+        total_possible = total_habits * 7
+        total_completed_week = HabitLog.objects.filter(
+            habit__user=user,
+            date__gte=week_start,
+        ).count()
+        habit_completion_rate = round(
+            (total_completed_week / total_possible * 100) if total_possible > 0 else 0, 1
+        )
+
         data = {
             'heatmap': heatmap,
             'daily_focus': daily_focus,
@@ -239,6 +308,12 @@ class ProductivityAnalyticsView(APIView):
             'completed_tasks': completed_tasks,
             'task_completion_rate': task_completion_rate,
             'streak_days': streak_days,
+            'total_habits': total_habits,
+            'habit_stats': habit_stats,
+            'habit_heatmap': habit_heatmap,
+            'habit_completion_rate': habit_completion_rate,
+            'habit_week_completed': total_completed_week,
+            'habit_week_possible': total_possible,
         }
         return Response(data)
 
@@ -252,8 +327,8 @@ class FinanceAnalyticsView(APIView):
         user = request.user
         today = timezone.localdate()
 
-        # === Cashflow (last 30 days) ===
-        cashflow_start = today - timedelta(days=30)
+        # === Cashflow (last 30 days including today) ===
+        cashflow_start = today - timedelta(days=29)
         cashflow = []
         for i in range(30):
             d = cashflow_start + timedelta(days=i)
@@ -334,7 +409,7 @@ class FinanceAnalyticsView(APIView):
         )
 
         monthly_totals = []
-        for i in range(months):
+        for i in range(months + 1):  # +1 to include current month
             m = start_month + i
             y = start_year + (m - 1) // 12
             m = ((m - 1) % 12) + 1

@@ -12,8 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'email', 'name', 'avatar_url',
-            'base_currency', 'locale', 'timezone', 'last_seen_at',
-            'date_joined',
+            'base_currency', 'locale', 'timezone',
+            'date_format', 'week_start', 'number_format',
+            'last_seen_at', 'date_joined',
         ]
         read_only_fields = ['id', 'email', 'date_joined', 'last_seen_at']
 
@@ -62,6 +63,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'name', 'avatar_url', 'base_currency', 'locale', 'timezone',
+            'date_format', 'week_start', 'number_format',
         ]
 
     def validate_base_currency(self, value):
@@ -69,3 +71,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if len(value) != 3:
             raise serializers.ValidationError('Currency must be a 3-letter ISO code.')
         return value.upper()
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """Сериализатор смены пароля: текущий пароль и новый."""
+    current_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, min_length=8, validators=[validate_password])
+    new_password_confirm = serializers.CharField(write_only=True, min_length=8)
+
+    def validate_current_password(self, value):
+        """Проверяет текущий пароль."""
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Current password is incorrect.')
+        return value
+
+    def validate(self, attrs):
+        """Проверяет совпадение нового пароля и подтверждения."""
+        if attrs['new_password'] != attrs['new_password_confirm']:
+            raise serializers.ValidationError({'new_password_confirm': 'Passwords do not match.'})
+        return attrs

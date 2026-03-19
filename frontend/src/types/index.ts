@@ -63,9 +63,11 @@ export interface User {
   timezone: string;
   base_currency: string;
   locale: string;
+  date_format?: string;
+  week_start?: string;
+  number_format?: string;
   last_seen_at?: string;
   date_joined: string;
-  // Backward compat aliases (optional)
   first_name?: string;
   last_name?: string;
 }
@@ -131,9 +133,11 @@ export interface Habit {
   color: string;
   icon?: string;
   frequency: string;
-  target_per_day: number;
+  target_count: number;
+  target_days: number;
   current_streak: number;
-  longest_streak: number;
+  completed_days: number;
+  progress: number;
   is_active: boolean;
   created_at: string;
 }
@@ -173,6 +177,7 @@ export interface Category {
   id: string;
   name: string;
   type: CategoryType;
+  category_type: CategoryType;
   color: string;
   icon?: string;
   parent?: string | null;
@@ -193,33 +198,34 @@ export interface Account {
 export interface Transaction {
   id: string;
   type: TransactionType;
+  transaction_type: TransactionType;
   amount: number;
   description: string;
-  category?: Category | null;
-  category_id?: string | null;
-  account: Account;
-  account_id: string;
-  to_account?: Account | null;
-  to_account_id?: string | null;
+  note: string;
+  category?: string | null;
+  category_name?: string | null;
+  account: string;
+  account_name?: string;
   date: string;
-  notes?: string;
   is_recurring: boolean;
-  recurring_frequency?: string | null;
-  tags: string[];
+  currency: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface Budget {
   id: string;
-  name: string;
-  category?: Category | null;
-  category_id?: string | null;
+  name?: string;
+  category?: string | null;
+  category_name?: string | null;
   amount: number;
   spent: number;
+  spent_amount?: string;
+  remaining?: string;
   period: BudgetPeriod;
   start_date: string;
-  end_date: string;
-  is_active: boolean;
+  end_date?: string | null;
+  created_at: string;
 }
 
 export interface Goal {
@@ -277,10 +283,27 @@ export interface ProductivityStats {
   task_completion_rate: number;
   total_tasks: number;
   completed_tasks: number;
+  total_focus_minutes: number;
   peak_hours: { hour: number; minutes: number }[];
   heatmap: { date: string; minutes: number }[];
   avg_focus_per_day: number;
   streak_days: number;
+  total_habits: number;
+  habit_stats: {
+    id: string;
+    name: string;
+    color: string;
+    icon: string;
+    completed_days: number;
+    target_days: number;
+    progress: number;
+    week_completed: number;
+    current_streak: number;
+  }[];
+  habit_heatmap: { date: string; count: number }[];
+  habit_completion_rate: number;
+  habit_week_completed: number;
+  habit_week_possible: number;
 }
 
 export interface FinanceStats {
@@ -345,39 +368,38 @@ export interface CreateTaskData {
 }
 
 export interface CreateTransactionData {
-  type: TransactionType;
+  transaction_type: TransactionType;
   amount: number;
-  description: string;
-  category_id?: string | null;
-  account_id: string;
-  to_account_id?: string | null;
+  note?: string;
+  category?: string | null;
+  account: string;
   date: string;
-  notes?: string;
   is_recurring?: boolean;
-  recurring_frequency?: string | null;
-  tags?: string[];
+  [key: string]: any;
 }
 
 export interface CreateProjectData {
   name: string;
   description?: string;
   color?: string;
+  icon?: string;
 }
 
 export interface CreateHabitData {
   name: string;
   description?: string;
   color?: string;
+  icon?: string;
   frequency?: string;
-  target_per_day?: number;
+  target_days?: number;
 }
 
 export interface CreateBudgetData {
-  name: string;
-  category_id?: string | null;
+  category: string;
   amount: number;
   period: BudgetPeriod;
   start_date: string;
+  end_date?: string | null;
 }
 
 export interface CreateGoalData {
@@ -403,10 +425,10 @@ export interface StartFocusData {
 }
 
 export interface BulkUpdateTasksData {
-  task_ids: string[];
+  ids: string[];
   status?: TaskStatus;
   priority?: Priority;
-  project_id?: string | null;
+  project?: string | null;
 }
 
 export interface LoginCredentials {
@@ -434,7 +456,9 @@ export interface ProfileUpdateData {
   timezone?: string;
   base_currency?: string;
   locale?: string;
-  // Backward compat aliases (optional)
+  date_format?: string;
+  week_start?: string;
+  number_format?: string;
   first_name?: string;
   last_name?: string;
 }

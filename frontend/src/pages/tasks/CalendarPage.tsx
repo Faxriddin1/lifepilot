@@ -10,9 +10,6 @@ import { PRIORITY_COLORS, getPriorityLabel, getStatusLabel } from '@/utils/const
 import { type Task, type Priority, type TaskStatus } from '@/types';
 import { TaskDetailModal } from './TaskDetailModal';
 
-const WEEKDAYS_EN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const WEEKDAYS_RU = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-
 /** Форматирует Date в строку YYYY-MM-DD для ключа. */
 const formatDateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -20,14 +17,13 @@ const formatDateKey = (date: Date) =>
 /** Страница календаря задач с месячным видом, панелью задач дня и переходом к деталям. */
 export function CalendarPage() {
   const { t, i18n } = useTranslation();
-  const isRu = i18n.language === 'ru';
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const { data, isLoading } = useTasksQuery({});
 
   const tasks = data?.results ?? [];
-  const weekdays = isRu ? WEEKDAYS_RU : WEEKDAYS_EN;
+  const weekdays = t('calendar.weekdaysShort', { returnObjects: true }) as string[];
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -71,7 +67,7 @@ export function CalendarPage() {
   const today = new Date();
   const todayKey = formatDateKey(today);
 
-  const monthName = currentDate.toLocaleString(isRu ? 'ru-RU' : 'en-US', {
+  const monthName = currentDate.toLocaleString(i18n.language === 'uz-cyr' ? 'uz' : i18n.language, {
     month: 'long',
     year: 'numeric',
   });
@@ -87,7 +83,7 @@ export function CalendarPage() {
   const formatSelectedDate = (key: string) => {
     const [y, m, d] = key.split('-').map(Number);
     const date = new Date(y, m - 1, d);
-    return date.toLocaleDateString(isRu ? 'ru-RU' : 'en-US', {
+    return date.toLocaleDateString(i18n.language === 'uz-cyr' ? 'uz' : i18n.language, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -126,7 +122,7 @@ export function CalendarPage() {
           </button>
         </div>
         <Button variant="secondary" size="sm" onClick={goToday}>
-          {isRu ? 'Сегодня' : 'Today'}
+          {t('calendar.today')}
         </Button>
       </div>
 
@@ -218,7 +214,7 @@ export function CalendarPage() {
                     ))}
                     {dayTasks.length > 3 && (
                       <div className="text-[10px] text-gray-400 dark:text-gray-500 pl-1.5 font-medium">
-                        +{dayTasks.length - 3} {isRu ? 'ещё' : 'more'}
+                        +{dayTasks.length - 3} {t('calendar.more')}
                       </div>
                     )}
                   </div>
@@ -238,7 +234,7 @@ export function CalendarPage() {
                   {formatSelectedDate(selectedDateKey)}
                 </p>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {selectedDayTasks.length} {isRu ? 'задач' : 'tasks'}
+                  {selectedDayTasks.length} {t('calendar.tasks')}
                 </p>
               </div>
               <button
@@ -254,7 +250,7 @@ export function CalendarPage() {
               {selectedDayTasks.length === 0 ? (
                 <div className="p-6 text-center text-sm text-gray-400">
                   <Clock className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                  {isRu ? 'Нет задач на этот день' : 'No tasks for this day'}
+                  {t('calendar.noTasksForDay')}
                 </div>
               ) : (
                 <div className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -287,7 +283,7 @@ export function CalendarPage() {
                           </div>
                           {task.project_name && (
                             <p className="text-[10px] text-gray-400 mt-1">
-                              📁 {task.project_name}
+                              {task.project_name}
                             </p>
                           )}
                         </div>
@@ -305,10 +301,10 @@ export function CalendarPage() {
       {/* Stats bar */}
       <div className="flex gap-4 mt-4 text-sm text-gray-500">
         <span>
-          {isRu ? 'Всего' : 'Total'}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.length}</span> {isRu ? 'задач' : 'tasks'}
+          {t('calendar.total')}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.length}</span> {t('calendar.tasks')}
         </span>
         <span>
-          {isRu ? 'С дедлайном' : 'With deadline'}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.filter((t) => t.deadline).length}</span>
+          {t('calendar.withDeadline')}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.filter((t) => t.deadline).length}</span>
         </span>
       </div>
 

@@ -5,11 +5,8 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from 'recharts';
-import { Timer, CheckSquare, TrendingUp, Clock } from 'lucide-react';
+import { Timer, CheckSquare, TrendingUp, Clock, Flame } from 'lucide-react';
 import clsx from 'clsx';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { StatCard } from '@/components/ui/StatCard';
@@ -17,12 +14,11 @@ import { Spinner } from '@/components/ui/Spinner';
 import { useProductivityStats } from '@/hooks/useDashboard';
 import { formatDuration, formatDate } from '@/utils/formatters';
 import { useTranslation } from 'react-i18next';
+import { getFocusAlert, getCompletionAlert } from '@/utils/alerts';
 
-const CHART_COLORS = ['#2563eb', '#7c3aed', '#16a34a', '#f59e0b'];
-
-/** Страница аналитики продуктивности с тепловой картой, графиками фокуса и статистикой задач. */
+/** Страница аналитики продуктивности — фокус, задачи, привычки. */
 export function AnalyticsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, isLoading } = useProductivityStats();
 
   if (isLoading) {
@@ -34,6 +30,34 @@ export function AnalyticsPage() {
   }
 
   const completionRate = data?.task_completion_rate ?? 0;
+  const habitRate = data?.habit_completion_rate ?? 0;
+  const habitWeekDone = data?.habit_week_completed ?? 0;
+  const habitWeekTotal = data?.habit_week_possible ?? 0;
+
+  // Sparkline & alert data
+  const focusSparkline = (data?.daily_focus ?? []).slice(-7).map((d: any) => d.minutes || 0);
+  const focusTarget = 120; // 2h — TODO: user-configurable
+  const avgFocus = data?.avg_focus_per_day ?? 0;
+  const focusAlertLevel = getFocusAlert(avgFocus, focusTarget);
+  const focusAlert = focusAlertLevel !== 'neutral' ? focusAlertLevel : undefined;
+
+  const completionTarget = 90;
+  const completionAlertLevel = getCompletionAlert(completionRate, completionTarget);
+  const completionAlert = completionAlertLevel !== 'neutral' ? completionAlertLevel : undefined;
+
+  // Filter daily_focus to only show days with data + 3 padding
+  const dailyFocus = data?.daily_focus ?? [];
+  const daysWithData = dailyFocus.filter((d: any) => d.minutes > 0);
+  const focusData = daysWithData.length < 7 && daysWithData.length > 0
+    ? dailyFocus.slice(Math.max(0, dailyFocus.findIndex((d: any) => d.minutes > 0) - 3))
+    : dailyFocus;
+
+  // Peak hours — top 4
+  const peakHours = [...(data?.peak_hours ?? [])]
+    .filter((h: any) => h.minutes > 0)
+    .sort((a: any, b: any) => b.minutes - a.minutes)
+    .slice(0, 4);
+  const peakMax = peakHours[0]?.minutes || 1;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -42,27 +66,32 @@ export function AnalyticsPage() {
         <StatCard
           icon={<Timer className="w-5 h-5" />}
           label={t('analyticsPage.avgDailyFocus')}
-          value={formatDuration(data?.avg_focus_per_day ?? 0)}
-          trend={5}
+          value={formatDuration(avgFocus)}
+          sparklineData={focusSparkline.length > 1 ? focusSparkline : undefined}
+          target={{ value: formatDuration(focusTarget), label: t('analyticsNew.target') }}
+          alert={focusAlert}
           iconBg="bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400"
         />
         <StatCard
           icon={<CheckSquare className="w-5 h-5" />}
           label={t('analyticsPage.tasksCompleted')}
           value={`${data?.completed_tasks ?? 0}`}
-          trend={12}
+          subtitle={`${t('analyticsNew.total')}: ${data?.total_tasks ?? 0}`}
           iconBg="bg-success-50 text-success-600 dark:bg-success-900/30 dark:text-success-400"
         />
         <StatCard
           icon={<TrendingUp className="w-5 h-5" />}
           label={t('analyticsPage.completionRate')}
           value={`${completionRate}%`}
+          target={{ value: `${completionTarget}%`, label: t('analyticsNew.target') }}
+          alert={completionAlert}
           iconBg="bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400"
         />
         <StatCard
           icon={<Clock className="w-5 h-5" />}
           label={t('analyticsPage.focusStreak')}
           value={`${data?.streak_days ?? 0} ${t('analyticsPage.days')}`}
+          subtitle={`${t('analyticsNew.record')}: ${data?.streak_days ?? 0} ${t('analyticsPage.days')}`}
           iconBg="bg-warning-50 text-warning-600 dark:bg-warning-900/30 dark:text-warning-400"
         />
       </div>
@@ -70,143 +99,229 @@ export function AnalyticsPage() {
       {/* Heatmap */}
       <Card>
         <CardHeader title={t('analyticsPage.productivityHeatmap')} subtitle={t('analyticsPage.focusMinutesPerDay')} />
-        <div className="flex flex-wrap gap-1">
-          {(data?.heatmap ?? []).map((day, i) => {
-            const intensity =
-              day.minutes === 0
-                ? 'bg-gray-100 dark:bg-gray-800'
-                : day.minutes < 30
-                  ? 'bg-primary-100 dark:bg-primary-900/30'
-                  : day.minutes < 60
-                    ? 'bg-primary-300 dark:bg-primary-700/50'
-                    : day.minutes < 120
-                      ? 'bg-primary-500 dark:bg-primary-600/70'
-                      : 'bg-primary-700 dark:bg-primary-500';
+        {(() => {
+          const heatmap = data?.heatmap ?? [];
+          if (heatmap.length === 0) {
             return (
-              <div
-                key={i}
-                className={clsx('w-3.5 h-3.5 rounded-sm', intensity)}
-                title={`${day.date}: ${day.minutes}min`}
-              />
+              <p className="text-sm text-gray-400 text-center py-6">
+                {t('analyticsNew.noHeatmapData')}
+              </p>
             );
-          })}
-        </div>
-        <div className="flex items-center gap-2 mt-3 text-xs text-gray-400">
+          }
+
+          const firstDate = new Date(heatmap[0].date + 'T00:00:00');
+          const startDow = (firstDate.getDay() + 6) % 7;
+
+          const cells: (typeof heatmap[0] | null)[] = [];
+          for (let i = 0; i < startDow; i++) cells.push(null);
+          cells.push(...heatmap);
+          while (cells.length % 7 !== 0) cells.push(null);
+
+          const weeks = Math.ceil(cells.length / 7);
+          const dayLabels = t('analyticsNew.weekDays', { returnObjects: true }) as string[];
+
+          const monthLabels: { col: number; label: string }[] = [];
+          let lastMonth = -1;
+          for (let w = 0; w < weeks; w++) {
+            const cell = cells[w * 7];
+            if (cell) {
+              const d = new Date(cell.date + 'T00:00:00');
+              if (d.getMonth() !== lastMonth) {
+                lastMonth = d.getMonth();
+                monthLabels.push({
+                  col: w,
+                  label: d.toLocaleString(i18n.language === 'ru' ? 'ru-RU' : 'en-US', { month: 'short' }),
+                });
+              }
+            }
+          }
+
+          const getColor = (minutes: number) => {
+            if (minutes === 0) return 'bg-gray-100 dark:bg-gray-800';
+            if (minutes < 15) return 'bg-green-200 dark:bg-green-900/40';
+            if (minutes < 45) return 'bg-green-400 dark:bg-green-700/60';
+            if (minutes < 90) return 'bg-green-500 dark:bg-green-600';
+            return 'bg-green-700 dark:bg-green-500';
+          };
+
+          return (
+            <div className="overflow-x-auto">
+              <div className="flex ml-8 mb-1">
+                {monthLabels.map((m, i) => (
+                  <span
+                    key={i}
+                    className="text-[10px] text-gray-400 font-medium"
+                    style={{ position: 'relative', left: `${m.col * 15}px` }}
+                  >
+                    {m.label}
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-[3px]">
+                <div className="flex flex-col gap-[3px] mr-1">
+                  {dayLabels.map((label, i) => (
+                    <div key={i} className="h-[12px] text-[9px] text-gray-400 leading-[12px] w-6 text-right pr-1">
+                      {i % 2 === 0 ? label : ''}
+                    </div>
+                  ))}
+                </div>
+                {Array.from({ length: weeks }).map((_, w) => (
+                  <div key={w} className="flex flex-col gap-[3px]">
+                    {Array.from({ length: 7 }).map((_, d) => {
+                      const cell = cells[w * 7 + d];
+                      if (!cell) return <div key={d} className="w-[12px] h-[12px]" />;
+                      return (
+                        <div
+                          key={d}
+                          className={clsx('w-[12px] h-[12px] rounded-[2px] transition-colors', getColor(cell.minutes))}
+                          title={`${cell.date}: ${cell.minutes} min`}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        <div className="flex items-center gap-1.5 mt-3 text-[10px] text-gray-400">
           <span>{t('analyticsPage.less')}</span>
-          <div className="w-3 h-3 rounded-sm bg-gray-100 dark:bg-gray-800" />
-          <div className="w-3 h-3 rounded-sm bg-primary-100" />
-          <div className="w-3 h-3 rounded-sm bg-primary-300" />
-          <div className="w-3 h-3 rounded-sm bg-primary-500" />
-          <div className="w-3 h-3 rounded-sm bg-primary-700" />
+          <div className="w-[10px] h-[10px] rounded-[2px] bg-gray-100 dark:bg-gray-800" />
+          <div className="w-[10px] h-[10px] rounded-[2px] bg-green-200 dark:bg-green-900/40" />
+          <div className="w-[10px] h-[10px] rounded-[2px] bg-green-400 dark:bg-green-700/60" />
+          <div className="w-[10px] h-[10px] rounded-[2px] bg-green-500 dark:bg-green-600" />
+          <div className="w-[10px] h-[10px] rounded-[2px] bg-green-700 dark:bg-green-500" />
           <span>{t('analyticsPage.more')}</span>
         </div>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Daily focus bar chart */}
+        {/* Daily focus bar chart — adaptive */}
         <Card>
           <CardHeader title={t('analyticsPage.dailyFocusTime')} subtitle={t('analyticsPage.last30Days')} />
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.daily_focus ?? []}>
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 10, fill: '#9ca3af' }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(v: string) => {
-                    try { return formatDate(v, 'd'); } catch { return v; }
-                  }}
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: '#9ca3af' }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(v: number) => `${v}m`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                  }}
-                  formatter={(value: number) => [`${value} min`, 'Focus']}
-                />
-                <Bar dataKey="minutes" fill="#2563eb" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        {/* Completion rate donut + Peak hours */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader title={t('analyticsPage.taskCompletionRate')} />
-            <div className="flex items-center justify-center">
-              <div className="relative w-36 h-36">
-                <PieChart width={144} height={144}>
-                  <Pie
-                    data={[
-                      { name: 'Completed', value: data?.completed_tasks ?? 0 },
-                      {
-                        name: 'Remaining',
-                        value: (data?.total_tasks ?? 0) - (data?.completed_tasks ?? 0),
-                      },
-                    ]}
-                    cx={67}
-                    cy={67}
-                    innerRadius={48}
-                    outerRadius={65}
-                    startAngle={90}
-                    endAngle={-270}
-                    dataKey="value"
-                  >
-                    <Cell fill="#2563eb" />
-                    <Cell fill="#e5e7eb" />
-                  </Pie>
-                </PieChart>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    {completionRate}%
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="text-center text-sm text-gray-500 mt-2">
-              {`${data?.completed_tasks ?? 0} ${t('analyticsPage.ofTasksCompleted')} ${data?.total_tasks ?? 0} ${t('analyticsPage.tasksCompletedLabel')}`}
-            </div>
-          </Card>
-
-          <Card>
-            <CardHeader title={t('analyticsPage.peakHours')} />
-            <div className="h-32">
+          {focusData.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-12">
+              {t('analyticsNew.noFocusData')}
+            </p>
+          ) : (
+            <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data?.peak_hours ?? []}>
+                <BarChart data={focusData}>
                   <XAxis
-                    dataKey="hour"
+                    dataKey="date"
                     tick={{ fontSize: 10, fill: '#9ca3af' }}
                     axisLine={false}
                     tickLine={false}
-                    tickFormatter={(v: number) => `${v}:00`}
+                    tickFormatter={(v: string) => {
+                      try { return formatDate(v, 'd'); } catch { return v; }
+                    }}
                   />
-                  <YAxis hide />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: '#9ca3af' }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(v: number) => `${v}m`}
+                  />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--tooltip-bg, white)',
                       border: '1px solid #e5e7eb',
                       borderRadius: '8px',
                       fontSize: '12px',
                     }}
-                    formatter={(value: number) => [`${value} min`, 'Focus']}
+                    formatter={(value: number) => [`${value} min`, t('analyticsNew.focus')]}
                   />
-                  <Bar dataKey="minutes" fill="#7c3aed" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="minutes" fill="#2563eb" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </Card>
-        </div>
+          )}
+        </Card>
+
+        {/* Peak hours — compact top-4 */}
+        <Card>
+          <CardHeader title={t('analyticsPage.peakHours')} />
+          {peakHours.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-12">
+              {t('analyticsNew.insufficientData')}
+            </p>
+          ) : (
+            <div className="space-y-3 py-2">
+              <p className="text-xs text-gray-400 mb-4">
+                {t('analyticsNew.planComplexTasks')}
+              </p>
+              {peakHours.map((h: any, i: number) => (
+                <div key={h.hour} className="flex items-center gap-3">
+                  <span className="text-sm font-mono text-gray-600 dark:text-gray-400 w-12">
+                    {String(h.hour).padStart(2, '0')}:00
+                  </span>
+                  <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
+                    <div
+                      className="h-full rounded-md transition-all duration-500"
+                      style={{
+                        width: `${(h.minutes / peakMax) * 100}%`,
+                        backgroundColor: i === 0 ? '#7c3aed' : i === 1 ? '#a78bfa' : '#c4b5fd',
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs text-gray-500 w-12 text-right">{h.minutes}m</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
+
+      {/* Habits section — compact */}
+      {(data?.total_habits ?? 0) > 0 && (
+        <>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Flame className="w-5 h-5 text-orange-500" />
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                {t('analyticsNew.habits')}
+              </h2>
+            </div>
+            {/* Inline summary instead of 3 separate stat cards */}
+            <p className="text-sm text-gray-500">
+              {t('analyticsNew.thisWeek')}:
+              <span className="font-semibold text-orange-500 ml-1">{habitRate}%</span>
+              <span className="text-gray-400 ml-1">({habitWeekDone}/{habitWeekTotal})</span>
+            </p>
+          </div>
+
+          {/* Per-habit progress — single card */}
+          <Card>
+            <div className="space-y-4">
+              {(data?.habit_stats ?? []).map((habit: any) => (
+                <div key={habit.id}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: habit.color }} />
+                      <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                        {habit.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span>{habit.completed_days}/{habit.target_days} {t('analyticsNew.daysShort')}</span>
+                      <span className="font-semibold" style={{ color: habit.color }}>{habit.progress}%</span>
+                    </div>
+                  </div>
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${habit.progress}%`, backgroundColor: habit.color }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-1">
+                    {t('analyticsNew.thisWeek')}: {habit.week_completed}/7
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

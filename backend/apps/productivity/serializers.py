@@ -37,15 +37,42 @@ class FocusSessionStartSerializer(serializers.Serializer):
 
 
 class HabitSerializer(serializers.ModelSerializer):
-    """Сериализатор привычки: название, частота, цель и настройки отображения."""
+    """Сериализатор привычки с прогрессом и серией (streak)."""
+    current_streak = serializers.SerializerMethodField()
+    completed_days = serializers.SerializerMethodField()
+    progress = serializers.SerializerMethodField()
 
     class Meta:
         model = Habit
         fields = [
             'id', 'name', 'description', 'color', 'icon',
-            'frequency', 'target_count', 'is_active', 'created_at',
+            'frequency', 'target_count', 'target_days', 'is_active', 'created_at',
+            'current_streak', 'completed_days', 'progress',
         ]
         read_only_fields = ['id', 'created_at']
+
+    def get_completed_days(self, obj):
+        """Количество уникальных дней с выполнением."""
+        return obj.logs.count()
+
+    def get_progress(self, obj):
+        """Прогресс в процентах: completed_days / target_days * 100."""
+        if obj.target_days <= 0:
+            return 0
+        completed = obj.logs.count()
+        return round(min(completed / obj.target_days * 100, 100), 1)
+
+    def get_current_streak(self, obj):
+        """Количество отмеченных дней за текущую неделю (Пн-Вс)."""
+        from datetime import timedelta
+        from django.utils import timezone
+
+        today = timezone.localdate()
+        # Понедельник текущей недели
+        monday = today - timedelta(days=today.weekday())
+        sunday = monday + timedelta(days=6)
+
+        return obj.logs.filter(date__gte=monday, date__lte=sunday).count()
 
 
 class HabitLogSerializer(serializers.ModelSerializer):

@@ -102,4 +102,9 @@ export const tasksApi = {
     const { data } = await apiClient.patch<Project>(`/tasks/projects/${id}/`, projectData);
     return data;
   },
+
+  /** Удаление проекта. Задачи проекта сохраняются (project=null). */
+  deleteProject: async (id: string): Promise<void> => {
+    await apiClient.delete(`/tasks/projects/${id}/`);
+  },
 };

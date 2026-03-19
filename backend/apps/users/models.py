@@ -42,6 +42,9 @@ class User(AbstractUser):
     base_currency = models.CharField(max_length=3, default='USD')  # Основная валюта пользователя
     locale = models.CharField(max_length=10, default='ru')
     timezone = models.CharField(max_length=50, default='Europe/Moscow')
+    date_format = models.CharField(max_length=10, default='DD.MM.YYYY')  # DD.MM.YYYY, MM/DD/YYYY, YYYY-MM-DD
+    week_start = models.CharField(max_length=3, default='mon')  # mon, sun
+    number_format = models.CharField(max_length=10, default='1 000,00')  # 1,000.00, 1.000,00, 1 000,00
     last_seen_at = models.DateTimeField(null=True, blank=True)  # Время последней активности
 
     objects = UserManager()

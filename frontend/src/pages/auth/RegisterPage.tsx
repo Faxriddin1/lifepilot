@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 import { authApi } from '@/api/auth';
 import { showApiError } from '@/utils/errorHandler';
 import { validateRegisterForm } from '@/utils/validation';
+import { PasswordStrength } from '@/components/ui/PasswordStrength';
 import toast from 'react-hot-toast';
 
 /** Страница регистрации нового пользователя с валидацией имени, email и пароля. */
@@ -161,8 +162,8 @@ export function RegisterPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               }
-              hint={t('register.passwordHint')}
             />
+            <PasswordStrength password={password} />
 
             <Input
               label={t('auth.confirmPassword')}
