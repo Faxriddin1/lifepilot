@@ -119,7 +119,6 @@ export interface FocusSession {
   task_title?: string | null;
   session_type: SessionType;
   duration: number;
-  duration_minutes: number;
   start_time: string;
   end_time?: string | null;
   status: string;
@@ -331,7 +330,7 @@ export interface TaskFilters {
 }
 
 export interface TransactionFilters {
-  type?: TransactionType;
+  transaction_type?: TransactionType;
   category_id?: string;
   account_id?: string;
   date_from?: string;
@@ -422,6 +421,7 @@ export interface StartFocusData {
   task?: string | null;
   session_type: SessionType;
   duration: number;
+  start_time: string;
 }
 
 export interface BulkUpdateTasksData {
@@ -439,6 +439,7 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
+  password_confirm: string;
   name: string;
   // Backward compat aliases (optional)
   first_name?: string;

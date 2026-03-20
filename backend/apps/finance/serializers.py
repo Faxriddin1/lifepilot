@@ -3,6 +3,8 @@ from decimal import Decimal
 from django.db.models import Sum
 from rest_framework import serializers
 
+from apps.utils import SanitizeMixin
+
 from .models import Account, Budget, Category, Goal, Transaction
 
 
@@ -71,7 +73,7 @@ class GoalSerializer(serializers.ModelSerializer):
         return value
 
 
-class TransactionSerializer(serializers.ModelSerializer):
+class TransactionSerializer(SanitizeMixin, serializers.ModelSerializer):
     """Сериализатор транзакции с валидацией владельца счёта, категории и цели."""
     account_name = serializers.CharField(source='account.name', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True, default=None)

@@ -112,8 +112,8 @@ PM/
 | `/register` | RegisterPage | Registration: email/password + Google OAuth + password strength indicator |
 | `/welcome` | LandingPage | Animated landing: intro screen, cursor effects, 3D tilt cards, gradient mesh, 4-language responsive |
 | `/about` | AboutPage | About the project |
-| `/privacy` | LegalPage | Privacy policy |
-| `/terms` | LegalPage | Terms of service |
+| `/legal/privacy` | LegalPage | Privacy policy (also `/privacy` redirects here) |
+| `/legal/terms` | LegalPage | Terms of service (also `/terms` redirects here) |
 
 ## Admin Panel (11 pages)
 
@@ -150,7 +150,8 @@ Common admin features:
 - **Alert system:** Color-coded alerts across modules — budget overspend, focus session reminders, task deadline warnings
 - **Landing page:** Animated intro screen with cursor particle effects, 3D tilt cards, gradient mesh backgrounds, fully responsive
 - **Themes:** Light and dark mode
-- **i18n:** Zero hardcoded strings — every UI element uses react-i18next `t()` calls across all 4 languages
+- **Mobile:** Responsive sidebar with hamburger menu, overlay, auto-close on navigation (lg: breakpoint = 1024px)
+- **i18n:** Zero hardcoded strings — every UI element uses react-i18next `t()` calls across all 4 languages, language synced with user profile on login
 
 ## API
 
@@ -184,9 +185,9 @@ All endpoints under `/api/v1/`. JWT Bearer token authentication.
 - `POST /api/v1/finance/goals/{id}/contribute/` — contribute amount to a goal
 
 ### Analytics
-- `/api/v1/analytics/dashboard/` — summary statistics
-- `/api/v1/analytics/productivity/` — productivity (heatmap, daily_focus)
-- `/api/v1/analytics/finance/` — financial analytics
+- `/api/v1/analytics/dashboard/` — summary statistics (Redis cached, 5 min TTL)
+- `/api/v1/analytics/productivity/` — productivity (heatmap, daily_focus) (Redis cached, 5 min TTL)
+- `/api/v1/analytics/finance/` — financial analytics (Redis cached, 5 min TTL)
 
 ### Admin Panel (is_staff only)
 - `/api/v1/admin-panel/dashboard/` — system statistics
@@ -263,9 +264,10 @@ VITE_GOOGLE_CLIENT_ID=<your-client-id>.apps.googleusercontent.com
 - Rate limiting (django-ratelimit)
 - CORS whitelist
 - CSRF, XSS, Clickjacking protection
+- Server-side HTML sanitization via bleach (SanitizeMixin on all text-input serializers)
 - SECURE_CONTENT_TYPE_NOSNIFF, X_FRAME_OPTIONS='DENY'
 - Serializer-level validation + frontend form validation
-- PBKDF2 password hashing
+- Argon2 password hashing (with PBKDF2 fallback)
 - Password strength indicator on registration
 - Change password functionality in settings
 - Circular reference prevention (subtasks max depth 3)

@@ -39,7 +39,7 @@ export function AdminDashboard() {
     <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">Обзор системы ProductFlow</p>
+        <p className="text-sm text-gray-500 mt-1">Обзор системы LifePilot</p>
       </div>
 
       {/* Stat cards */}

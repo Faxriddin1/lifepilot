@@ -264,7 +264,7 @@ export function LegalPage() {
   }, [type]);
 
   const legalType = (type === 'privacy' || type === 'terms') ? type : 'privacy';
-  const savedLang = localStorage.getItem('landing-lang') || 'en';
+  const savedLang = localStorage.getItem('locale') || localStorage.getItem('landing-lang') || 'en';
   const lang = savedLang.startsWith('ru') || savedLang === 'uz-cyr' ? 'ru' : 'en';
   const data = content[legalType][lang];
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Plus, Search, Bell, ChevronDown, User, Settings, LogOut } from 'lucide-react';
+import { Plus, Search, Bell, ChevronDown, User, Settings, LogOut, Menu } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
@@ -14,6 +14,7 @@ export function TopBar() {
   const { user, logout } = useAuthStore();
   const setQuickAddOpen = useUiStore((s) => s.setQuickAddOpen);
 
+  const toggleMobileSidebar = useUiStore((s) => s.toggleMobileSidebar);
   const pagesWithAdd = ['/tasks', '/inbox', '/projects', '/transactions', '/budgets', '/goals', '/habits'];
   const showAddButton = pagesWithAdd.includes(location.pathname);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -22,7 +23,7 @@ export function TopBar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
-  const pageTitle = t(`topbar.routes.${location.pathname}`, { defaultValue: 'ProductFlow' });
+  const pageTitle = t(`topbar.routes.${location.pathname}`, { defaultValue: 'LifePilot' });
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -37,8 +38,16 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center justify-between h-14 px-6">
-        {/* Left: Page title */}
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{pageTitle}</h1>
+        {/* Left: Hamburger + Page title */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleMobileSidebar}
+            className="lg:hidden p-2 -ml-2 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{pageTitle}</h1>
+        </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">

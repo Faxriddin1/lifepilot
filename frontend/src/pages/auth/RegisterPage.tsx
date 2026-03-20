@@ -66,6 +66,7 @@ export function RegisterPage() {
       await register({
         email,
         password,
+        password_confirm: confirmPassword,
         name: name.trim(),
       });
       toast.success(t('auth.registerSuccess'));
@@ -86,7 +87,7 @@ export function RegisterPage() {
             <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white">ProductFlow</span>
+            <span className="text-2xl font-bold text-white">LifePilot</span>
           </div>
         </div>
 
@@ -118,7 +119,7 @@ export function RegisterPage() {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">ProductFlow</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">LifePilot</span>
           </div>
 
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{t('register.title')}</h1>

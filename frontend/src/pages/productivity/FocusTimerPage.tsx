@@ -41,6 +41,7 @@ export function FocusTimerPage() {
     start({
       session_type: preset.type as SessionType,
       duration: timerMinutes,
+      start_time: new Date().toISOString(),
       task: selectedTaskId || null,
     });
   };

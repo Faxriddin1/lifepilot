@@ -6,12 +6,15 @@ type Locale = 'en' | 'ru' | 'uz' | 'uz-cyr';
 
 interface UiState {
   sidebarCollapsed: boolean;
+  mobileSidebarOpen: boolean;
   theme: Theme;
   locale: Locale;
   quickAddOpen: boolean;
 
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  toggleMobileSidebar: () => void;
+  closeMobileSidebar: () => void;
   setTheme: (theme: Theme) => void;
   setLocale: (locale: Locale) => void;
   setQuickAddOpen: (open: boolean) => void;
@@ -25,11 +28,17 @@ interface UiState {
  */
 export const useUiStore = create<UiState>((set) => ({
   sidebarCollapsed: false,
+  mobileSidebarOpen: false,
   theme: 'light',
   locale: 'en',
   quickAddOpen: false,
 
   setQuickAddOpen: (open: boolean) => set({ quickAddOpen: open }),
+
+  toggleMobileSidebar: () =>
+    set((state) => ({ mobileSidebarOpen: !state.mobileSidebarOpen })),
+
+  closeMobileSidebar: () => set({ mobileSidebarOpen: false }),
 
   toggleSidebar: () =>
     set((state) => {

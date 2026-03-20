@@ -35,7 +35,7 @@ export function AdminLayout() {
             <Shield className="w-6 h-6 text-blue-400" />
             <span className="font-bold text-lg">Admin Panel</span>
           </div>
-          <p className="text-xs text-gray-500 mt-1">ProductFlow</p>
+          <p className="text-xs text-gray-500 mt-1">LifePilot</p>
         </div>
 
         {/* Navigation */}

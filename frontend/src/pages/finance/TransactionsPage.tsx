@@ -69,11 +69,11 @@ export function TransactionsPage() {
             { value: TransactionType.EXPENSE, label: t('transactionsPage.expense') },
             { value: TransactionType.TRANSFER, label: t('transactionsPage.transfer') },
           ]}
-          value={filters.type || ''}
+          value={filters.transaction_type || ''}
           onChange={(e) =>
             setFilters((p) => ({
               ...p,
-              type: (e.target.value as TransactionType) || undefined,
+              transaction_type: (e.target.value as TransactionType) || undefined,
             }))
           }
         />

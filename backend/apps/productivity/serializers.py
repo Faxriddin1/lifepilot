@@ -1,6 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from apps.utils import SanitizeMixin
 from .models import DailyLog, FocusSession, Habit, HabitLog
 
 
@@ -36,7 +37,7 @@ class FocusSessionStartSerializer(serializers.Serializer):
         return value
 
 
-class HabitSerializer(serializers.ModelSerializer):
+class HabitSerializer(SanitizeMixin, serializers.ModelSerializer):
     """Сериализатор привычки с прогрессом и серией (streak)."""
     current_streak = serializers.SerializerMethodField()
     completed_days = serializers.SerializerMethodField()
@@ -102,7 +103,7 @@ class HabitLogSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class DailyLogSerializer(serializers.ModelSerializer):
+class DailyLogSerializer(SanitizeMixin, serializers.ModelSerializer):
     """Сериализатор дневника: итоги дня, планы, заметки, настроение и энергия."""
 
     class Meta:

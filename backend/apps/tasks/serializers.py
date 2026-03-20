@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from apps.utils import SanitizeMixin
 from .models import Project, Task
 
 
@@ -62,16 +63,17 @@ class TaskSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 
-class TaskCreateSerializer(serializers.ModelSerializer):
+class TaskCreateSerializer(SanitizeMixin, serializers.ModelSerializer):
     """Сериализатор создания задачи с валидацией владельца и глубины подзадач."""
 
     class Meta:
         model = Task
         fields = [
-            'project', 'parent_task', 'title', 'description',
+            'id', 'project', 'parent_task', 'title', 'description',
             'priority', 'status', 'deadline', 'tags',
             'time_estimate', 'recurrence_rule', 'position',
         ]
+        read_only_fields = ['id']
 
     def validate(self, attrs):
         """Проверяет принадлежность родительской задачи и проекта, ограничение глубины подзадач."""
@@ -103,7 +105,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class TaskUpdateSerializer(serializers.ModelSerializer):
+class TaskUpdateSerializer(SanitizeMixin, serializers.ModelSerializer):
     """Сериализатор обновления задачи с проверкой циклических ссылок."""
 
     class Meta:

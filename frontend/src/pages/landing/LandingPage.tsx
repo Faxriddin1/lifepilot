@@ -48,6 +48,7 @@ export function LandingPage() {
     setLang(l);
     setLangOpen(false);
     localStorage.setItem('landing-lang', l);
+    localStorage.setItem('locale', l);
   };
 
   return (

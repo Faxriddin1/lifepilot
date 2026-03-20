@@ -81,7 +81,7 @@ export function useFocusSession() {
     }
   }, [activeSession, stopMutation]);
 
-  const totalSeconds = activeSession ? (activeSession.duration ?? activeSession.duration_minutes) * 60 : 0;
+  const totalSeconds = activeSession ? activeSession.duration * 60 : 0;
   const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
   const progress = totalSeconds > 0 ? (elapsedSeconds / totalSeconds) * 100 : 0;
 

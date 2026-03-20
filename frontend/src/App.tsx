@@ -60,6 +60,8 @@ function AppContent() {
         <Route path="/welcome" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/legal/:type" element={<LegalPage />} />
+        <Route path="/privacy" element={<Navigate to="/legal/privacy" replace />} />
+        <Route path="/terms" element={<Navigate to="/legal/terms" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 

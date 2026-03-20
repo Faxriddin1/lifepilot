@@ -1,6 +1,7 @@
 from datetime import timedelta
 from decimal import Decimal
 
+from django.core.cache import cache
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncDate, TruncMonth
 from django.utils import timezone
@@ -20,10 +21,15 @@ class DashboardView(APIView):
 
     def get(self, request):
         """Возвращает полную сводку дашборда: задачи, фокус, привычки, финансы."""
+        user = request.user
+        cache_key = f'dashboard_{user.id}'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
         from apps.finance.models import Budget
         from apps.productivity.models import Habit
 
-        user = request.user
         today = timezone.localdate()
         month_start = today.replace(day=1)
         week_start = today - timedelta(days=6)
@@ -97,6 +103,25 @@ class DashboardView(APIView):
             .aggregate(total=Sum('balance'))['total']
         ) or Decimal('0.00')
 
+        # Income & expenses this month
+        income_this_month = (
+            Transaction.objects.filter(
+                user=user,
+                transaction_type=Transaction.TransactionType.INCOME,
+                date__gte=month_start,
+                date__lte=today,
+            ).aggregate(total=Sum('amount'))['total']
+        ) or Decimal('0.00')
+
+        expenses_this_month = (
+            Transaction.objects.filter(
+                user=user,
+                transaction_type=Transaction.TransactionType.EXPENSE,
+                date__gte=month_start,
+                date__lte=today,
+            ).aggregate(total=Sum('amount'))['total']
+        ) or Decimal('0.00')
+
         # Cashflow 7 days
         cashflow_7d = []
         for i in range(7):
@@ -131,17 +156,21 @@ class DashboardView(APIView):
                 'spent': float(spent),
             })
 
-        return Response({
+        data = {
             'tasks_today': tasks_today,
             'tasks_completed_today': tasks_completed_today,
             'focus_minutes_today': focus_minutes_today,
             'total_balance': float(total_balance),
+            'income_this_month': float(income_this_month),
+            'expenses_this_month': float(expenses_this_month),
             'recent_tasks': recent_tasks,
             'cashflow_7d': cashflow_7d,
             'habit_completions': habit_completions,
             'top_budgets': top_budgets,
             'productivity_heatmap': productivity_heatmap,
-        })
+        }
+        cache.set(cache_key, data, 300)
+        return Response(data)
 
 
 class ProductivityAnalyticsView(APIView):
@@ -152,6 +181,11 @@ class ProductivityAnalyticsView(APIView):
         """Возвращает полную статистику продуктивности: фокус, задачи, тепловую карту."""
         user = request.user
         days = int(request.query_params.get('days', 90))
+        cache_key = f'productivity_{user.id}_{days}'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
         today = timezone.localdate()
         start_date = today - timedelta(days=days)
 
@@ -315,6 +349,7 @@ class ProductivityAnalyticsView(APIView):
             'habit_week_completed': total_completed_week,
             'habit_week_possible': total_possible,
         }
+        cache.set(cache_key, data, 300)
         return Response(data)
 
 
@@ -325,6 +360,11 @@ class FinanceAnalyticsView(APIView):
     def get(self, request):
         """Возвращает cashflow, категории расходов/доходов, помесячные тренды."""
         user = request.user
+        cache_key = f'finance_analytics_{user.id}'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
         today = timezone.localdate()
 
         # === Cashflow (last 30 days including today) ===
@@ -431,10 +471,12 @@ class FinanceAnalyticsView(APIView):
         )
         net_worth_trend = [{'date': str(today), 'amount': total_balance}]
 
-        return Response({
+        data = {
             'cashflow': cashflow,
             'expense_by_category': expense_by_category,
             'income_by_category': income_by_category,
             'monthly_totals': monthly_totals,
             'net_worth_trend': net_worth_trend,
-        })
+        }
+        cache.set(cache_key, data, 300)
+        return Response(data)

@@ -25,7 +25,9 @@ export function AppLayout() {
       <div
         className={clsx(
           'transition-all duration-300',
-          sidebarCollapsed ? 'ml-16' : 'ml-60'
+          'ml-0 lg:ml-60',
+          sidebarCollapsed && 'lg:ml-16',
+          !sidebarCollapsed && 'lg:ml-60'
         )}
       >
         <TopBar />

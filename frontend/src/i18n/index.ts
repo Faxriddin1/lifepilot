@@ -5,7 +5,7 @@ import ru from './locales/ru.json';
 import uz from './locales/uz.json';
 import uzCyr from './locales/uz-cyr.json';
 
-const savedLocale = localStorage.getItem('locale') || 'en';
+const savedLocale = localStorage.getItem('locale') || localStorage.getItem('landing-lang') || 'en';
 
 i18n.use(initReactI18next).init({
   resources: {

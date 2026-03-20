@@ -1,5 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import {
   LayoutDashboard,
   Inbox,
@@ -76,16 +77,32 @@ const navSections: NavSection[] = [
 /** Боковая панель навигации с секциями меню, профилем пользователя и возможностью сворачивания. */
 export function Sidebar() {
   const { t } = useTranslation();
-  const { sidebarCollapsed, toggleSidebar } = useUiStore();
+  const { sidebarCollapsed, toggleSidebar, mobileSidebarOpen, closeMobileSidebar } = useUiStore();
   const user = useAuthStore((s) => s.user);
+  const location = useLocation();
+
+  // Close mobile sidebar on navigation
+  useEffect(() => {
+    closeMobileSidebar();
+  }, [location.pathname, closeMobileSidebar]);
 
   return (
-    <aside
-      className={clsx(
-        'fixed inset-y-0 left-0 z-30 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300',
-        sidebarCollapsed ? 'w-16' : 'w-60'
+    <>
+      {/* Mobile overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={closeMobileSidebar}
+        />
       )}
-    >
+      <aside
+        className={clsx(
+          'fixed inset-y-0 left-0 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300',
+          sidebarCollapsed ? 'w-16' : 'w-60',
+          'lg:translate-x-0 lg:z-30',
+          mobileSidebarOpen ? 'translate-x-0 z-50' : '-translate-x-full lg:translate-x-0 z-30'
+        )}
+      >
       {/* User section */}
       <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
         <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
@@ -179,6 +196,7 @@ export function Sidebar() {
         </button>
 
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

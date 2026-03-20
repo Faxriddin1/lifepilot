@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { User, LoginCredentials, RegisterData } from '@/types';
 import { authApi } from '@/api/auth';
+import i18n from '@/i18n';
 
 interface AuthState {
   user: User | null;
@@ -36,6 +37,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     const user = await authApi.getProfile();
 
+    if (user.locale && i18n.language !== user.locale) {
+      await i18n.changeLanguage(user.locale);
+      localStorage.setItem('locale', user.locale);
+    }
+
     set({
       user,
       token: tokens.access,
@@ -51,6 +57,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.setItem('refresh_token', tokens.refresh);
 
     const user = await authApi.getProfile();
+
+    if (user.locale && i18n.language !== user.locale) {
+      await i18n.changeLanguage(user.locale);
+      localStorage.setItem('locale', user.locale);
+    }
 
     set({
       user,
@@ -96,6 +107,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       authApi
         .getProfile()
         .then((user) => {
+          if (user.locale && i18n.language !== user.locale) {
+            i18n.changeLanguage(user.locale);
+            localStorage.setItem('locale', user.locale);
+          }
           set({ user });
         })
         .catch(() => {
