@@ -31,6 +31,14 @@ Thumbs.db
 # Django
 staticfiles/
 media/
+*/migrations/
+!*/migrations/__init__.py
 
 # Docker
 *.log
+# QA Reports
+*.docx
+qa-report-detailed.js
+
+# Package locks
+package-lock.json

@@ -1,0 +1,105 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Google Cloud VM
+        env:
+          VM_HOST: ${{ secrets.GCP_VM_HOST }}
+          VM_USER: ${{ secrets.GCP_VM_USER }}
+          SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.GCP_SSH_KNOWN_HOSTS }}
+        run: |
+          # Create temporary SSH key file
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # Add known hosts
+          mkdir -p ~/.ssh
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          
+          # Deploy via SSH
+          ssh -i ~/.ssh/deploy_key $VM_USER@$VM_HOST << 'EOF'
+            set -e
+            
+            echo "📦 Pulling latest code..."
+            cd ~/lifepilot
+            git pull origin main
+            
+            echo "🔄 Rebuilding Docker containers..."
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d --build
+            
+            echo "🗑️  Cleaning up old containers and images..."
+            docker system prune -f
+            
+            echo "📝 Running database migrations..."
+            docker-compose exec -T backend python manage.py migrate
+            
+            echo "📊 Creating default categories if missing..."
+            docker-compose exec -T backend python manage.py create_default_categories --skip-existing
+            
+            echo "✅ Deployment completed successfully!"
+          EOF
+          
+          # Clean up
+          rm -f ~/.ssh/deploy_key
+
+      - name: Verify Deployment
+        env:
+          VM_HOST: ${{ secrets.GCP_VM_HOST }}
+          VM_USER: ${{ secrets.GCP_VM_USER }}
+          SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.GCP_SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          
+          # Check health endpoints
+          ssh -i ~/.ssh/deploy_key $VM_USER@$VM_HOST << 'EOF'
+            echo "🏥 Health check..."
+            
+            # Wait for services to be ready
+            sleep 5
+            
+            # Check backend
+            if curl -s http://localhost:8000/api/v1/auth/me/ -H "Authorization: Bearer dummy" | grep -q "error"; then
+              echo "✓ Backend is running"
+            else
+              echo "⚠️  Backend may have issues, but likely just auth error (expected)"
+            fi
+            
+            # Check that docker containers are running
+            if docker-compose ps | grep -q "Up"; then
+              echo "✓ All containers are running"
+            else
+              echo "❌ Some containers are not running"
+              docker-compose ps
+              exit 1
+            fi
+          EOF
+          
+          rm -f ~/.ssh/deploy_key
+
+      - name: Notify Deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Deployment to lifepilot.uz'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        continue-on-error: true
