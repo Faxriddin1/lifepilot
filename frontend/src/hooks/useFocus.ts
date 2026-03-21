@@ -1,47 +1,31 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productivityApi } from '@/api/productivity';
-import type { FocusFilters, StartFocusData, FocusSession } from '@/types';
+import type { FocusFilters, StartFocusData } from '@/types';
 import { showApiError, showSuccess } from '@/utils/errorHandler';
+import { useFocusStore } from '@/store/focusStore';
 
 /**
  * Хук для управления фокус-сессией (таймер Pomodoro / Deep Work).
- * Управляет запуском, паузой, возобновлением и остановкой сессии.
- * Ведёт отсчёт прошедшего времени и вычисляет прогресс.
+ * Использует глобальный Zustand store — таймер продолжает работать при переходе между страницами.
  * @returns Объект с состоянием сессии, таймером и методами управления (start, stop, pause, resume)
  */
 export function useFocusSession() {
   const queryClient = useQueryClient();
-  const [activeSession, setActiveSession] = useState<FocusSession | null>(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const clearTimer = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, []);
-
-  const startTimer = useCallback(() => {
-    clearTimer();
-    intervalRef.current = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-  }, [clearTimer]);
-
-  useEffect(() => {
-    return clearTimer;
-  }, [clearTimer]);
+  const {
+    activeSession,
+    elapsedSeconds,
+    isPaused,
+    setSession,
+    pauseTimer,
+    resumeTimer,
+    clearSession,
+  } = useFocusStore();
 
   const startMutation = useMutation({
     mutationFn: (data: StartFocusData) => productivityApi.startFocusSession(data),
     onSuccess: (session) => {
-      setActiveSession(session);
-      setElapsedSeconds(0);
-      setIsPaused(false);
-      startTimer();
+      setSession(session);
       showSuccess('errors.sessionStarted');
     },
     onError: (error) => {
@@ -52,10 +36,7 @@ export function useFocusSession() {
   const stopMutation = useMutation({
     mutationFn: (id: string) => productivityApi.stopFocusSession(id),
     onSuccess: () => {
-      clearTimer();
-      setActiveSession(null);
-      setElapsedSeconds(0);
-      setIsPaused(false);
+      clearSession();
       queryClient.invalidateQueries({ queryKey: ['focus-history'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       showSuccess('errors.sessionStopped');
@@ -66,14 +47,12 @@ export function useFocusSession() {
   });
 
   const pause = useCallback(() => {
-    clearTimer();
-    setIsPaused(true);
-  }, [clearTimer]);
+    pauseTimer();
+  }, [pauseTimer]);
 
   const resume = useCallback(() => {
-    setIsPaused(false);
-    startTimer();
-  }, [startTimer]);
+    resumeTimer();
+  }, [resumeTimer]);
 
   const stop = useCallback(() => {
     if (activeSession) {

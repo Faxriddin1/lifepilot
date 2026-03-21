@@ -34,6 +34,7 @@ import { LegalPage } from '@/pages/landing/LegalPage';
 import { AboutPage } from '@/pages/landing/AboutPage';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
+import { restoreFocusSession } from '@/store/focusStore';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,7 @@ function AppContent() {
   useEffect(() => {
     initUi();
     loadFromStorage();
+    restoreFocusSession();
   }, [loadFromStorage, initUi]);
 
   return (

@@ -50,7 +50,13 @@ export function TaskListPage() {
   const [newPriority, setNewPriority] = useState<Priority>(Priority.P3);
   const [newStatus, setNewStatus] = useState<TaskStatus>(TaskStatus.INBOX);
   const [newDueDate, setNewDueDate] = useState('');
-  const [newProjectId, setNewProjectId] = useState<string>('');
+  const [newProjectId, setNewProjectId] = useState<string>(projectFromUrl || '');
+
+  useEffect(() => {
+    if (showAddModal && projectFromUrl) {
+      setNewProjectId(projectFromUrl);
+    }
+  }, [showAddModal, projectFromUrl]);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -103,7 +109,7 @@ export function TaskListPage() {
         setShowAddModal(false);
         setNewTitle('');
         setNewDueDate('');
-        setNewProjectId('');
+        setNewProjectId(projectFromUrl || '');
       },
     });
   };
@@ -436,23 +442,25 @@ export function TaskListPage() {
               onChange={(e) => setNewStatus(e.target.value as TaskStatus)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className={projectFromUrl ? '' : 'grid grid-cols-2 gap-4'}>
             <Input
               label={t('taskList.dueDate')}
               type="date"
               value={newDueDate}
               onChange={(e) => setNewDueDate(e.target.value)}
             />
-            <Select
-              label={t('taskList.project')}
-              placeholder={t('taskList.selectProject')}
-              options={[
-                { value: '', label: t('taskList.noProject') },
-                ...(projects ?? []).map((p) => ({ value: String(p.id), label: p.name })),
-              ]}
-              value={newProjectId}
-              onChange={(e) => setNewProjectId(e.target.value)}
-            />
+            {!projectFromUrl && (
+              <Select
+                label={t('taskList.project')}
+                placeholder={t('taskList.selectProject')}
+                options={[
+                  { value: '', label: t('taskList.noProject') },
+                  ...(projects ?? []).map((p) => ({ value: String(p.id), label: p.name })),
+                ]}
+                value={newProjectId}
+                onChange={(e) => setNewProjectId(e.target.value)}
+              />
+            )}
           </div>
         </div>
       </Modal>

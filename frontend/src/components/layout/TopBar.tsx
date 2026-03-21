@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Plus, Search, Bell, ChevronDown, User, Settings, LogOut, Menu } from 'lucide-react';
+import { Plus, Search, Bell, ChevronDown, User, Settings, LogOut, Menu, Play, Pause, Square, Timer } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/authStore';
 import { useUiStore } from '@/store/uiStore';
+import { useFocusStore } from '@/store/focusStore';
+import { useFocusSession } from '@/hooks/useFocus';
+import { formatSeconds } from '@/utils/formatters';
 import { Button } from '@/components/ui/Button';
 
 /** Верхняя панель с заголовком страницы, поиском, уведомлениями и меню пользователя. */
@@ -97,6 +100,9 @@ export function TopBar() {
             )}
           </div>
 
+          {/* Focus Timer Mini Widget */}
+          <FocusMiniWidget />
+
           {/* Notifications */}
           <button className="relative p-2 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
             <Bell className="w-5 h-5" />
@@ -158,5 +164,51 @@ export function TopBar() {
         </div>
       </div>
     </header>
+  );
+}
+
+function FocusMiniWidget() {
+  const navigate = useNavigate();
+  const { activeSession, elapsedSeconds, isPaused } = useFocusStore();
+  const { pause, resume, stop } = useFocusSession();
+
+  const totalSeconds = activeSession ? activeSession.duration * 60 : 0;
+  const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
+
+  if (!activeSession) return null;
+
+  return (
+    <div
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 cursor-pointer"
+      onClick={() => navigate('/focus')}
+    >
+      <Timer className={clsx('w-4 h-4 text-primary-600', !isPaused && 'animate-pulse')} />
+      <span className="text-sm font-mono font-semibold text-primary-700 dark:text-primary-300">
+        {formatSeconds(remainingSeconds)}
+      </span>
+      <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+        {isPaused ? (
+          <button
+            onClick={resume}
+            className="p-1 rounded hover:bg-primary-100 dark:hover:bg-primary-800 text-primary-600"
+          >
+            <Play className="w-3.5 h-3.5" />
+          </button>
+        ) : (
+          <button
+            onClick={pause}
+            className="p-1 rounded hover:bg-primary-100 dark:hover:bg-primary-800 text-primary-600"
+          >
+            <Pause className="w-3.5 h-3.5" />
+          </button>
+        )}
+        <button
+          onClick={stop}
+          className="p-1 rounded hover:bg-danger-100 dark:hover:bg-danger-800 text-danger-600"
+        >
+          <Square className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
   );
 }
