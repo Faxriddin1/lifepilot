@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckSquare, Timer, Wallet, ChevronRight, Check, Globe,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { landing, LANG_LABELS, type LandingLang } from './landingTranslations';
+import i18n from '@/i18n';
 import { useScrollReveal, useNavScroll } from './useScrollReveal';
 import { useSpotlight, useCardTilt, useMagnetic, useHeroParallax } from './useCursorEffects';
 import { IntroScreen } from './IntroScreen';
@@ -29,6 +30,12 @@ export function LandingPage() {
   const navigate = useNavigate();
   const t = landing[lang];
 
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('locale', lang);
+    localStorage.setItem('landing-lang', lang);
+  }, [lang]);
+
   useScrollReveal();
   useNavScroll();
   useSpotlight();
@@ -49,6 +56,7 @@ export function LandingPage() {
     setLangOpen(false);
     localStorage.setItem('landing-lang', l);
     localStorage.setItem('locale', l);
+    i18n.changeLanguage(l);
   };
 
   return (

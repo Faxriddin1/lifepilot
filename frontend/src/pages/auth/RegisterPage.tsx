@@ -28,7 +28,7 @@ export function RegisterPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleGoogleSuccess = async (response: CredentialResponse) => {
@@ -47,7 +47,7 @@ export function RegisterPage() {
         isLoading: false,
       });
       toast.success(t('auth.registerSuccess'));
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       showApiError(err);
     } finally {
@@ -70,7 +70,7 @@ export function RegisterPage() {
         name: name.trim(),
       });
       toast.success(t('auth.registerSuccess'));
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: unknown) {
       showApiError(err);
     } finally {
@@ -92,13 +92,9 @@ export function RegisterPage() {
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-white">Start your productivity journey today.</h2>
+          <h2 className="text-3xl font-bold text-white">{t('register.brandTitle')}</h2>
           <div className="space-y-4">
-            {[
-              'Organize tasks with Kanban boards and smart filters',
-              'Track focus time with Pomodoro and deep work sessions',
-              'Monitor expenses, set budgets, and reach savings goals',
-            ].map((item, i) => (
+            {(t('register.brandFeatures', { returnObjects: true }) as string[]).map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-white text-xs font-bold">{i + 1}</span>

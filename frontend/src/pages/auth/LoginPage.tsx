@@ -25,7 +25,7 @@ export function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleGoogleSuccess = async (response: CredentialResponse) => {
@@ -44,7 +44,7 @@ export function LoginPage() {
         isLoading: false,
       });
       toast.success(t('auth.welcomeBack') + '!');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       showApiError(err);
     } finally {
@@ -62,7 +62,7 @@ export function LoginPage() {
     try {
       await login({ email, password });
       toast.success(t('auth.welcomeBack') + '!');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: unknown) {
       showApiError(err);
     } finally {

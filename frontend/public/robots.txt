@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Allow: /welcome
+Allow: /about
+Allow: /login
+Allow: /register
+
+Disallow: /dashboard
+Disallow: /inbox
+Disallow: /tasks
+Disallow: /projects
+Disallow: /focus
+Disallow: /habits
+Disallow: /analytics
+Disallow: /finance
+Disallow: /transactions
+Disallow: /budgets
+Disallow: /goals
+Disallow: /reports
+Disallow: /settings
+Disallow: /admin
+
+Sitemap: https://lifepilot.uz/sitemap.xml

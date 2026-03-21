@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { FullPageSpinner } from '@/components/ui/Spinner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
@@ -44,6 +45,13 @@ const queryClient = new QueryClient({
   },
 });
 
+function HomePage() {
+  const { isAuthenticated, isLoading } = useAuthStore();
+  if (isLoading) return <FullPageSpinner />;
+  if (!isAuthenticated) return <LandingPage />;
+  return <Navigate to="/dashboard" replace />;
+}
+
 function AppContent() {
   const loadFromStorage = useAuthStore((s) => s.loadFromStorage);
   const initUi = useUiStore((s) => s.initFromStorage);
@@ -56,6 +64,9 @@ function AppContent() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Landing — shows LandingPage for guests, redirects to /dashboard for authenticated */}
+        <Route path="/" element={<HomePage />} />
+
         {/* Public routes */}
         <Route path="/welcome" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -67,7 +78,7 @@ function AppContent() {
 
         {/* Protected routes */}
         <Route element={<AppLayout />}>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/inbox" element={<InboxPage />} />
           <Route path="/tasks" element={<TaskListPage />} />
           <Route path="/tasks/kanban" element={<KanbanPage />} />

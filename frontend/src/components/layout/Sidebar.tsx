@@ -40,7 +40,7 @@ const navSections: NavSection[] = [
   {
     titleKey: 'sidebar.main',
     items: [
-      { to: '/', icon: <LayoutDashboard className="w-5 h-5" />, labelKey: 'sidebar.dashboard' },
+      { to: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, labelKey: 'sidebar.dashboard' },
       { to: '/inbox', icon: <Inbox className="w-5 h-5" />, labelKey: 'sidebar.inbox' },
     ],
   },

@@ -63,7 +63,7 @@ export function AdminLayout() {
         {/* Back to app */}
         <div className="p-3 border-t border-gray-800">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
