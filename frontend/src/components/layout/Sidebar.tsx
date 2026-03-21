@@ -97,7 +97,7 @@ export function Sidebar() {
       )}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300',
+          'fixed inset-y-0 left-0 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 overflow-hidden',
           sidebarCollapsed ? 'w-16' : 'w-60',
           'lg:translate-x-0 lg:z-30',
           mobileSidebarOpen ? 'translate-x-0 z-50' : '-translate-x-full lg:translate-x-0 z-30'
@@ -123,14 +123,16 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-6 scrollbar-thin">
-        {navSections.map((section) => (
+      <nav className={clsx('flex-1 overflow-y-auto px-2 py-3 scrollbar-thin', sidebarCollapsed ? 'space-y-2' : 'space-y-6')}>
+        {navSections.map((section, idx) => (
           <div key={section.titleKey}>
-            {!sidebarCollapsed && (
+            {!sidebarCollapsed ? (
               <p className="px-3 mb-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
                 {t(section.titleKey)}
               </p>
-            )}
+            ) : idx > 0 ? (
+              <div className="mx-3 mb-1 border-t border-gray-200 dark:border-gray-800" />
+            ) : null}
             <div className="space-y-0.5">
               {section.items.map((item) => (
                 <NavLink
