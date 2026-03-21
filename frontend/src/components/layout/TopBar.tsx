@@ -116,7 +116,7 @@ export function TopBar() {
             >
               <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center">
                 <span className="text-xs font-semibold text-white">
-                  {user?.first_name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
+                  {user?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
                 </span>
               </div>
               <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -126,9 +126,7 @@ export function TopBar() {
               <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 animate-fade-in">
                 <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {user?.first_name
-                      ? `${user.first_name} ${user.last_name || ''}`
-                      : 'User'}
+                    {user?.name || 'User'}
                   </p>
                   <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                 </div>

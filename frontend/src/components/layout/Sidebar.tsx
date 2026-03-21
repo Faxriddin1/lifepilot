@@ -107,15 +107,13 @@ export function Sidebar() {
       <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
         <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
           <span className="text-sm font-semibold text-white">
-            {user?.first_name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
+            {user?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
           </span>
         </div>
         {!sidebarCollapsed && (
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
-              {user?.first_name
-                ? `${user.first_name} ${user.last_name || ''}`
-                : user?.email || 'User'}
+              {user?.name || user?.email || 'User'}
             </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
