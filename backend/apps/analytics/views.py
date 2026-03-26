@@ -22,17 +22,15 @@ class DashboardView(APIView):
     def get(self, request):
         """Возвращает полную сводку дашборда: задачи, фокус, привычки, финансы."""
         user = request.user
-        cache_key = f'dashboard_{user.id}'
-        cached = cache.get(cache_key)
-        if cached:
-            return Response(cached)
+        # No server-side cache — frontend handles cache invalidation via React Query
 
         from apps.finance.models import Budget
         from apps.productivity.models import Habit
 
         today = timezone.localdate()
         month_start = today.replace(day=1)
-        week_start = today - timedelta(days=6)
+        # Week start = Monday of current week (matches habits page)
+        week_start = today - timedelta(days=today.weekday())
 
         # === Tasks ===
         user_tasks = Task.objects.filter(user=user).exclude(status=Task.Status.ARCHIVED)
@@ -81,10 +79,11 @@ class DashboardView(APIView):
         # === Habits (this week) ===
         habits = Habit.objects.filter(user=user, is_active=True)[:5]
         habit_completions = []
+        week_end = week_start + timedelta(days=6)  # Sunday
         for habit in habits:
             logs = set(
                 HabitLog.objects.filter(
-                    habit=habit, date__gte=week_start, date__lte=today
+                    habit=habit, date__gte=week_start, date__lte=week_end
                 ).values_list('date', flat=True)
             )
             days = []
@@ -169,7 +168,6 @@ class DashboardView(APIView):
             'top_budgets': top_budgets,
             'productivity_heatmap': productivity_heatmap,
         }
-        cache.set(cache_key, data, 300)
         return Response(data)
 
 

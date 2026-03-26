@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import {
   LayoutDashboard,
   Inbox,
@@ -20,6 +20,7 @@ import {
   Settings,
   ChevronsLeft,
   ChevronsRight,
+  X,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '@/store/uiStore';
@@ -74,7 +75,7 @@ const navSections: NavSection[] = [
   },
 ];
 
-/** Боковая панель навигации с секциями меню, профилем пользователя и возможностью сворачивания. */
+/** Боковая панель навигации с секциями меню, профилем и возможностью сворачивания. Shortcut: [ */
 export function Sidebar() {
   const { t } = useTranslation();
   const { sidebarCollapsed, toggleSidebar, mobileSidebarOpen, closeMobileSidebar } = useUiStore();
@@ -86,116 +87,154 @@ export function Sidebar() {
     closeMobileSidebar();
   }, [location.pathname, closeMobileSidebar]);
 
+  // Keyboard shortcut: [ to toggle sidebar
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === '[' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      toggleSidebar();
+    }
+    // Escape closes mobile sidebar
+    if (e.key === 'Escape' && mobileSidebarOpen) {
+      closeMobileSidebar();
+    }
+  }, [toggleSidebar, mobileSidebarOpen, closeMobileSidebar]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    clsx(
+      'flex items-center gap-3 rounded-md transition-colors duration-normal',
+      sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2',
+      isActive
+        ? 'bg-accent/10 text-accent border-l-2 border-accent font-medium'
+        : 'text-foreground-secondary hover:bg-surface hover:text-foreground border-l-2 border-transparent'
+    );
+
   return (
     <>
       {/* Mobile overlay */}
       {mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-[var(--bg-overlay)] backdrop-blur-sm z-40 lg:hidden animate-fade-in"
           onClick={closeMobileSidebar}
         />
       )}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 overflow-hidden',
-          sidebarCollapsed ? 'w-16' : 'w-60',
-          'lg:translate-x-0 lg:z-30',
-          mobileSidebarOpen ? 'translate-x-0 z-50' : '-translate-x-full lg:translate-x-0 z-30'
+          'fixed inset-y-0 left-0 flex flex-col bg-sidebar border-r border-border overflow-hidden z-30',
+          // Desktop: smooth width transition
+          'lg:translate-x-0 lg:transition-[width] lg:duration-slow lg:ease-[var(--ease-out)]',
+          sidebarCollapsed ? 'lg:w-16' : 'lg:w-60',
+          // Mobile: slide in as sheet (280px)
+          'w-[280px] transition-transform duration-slow ease-[var(--ease-out)]',
+          mobileSidebarOpen ? 'translate-x-0 z-50' : '-translate-x-full lg:translate-x-0'
         )}
       >
-      {/* User section */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
-        <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm font-semibold text-white">
-            {user?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
-          </span>
-        </div>
-        {!sidebarCollapsed && (
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
-              {user?.name || user?.email || 'User'}
-            </p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+        {/* Header: Logo / User + toggle/close */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-border">
+          <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+            <span className="text-sm font-semibold text-foreground-inverse">
+              {user?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
+            </span>
           </div>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <nav className={clsx('flex-1 overflow-y-auto px-2 py-3 scrollbar-thin', sidebarCollapsed ? 'space-y-2' : 'space-y-6')}>
-        {navSections.map((section, idx) => (
-          <div key={section.titleKey}>
-            {!sidebarCollapsed ? (
-              <p className="px-3 mb-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-                {t(section.titleKey)}
+          {(!sidebarCollapsed || mobileSidebarOpen) && (
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-foreground truncate">
+                {user?.name || user?.email || 'User'}
               </p>
-            ) : idx > 0 ? (
-              <div className="mx-3 mb-1 border-t border-gray-200 dark:border-gray-800" />
-            ) : null}
-            <div className="space-y-0.5">
-              {section.items.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    clsx(
-                      'flex items-center gap-3 rounded-md transition-colors duration-150',
-                      sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2',
-                      isActive
-                        ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 font-medium'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
-                    )
-                  }
-                  title={sidebarCollapsed ? t(item.labelKey) : undefined}
-                >
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  {!sidebarCollapsed && (
-                    <span className="text-sm truncate">{t(item.labelKey)}</span>
-                  )}
-                </NavLink>
-              ))}
+              <p className="text-xs text-foreground-secondary truncate">{user?.email}</p>
             </div>
-          </div>
-        ))}
-      </nav>
-
-      {/* Settings + Collapse */}
-      <div className="border-t border-gray-200 dark:border-gray-800 px-2 py-2 space-y-0.5">
-        <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            clsx(
-              'flex items-center gap-3 rounded-md transition-colors duration-150',
-              sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2',
-              isActive
-                ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 font-medium'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-            )
-          }
-        >
-          <Settings className="w-5 h-5 flex-shrink-0" />
-          {!sidebarCollapsed && <span className="text-sm">{t('sidebar.settings')}</span>}
-        </NavLink>
-
-        <button
-          onClick={toggleSidebar}
-          className={clsx(
-            'flex items-center gap-3 w-full rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150',
-            sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2'
           )}
-          title={sidebarCollapsed ? t('sidebar.expand') : t('sidebar.collapse')}
-        >
-          {sidebarCollapsed ? (
-            <ChevronsRight className="w-5 h-5" />
-          ) : (
-            <>
-              <ChevronsLeft className="w-5 h-5" />
-              <span className="text-sm">{t('sidebar.collapse')}</span>
-            </>
+          {/* Mobile close button */}
+          {mobileSidebarOpen && (
+            <button
+              onClick={closeMobileSidebar}
+              className="lg:hidden p-1 rounded-md text-foreground-tertiary hover:text-foreground hover:bg-surface transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           )}
-        </button>
+          {/* Desktop collapse toggle in header */}
+          {!mobileSidebarOpen && !sidebarCollapsed && (
+            <button
+              onClick={toggleSidebar}
+              className="hidden lg:flex p-1 rounded-md text-foreground-tertiary hover:text-foreground hover:bg-surface transition-colors"
+              title={t('sidebar.collapse') + ' ( [ )'}
+            >
+              <ChevronsLeft className="w-4 h-4" />
+            </button>
+          )}
+        </div>
 
-      </div>
+        {/* Navigation */}
+        <nav className={clsx('flex-1 overflow-y-auto px-2 py-3 scrollbar-thin', sidebarCollapsed && !mobileSidebarOpen ? 'space-y-2' : 'space-y-5')}>
+          {navSections.map((section, idx) => {
+            const isCollapsed = sidebarCollapsed && !mobileSidebarOpen;
+            return (
+              <div key={section.titleKey}>
+                {!isCollapsed ? (
+                  <p className="px-3 mb-1.5 text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider">
+                    {t(section.titleKey)}
+                  </p>
+                ) : idx > 0 ? (
+                  <div className="mx-3 mb-1 border-t border-border" />
+                ) : null}
+                <div className="space-y-0.5">
+                  {section.items.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === '/'}
+                      className={navLinkClass}
+                      title={isCollapsed ? t(item.labelKey) : undefined}
+                    >
+                      <span className="flex-shrink-0">{item.icon}</span>
+                      {!isCollapsed && (
+                        <span className="text-sm truncate">{t(item.labelKey)}</span>
+                      )}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* Footer: Settings + Collapse */}
+        <div className="border-t border-border px-2 py-2 space-y-0.5">
+          <NavLink
+            to="/settings"
+            className={navLinkClass}
+          >
+            <Settings className="w-5 h-5 flex-shrink-0" />
+            {(!sidebarCollapsed || mobileSidebarOpen) && <span className="text-sm">{t('sidebar.settings')}</span>}
+          </NavLink>
+
+          {/* Desktop-only collapse/expand button at bottom */}
+          <button
+            onClick={toggleSidebar}
+            className={clsx(
+              'hidden lg:flex items-center gap-3 w-full rounded-md text-foreground-secondary hover:bg-surface transition-colors duration-normal',
+              sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2'
+            )}
+            title={sidebarCollapsed ? t('sidebar.expand') + ' ( [ )' : t('sidebar.collapse') + ' ( [ )'}
+          >
+            {sidebarCollapsed ? (
+              <ChevronsRight className="w-5 h-5" />
+            ) : (
+              <>
+                <ChevronsLeft className="w-5 h-5" />
+                <span className="text-sm">{t('sidebar.collapse')}</span>
+                <kbd className="ml-auto text-[10px] text-foreground-tertiary bg-surface px-1.5 py-0.5 rounded border border-border">[</kbd>
+              </>
+            )}
+          </button>
+        </div>
       </aside>
     </>
   );

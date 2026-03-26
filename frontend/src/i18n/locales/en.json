@@ -353,6 +353,15 @@
       "/settings": "Settings"
     }
   },
+  "commandPalette": {
+    "label": "Command palette",
+    "placeholder": "Search pages, actions...",
+    "noResults": "No results found.",
+    "pages": "Pages",
+    "actions": "Actions",
+    "createTask": "Create task",
+    "toggleTheme": "Toggle theme"
+  },
   "register": {
     "title": "Create your account",
     "subtitle": "Get started for free. No credit card required.",

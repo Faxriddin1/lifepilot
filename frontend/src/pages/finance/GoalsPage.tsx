@@ -20,16 +20,16 @@ import { useUiStore } from '@/store/uiStore';
 
 /** Шаблоны целей с иконками и цветами. */
 const GOAL_TEMPLATES = [
-  { name_en: 'Vacation', name_ru: 'Отпуск', icon: Plane, color: '#3B82F6', emoji: '✈️' },
-  { name_en: 'Car', name_ru: 'Автомобиль', icon: Car, color: '#EF4444', emoji: '🚗' },
-  { name_en: 'House', name_ru: 'Жильё', icon: Home, color: '#8B5CF6', emoji: '🏠' },
-  { name_en: 'Education', name_ru: 'Обучение', icon: GraduationCap, color: '#6366F1', emoji: '🎓' },
-  { name_en: 'Gadget', name_ru: 'Техника', icon: Laptop, color: '#0EA5E9', emoji: '💻' },
-  { name_en: 'Health', name_ru: 'Здоровье', icon: Heart, color: '#EC4899', emoji: '❤️' },
-  { name_en: 'Gift', name_ru: 'Подарок', icon: Gift, color: '#F59E0B', emoji: '🎁' },
-  { name_en: 'Emergency', name_ru: 'На экстренный случай', icon: Shield, color: '#10B981', emoji: '🛡️' },
-  { name_en: 'Business', name_ru: 'Бизнес', icon: Briefcase, color: '#059669', emoji: '💼' },
-  { name_en: 'Other', name_ru: 'Другое', icon: Sparkles, color: '#6B7280', emoji: '✨' },
+  { name_en: 'Vacation', name_ru: 'Отпуск', icon: Plane, color: 'var(--color-income)', emoji: '✈️' },
+  { name_en: 'Car', name_ru: 'Автомобиль', icon: Car, color: 'var(--color-danger)', emoji: '🚗' },
+  { name_en: 'House', name_ru: 'Жильё', icon: Home, color: 'var(--accent-brand)', emoji: '🏠' },
+  { name_en: 'Education', name_ru: 'Обучение', icon: GraduationCap, color: 'var(--accent-brand)', emoji: '🎓' },
+  { name_en: 'Gadget', name_ru: 'Техника', icon: Laptop, color: 'var(--accent-primary)', emoji: '💻' },
+  { name_en: 'Health', name_ru: 'Здоровье', icon: Heart, color: 'var(--color-danger)', emoji: '❤️' },
+  { name_en: 'Gift', name_ru: 'Подарок', icon: Gift, color: 'var(--color-warning)', emoji: '🎁' },
+  { name_en: 'Emergency', name_ru: 'На экстренный случай', icon: Shield, color: 'var(--color-success)', emoji: '🛡️' },
+  { name_en: 'Business', name_ru: 'Бизнес', icon: Briefcase, color: 'var(--color-success)', emoji: '💼' },
+  { name_en: 'Other', name_ru: 'Другое', icon: Sparkles, color: 'var(--text-secondary)', emoji: '✨' },
 ];
 
 const QUICK_AMOUNTS = [50, 100, 500, 1000, 5000];
@@ -52,7 +52,7 @@ export function GoalsPage() {
   const [name, setName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [deadline, setDeadline] = useState('');
-  const [color, setColor] = useState('#3B82F6');
+  const [color, setColor] = useState('var(--color-income)');
 
   // Contribute modal state
   const [contributeGoalId, setContributeGoalId] = useState<string | null>(null);
@@ -124,19 +124,19 @@ export function GoalsPage() {
         <Card className="mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-gray-500">{t('goalsNew.totalProgress')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {formatCurrency(totalSaved)} <span className="text-sm font-normal text-gray-400">/ {formatCurrency(totalTarget)}</span>
+              <p className="text-sm text-foreground-secondary">{t('goalsNew.totalProgress')}</p>
+              <p className="text-2xl font-bold text-foreground">
+                {formatCurrency(totalSaved)} <span className="text-sm font-normal text-foreground-secondary">/ {formatCurrency(totalTarget)}</span>
               </p>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <div className="text-center">
-                <p className="text-xs text-gray-400">{t('goalsNew.progress')}</p>
-                <p className="text-lg font-bold text-blue-600">{Math.round(totalPct)}%</p>
+                <p className="text-xs text-foreground-secondary">{t('goalsNew.progress')}</p>
+                <p className="text-lg font-bold text-income">{Math.round(totalPct)}%</p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-400">{t('goalsNew.completed')}</p>
-                <p className="text-lg font-bold text-green-600">{completedCount}/{(goals ?? []).length}</p>
+                <p className="text-xs text-foreground-secondary">{t('goalsNew.completed')}</p>
+                <p className="text-lg font-bold text-success">{completedCount}/{(goals ?? []).length}</p>
               </div>
             </div>
             <Button icon={<Plus className="w-4 h-4" />} onClick={() => setShowModal(true)}>
@@ -144,9 +144,9 @@ export function GoalsPage() {
             </Button>
           </div>
           {/* Overall progress bar */}
-          <div className="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="mt-3 h-2 bg-elevated rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-blue-600 transition-all duration-500"
+              className="h-full rounded-full bg-income transition-all duration-500"
               style={{ width: `${Math.min(totalPct, 100)}%` }}
             />
           </div>
@@ -162,7 +162,7 @@ export function GoalsPage() {
           onAction={() => setShowModal(true)}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {goals.map((goal) => {
             const target = parseFloat(String(goal.target_amount || 0));
             const current = parseFloat(String(goal.current_amount || 0));
@@ -194,7 +194,7 @@ export function GoalsPage() {
                 <div className="pt-2">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+                    <h3 className="text-base font-bold text-foreground">
                       {goal.name}
                     </h3>
                     <div className="flex items-center gap-1">
@@ -203,7 +203,7 @@ export function GoalsPage() {
                       )}
                       <button
                         onClick={() => deleteGoal.mutate(goal.id)}
-                        className="p-1 rounded text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                        className="p-1 rounded text-foreground-tertiary hover:text-danger opacity-0 group-hover:opacity-100 transition-all"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -214,34 +214,34 @@ export function GoalsPage() {
                   <div className="flex items-center gap-4">
                     <div className="relative flex-shrink-0">
                       <svg width="100" height="100" className="-rotate-90">
-                        <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" strokeWidth="6" className="text-gray-200 dark:text-gray-700" />
+                        <circle cx="50" cy="50" r={radius} fill="none" stroke="currentColor" strokeWidth="6" className="text-elevated" />
                         <circle cx="50" cy="50" r={radius} fill="none" stroke={goal.color} strokeWidth="6" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} className="transition-all duration-700" />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-gray-900 dark:text-gray-100">{Math.round(pct)}%</span>
+                        <span className="text-lg font-bold text-foreground">{Math.round(pct)}%</span>
                       </div>
                     </div>
 
                     <div className="flex-1 space-y-1.5">
                       <div>
-                        <p className="text-xs text-gray-400">{t('goalsNew.saved')}</p>
-                        <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{formatCurrency(current)}</p>
+                        <p className="text-xs text-foreground-secondary">{t('goalsNew.saved')}</p>
+                        <p className="text-lg font-bold text-foreground">{formatCurrency(current)}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-400">{t('goalsNew.target')}</p>
-                        <p className="text-sm text-gray-500">{formatCurrency(target)}</p>
+                        <p className="text-xs text-foreground-secondary">{t('goalsNew.target')}</p>
+                        <p className="text-sm text-foreground-secondary">{formatCurrency(target)}</p>
                       </div>
                       {remaining > 0 && (
-                        <p className="text-xs text-gray-400">
-                          {t('goalsNew.left')}: <span className="font-medium text-gray-600 dark:text-gray-300">{formatCurrency(remaining)}</span>
+                        <p className="text-xs text-foreground-secondary">
+                          {t('goalsNew.left')}: <span className="font-medium text-foreground">{formatCurrency(remaining)}</span>
                         </p>
                       )}
                     </div>
                   </div>
 
                   {/* Footer info */}
-                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                    <div className="text-xs text-gray-400">
+                  <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+                    <div className="text-xs text-foreground-secondary">
                       {goal.deadline && (
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
@@ -275,12 +275,12 @@ export function GoalsPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+          <div className="relative w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-bold text-foreground">
                 {step === 'template' ? t('goalsNew.newGoal') : t('goalsNew.configureGoal')}
               </h2>
-              <p className="text-sm text-gray-400 mt-0.5">
+              <p className="text-sm text-foreground-secondary mt-0.5">
                 {step === 'template'
                   ? t('goalsNew.pickTemplate')
                   : `${name}`}
@@ -296,12 +296,12 @@ export function GoalsPage() {
                       <button
                         key={tmpl.name_en}
                         onClick={() => handleSelectTemplate(tmpl)}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-left"
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface transition-all text-left"
                       >
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${tmpl.color}20` }}>
                           <Icon className="w-5 h-5" style={{ color: tmpl.color }} />
                         </div>
-                        <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                        <span className="text-sm font-medium text-foreground">
                           {t(`goalTemplates.${tmpl.name_en.toLowerCase()}`)}
                         </span>
                       </button>
@@ -312,12 +312,12 @@ export function GoalsPage() {
                 <div className="space-y-4">
                   {/* Selected template */}
                   {selectedTemplate && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-surface">
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${selectedTemplate.color}20` }}>
                         {(() => { const I = selectedTemplate.icon; return <I className="w-5 h-5" style={{ color: selectedTemplate.color }} />; })()}
                       </div>
-                      <span className="font-medium text-gray-900 dark:text-gray-100 flex-1">{name}</span>
-                      <button onClick={() => setStep('template')} className="text-xs text-blue-500">{t('goalsNew.change')}</button>
+                      <span className="font-medium text-foreground flex-1">{name}</span>
+                      <button onClick={() => setStep('template')} className="text-xs text-accent">{t('goalsNew.change')}</button>
                     </div>
                   )}
 
@@ -329,11 +329,11 @@ export function GoalsPage() {
                   />
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                    <label className="block text-sm font-medium text-foreground-secondary mb-1.5">
                       {t('goalsNew.targetAmount')}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-gray-400">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-foreground-secondary">$</span>
                       <input
                         type="number"
                         placeholder="0.00"
@@ -342,7 +342,7 @@ export function GoalsPage() {
                         autoFocus
                         step="0.01"
                         min="0"
-                        className="w-full pl-10 pr-4 py-3 text-xl font-bold rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-4 py-3 text-xl font-bold rounded-xl border-2 border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                       />
                     </div>
                   </div>
@@ -357,7 +357,7 @@ export function GoalsPage() {
               )}
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+            <div className="px-6 py-4 border-t border-border flex gap-3">
               <Button variant="secondary" onClick={step === 'details' ? () => setStep('template') : closeModal} className="flex-1">
                 {step === 'details' ? t('goalsNew.back') : t('common.cancel')}
               </Button>
@@ -389,12 +389,12 @@ export function GoalsPage() {
         {contributeGoalObj && (
           <div className="space-y-4">
             {/* Current progress */}
-            <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="text-sm text-gray-500">{t('goalsNew.currentProgress')}</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-gray-100 mt-1">
+            <div className="text-center p-4 rounded-xl bg-surface">
+              <p className="text-sm text-foreground-secondary">{t('goalsNew.currentProgress')}</p>
+              <p className="text-xl font-bold text-foreground mt-1">
                 {formatCurrency(parseFloat(String(contributeGoalObj.current_amount)))} / {formatCurrency(parseFloat(String(contributeGoalObj.target_amount)))}
               </p>
-              <div className="mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="mt-2 h-2 bg-elevated rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
@@ -414,8 +414,8 @@ export function GoalsPage() {
                   className={clsx(
                     'px-3 py-1.5 text-sm rounded-lg border transition-all font-medium',
                     contributeAmount === String(amt)
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300',
+                      ? 'bg-accent text-white border-accent'
+                      : 'border-border text-foreground-secondary hover:border-accent/50',
                   )}
                 >
                   ${amt}
@@ -425,7 +425,7 @@ export function GoalsPage() {
 
             {/* Custom amount */}
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-foreground-secondary">$</span>
               <input
                 type="number"
                 placeholder="0.00"
@@ -434,7 +434,7 @@ export function GoalsPage() {
                 autoFocus
                 step="0.01"
                 min="0"
-                className="w-full pl-10 pr-4 py-3 text-lg font-bold rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-3 text-lg font-bold rounded-xl border-2 border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
               />
             </div>
           </div>

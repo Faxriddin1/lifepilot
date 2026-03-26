@@ -9,7 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 import { authApi } from '@/api/auth';
 import { showApiError } from '@/utils/errorHandler';
 import { validateLoginForm } from '@/utils/validation';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /** Страница входа в систему с валидацией email и пароля. */
 export function LoginPage() {
@@ -114,14 +114,14 @@ export function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">LifePilot</span>
+            <span className="text-xl font-bold text-foreground">LifePilot</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{t('auth.welcomeBack')}</h1>
-          <p className="text-gray-500 mb-8">{t('auth.signInSubtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">{t('auth.welcomeBack')}</h1>
+          <p className="text-foreground-secondary mb-8">{t('auth.signInSubtitle')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
@@ -147,7 +147,7 @@ export function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-gray-600"
+                  className="hover:text-foreground-secondary"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -156,14 +156,14 @@ export function LoginPage() {
             />
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <input type="checkbox" className="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+              <label className="flex items-center gap-2 text-sm text-foreground-secondary">
+                <input type="checkbox" className="rounded border-border text-accent focus:ring-border-focus" />
                 {t('auth.rememberMe')}
               </label>
               <button
                 type="button"
                 onClick={() => toast.error(t('auth.forgotPasswordComingSoon', { defaultValue: 'Password reset coming soon' }))}
-                className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                className="text-sm text-accent hover:text-accent font-medium"
               >
                 {t('auth.forgotPassword')}
               </button>
@@ -176,11 +176,11 @@ export function LoginPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-            <span className="text-xs text-gray-400 uppercase font-medium">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-foreground-secondary uppercase font-medium">
               {t('auth.orContinueWith', { defaultValue: 'or' })}
             </span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Google Sign-In */}
@@ -202,9 +202,9 @@ export function LoginPage() {
             )}
           </div>
 
-          <p className="mt-8 text-center text-sm text-gray-500">
+          <p className="mt-8 text-center text-sm text-foreground-secondary">
             {t('auth.noAccount')}{' '}
-            <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/register" className="text-accent hover:text-accent font-medium">
               {t('auth.signUpFree')}
             </Link>
           </p>

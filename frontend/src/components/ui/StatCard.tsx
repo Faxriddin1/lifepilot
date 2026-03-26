@@ -19,7 +19,7 @@ export interface StatCardProps {
 }
 
 /** Мини-спарклайн — SVG линия из массива значений. */
-function Sparkline({ data, color = '#3B82F6', width = 80, height = 28 }: {
+function Sparkline({ data, color = 'var(--accent-primary)', width = 80, height = 28 }: {
   data: number[];
   color?: string;
   width?: number;
@@ -49,16 +49,16 @@ function Sparkline({ data, color = '#3B82F6', width = 80, height = 28 }: {
   );
 }
 
-const ALERT_RING: Record<string, string> = {
-  success: 'ring-2 ring-green-400/30',
-  warning: 'ring-2 ring-amber-400/30',
-  danger: 'ring-2 ring-red-400/30',
+const ALERT_BORDER: Record<string, string> = {
+  success: 'border-l-[3px] border-l-success',
+  warning: 'border-l-[3px] border-l-warning',
+  danger: 'border-l-[3px] border-l-danger',
 };
 
 const ALERT_DOT: Record<string, string> = {
-  success: 'bg-green-500',
-  warning: 'bg-amber-500',
-  danger: 'bg-red-500',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-danger',
 };
 
 export function StatCard({
@@ -72,14 +72,14 @@ export function StatCard({
   sparklineData,
   alert,
   subtitle,
-  iconBg = 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400',
+  iconBg = 'bg-info-bg text-accent',
   className,
 }: StatCardProps) {
   const dir = trendDirection ?? (trend !== undefined ? (trend > 0 ? 'up' : trend < 0 ? 'down' : 'flat') : undefined);
   const trendPositive = dir === 'up';
 
   return (
-    <Card className={clsx('flex items-start gap-3 relative overflow-hidden', alert && ALERT_RING[alert], className)}>
+    <Card className={clsx('flex items-start gap-3 relative overflow-hidden', alert && ALERT_BORDER[alert], className)}>
       {/* Alert dot */}
       {alert && (
         <div className={clsx('absolute top-2 right-2 w-2 h-2 rounded-full', ALERT_DOT[alert])} />
@@ -90,14 +90,14 @@ export function StatCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{label}</p>
+        <p className="text-xs text-foreground-secondary truncate">{label}</p>
 
         <div className="flex items-center gap-2 mt-0.5">
-          <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{value}</p>
+          <p className="text-xl font-bold text-foreground">{value}</p>
           {sparklineData && sparklineData.length > 1 && (
             <Sparkline
               data={sparklineData}
-              color={alert === 'danger' ? '#EF4444' : alert === 'warning' ? '#EAB308' : '#3B82F6'}
+              color={alert === 'danger' ? 'var(--color-danger)' : alert === 'warning' ? 'var(--color-warning)' : 'var(--accent-primary)'}
             />
           )}
         </div>
@@ -106,28 +106,28 @@ export function StatCard({
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {trend !== undefined && (
             <div className="flex items-center gap-0.5">
-              {dir === 'up' && <TrendingUp className="w-3 h-3 text-green-500" />}
-              {dir === 'down' && <TrendingDown className="w-3 h-3 text-orange-500" />}
-              {dir === 'flat' && <Minus className="w-3 h-3 text-gray-400" />}
+              {dir === 'up' && <TrendingUp className="w-3 h-3 text-income" />}
+              {dir === 'down' && <TrendingDown className="w-3 h-3 text-expense" />}
+              {dir === 'flat' && <Minus className="w-3 h-3 text-foreground-tertiary" />}
               <span className={clsx(
                 'text-[11px] font-medium',
-                trendPositive ? 'text-green-600' : dir === 'down' ? 'text-orange-600' : 'text-gray-400',
+                trendPositive ? 'text-income' : dir === 'down' ? 'text-expense' : 'text-foreground-tertiary',
               )}>
                 {trendPositive ? '+' : ''}{trend}%
               </span>
-              {trendLabel && <span className="text-[10px] text-gray-400">{trendLabel}</span>}
+              {trendLabel && <span className="text-[10px] text-foreground-tertiary">{trendLabel}</span>}
             </div>
           )}
 
           {target && (
-            <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+            <span className="text-[10px] text-foreground-tertiary flex items-center gap-0.5">
               🎯 {target.label}: {target.value}
             </span>
           )}
         </div>
 
         {subtitle && (
-          <p className="text-[10px] text-gray-400 mt-0.5 truncate">{subtitle}</p>
+          <p className="text-[10px] text-foreground-tertiary mt-0.5 truncate">{subtitle}</p>
         )}
       </div>
     </Card>

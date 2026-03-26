@@ -21,11 +21,11 @@ import { showApiError, showSuccess } from '@/utils/errorHandler';
 import type { DailyLogMood } from '@/types';
 
 const MOOD_OPTIONS: { value: DailyLogMood; icon: typeof Smile; labelKey: string; color: string }[] = [
-  { value: 'great', icon: Star, labelKey: 'dailyLog.moodGreat', color: '#22C55E' },
-  { value: 'good', icon: Smile, labelKey: 'dailyLog.moodGood', color: '#3B82F6' },
-  { value: 'okay', icon: Meh, labelKey: 'dailyLog.moodOkay', color: '#F59E0B' },
-  { value: 'bad', icon: Frown, labelKey: 'dailyLog.moodBad', color: '#EF4444' },
-  { value: 'terrible', icon: Frown, labelKey: 'dailyLog.moodTerrible', color: '#7C3AED' },
+  { value: 'great', icon: Star, labelKey: 'dailyLog.moodGreat', color: 'var(--color-success)' },
+  { value: 'good', icon: Smile, labelKey: 'dailyLog.moodGood', color: 'var(--accent-primary)' },
+  { value: 'okay', icon: Meh, labelKey: 'dailyLog.moodOkay', color: 'var(--color-warning)' },
+  { value: 'bad', icon: Frown, labelKey: 'dailyLog.moodBad', color: 'var(--color-danger)' },
+  { value: 'terrible', icon: Frown, labelKey: 'dailyLog.moodTerrible', color: 'var(--accent-brand)' },
 ];
 
 /** Форматирует Date в строку YYYY-MM-DD. */
@@ -137,14 +137,14 @@ export function DailyLogPage() {
       {/* Date navigation */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-1 sm:gap-2 min-w-0">
-          <button onClick={prevDay} className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0">
-            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <button onClick={prevDay} className="p-1.5 sm:p-2 rounded-lg hover:bg-surface transition-colors flex-shrink-0">
+            <ChevronLeft className="w-5 h-5 text-foreground-secondary" />
           </button>
-          <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 capitalize text-center truncate">
+          <h2 className="text-base sm:text-xl font-bold text-foreground capitalize text-center truncate">
             {formattedDate}
           </h2>
-          <button onClick={nextDay} className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0">
-            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <button onClick={nextDay} className="p-1.5 sm:p-2 rounded-lg hover:bg-surface transition-colors flex-shrink-0">
+            <ChevronRight className="w-5 h-5 text-foreground-secondary" />
           </button>
         </div>
         <div className="flex gap-2">
@@ -170,8 +170,8 @@ export function DailyLogPage() {
           {/* Done */}
           <Card>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              <div className="w-3 h-3 rounded-full bg-success" />
+              <h3 className="font-semibold text-foreground">
                 {t('dailyLog.whatWasDone')}
               </h3>
             </div>
@@ -180,15 +180,15 @@ export function DailyLogPage() {
               onChange={(e) => setDone(e.target.value)}
               placeholder={t('dailyLog.whatWasDonePlaceholder')}
               rows={4}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder-foreground-tertiary resize-none focus:ring-2 focus:ring-border-focus focus:border-transparent transition-all text-sm"
             />
           </Card>
 
           {/* Planned */}
           <Card>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              <div className="w-3 h-3 rounded-full bg-accent" />
+              <h3 className="font-semibold text-foreground">
                 {t('dailyLog.plansForTomorrow')}
               </h3>
             </div>
@@ -197,15 +197,15 @@ export function DailyLogPage() {
               onChange={(e) => setPlanned(e.target.value)}
               placeholder={t('dailyLog.plansPlaceholder')}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder-foreground-tertiary resize-none focus:ring-2 focus:ring-border-focus focus:border-transparent transition-all text-sm"
             />
           </Card>
 
           {/* Notes */}
           <Card>
             <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="w-4 h-4 text-purple-500" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              <BookOpen className="w-4 h-4 text-brand" />
+              <h3 className="font-semibold text-foreground">
                 {t('dailyLog.notes')}
               </h3>
             </div>
@@ -214,7 +214,7 @@ export function DailyLogPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('dailyLog.notesPlaceholder')}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder-foreground-tertiary resize-none focus:ring-2 focus:ring-border-focus focus:border-transparent transition-all text-sm"
             />
           </Card>
         </div>
@@ -223,7 +223,7 @@ export function DailyLogPage() {
         <div className="w-full lg:w-[280px] flex-shrink-0 space-y-4">
           {/* Mood */}
           <Card>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 className="font-semibold text-foreground mb-3">
               {t('dailyLog.mood')}
             </h3>
             <div className="grid grid-cols-5 gap-1">
@@ -238,13 +238,13 @@ export function DailyLogPage() {
                       'flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-all',
                       isSelected
                         ? 'ring-2 shadow-sm scale-105'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800 opacity-60 hover:opacity-100',
+                        : 'hover:bg-surface opacity-60 hover:opacity-100',
                     )}
                     style={isSelected ? { backgroundColor: `${m.color}15`, color: m.color, outlineColor: m.color } : {}}
                     title={t(m.labelKey)}
                   >
                     <Icon className="w-5 h-5" style={isSelected ? { color: m.color } : {}} />
-                    <span className={clsx('text-[10px] leading-tight font-medium truncate w-full text-center', !isSelected && 'text-gray-500')}>
+                    <span className={clsx('text-[10px] leading-tight font-medium truncate w-full text-center', !isSelected && 'text-foreground-secondary')}>
                       {t(m.labelKey)}
                     </span>
                   </button>
@@ -256,11 +256,11 @@ export function DailyLogPage() {
           {/* Energy */}
           <Card>
             <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-4 h-4 text-amber-500" />
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              <Zap className="w-4 h-4 text-warning" />
+              <h3 className="font-semibold text-foreground">
                 {t('dailyLog.energy')}
               </h3>
-              <span className="ml-auto text-sm font-bold text-amber-500">{energy}/5</span>
+              <span className="ml-auto text-sm font-bold text-warning">{energy}/5</span>
             </div>
             <div className="flex gap-1.5">
               {[1, 2, 3, 4, 5].map((level) => (
@@ -270,8 +270,8 @@ export function DailyLogPage() {
                   className={clsx(
                     'flex-1 h-8 rounded-md transition-all',
                     level <= energy
-                      ? 'bg-amber-400 dark:bg-amber-500'
-                      : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600',
+                      ? 'bg-warning'
+                      : 'bg-elevated hover:bg-border',
                   )}
                 />
               ))}
@@ -280,12 +280,12 @@ export function DailyLogPage() {
 
           {/* History */}
           <Card>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 className="font-semibold text-foreground mb-3">
               {t('dailyLog.recentEntries')}
             </h3>
             <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
               {pastLogs.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-3">
+                <p className="text-sm text-foreground-tertiary text-center py-3">
                   {t('dailyLog.noEntries')}
                 </p>
               ) : (
@@ -301,11 +301,11 @@ export function DailyLogPage() {
                       className={clsx(
                         'w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-colors text-sm',
                         log.date === dateStr
-                          ? 'bg-blue-50 dark:bg-blue-900/20'
-                          : 'hover:bg-gray-50 dark:hover:bg-gray-800',
+                          ? 'bg-accent/10'
+                          : 'hover:bg-surface',
                       )}
                     >
-                      <span className="text-gray-700 dark:text-gray-300 font-medium">
+                      <span className="text-foreground font-medium">
                         {new Date(log.date + 'T00:00:00').toLocaleDateString(i18n.language === 'ru' ? 'ru-RU' : i18n.language === 'uz-cyr' ? 'uz-Cyrl' : i18n.language === 'uz' ? 'uz-Latn' : 'en-US', {
                           day: 'numeric',
                           month: 'short',
@@ -318,7 +318,7 @@ export function DailyLogPage() {
                           </span>
                         )}
                         {log.energy_level > 0 && (
-                          <span className="text-xs text-amber-500 font-medium">⚡{log.energy_level}</span>
+                          <span className="text-xs text-warning font-medium">⚡{log.energy_level}</span>
                         )}
                       </div>
                     </button>

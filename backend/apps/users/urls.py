@@ -12,4 +12,7 @@ urlpatterns = [
     path('google/', views.GoogleAuthView.as_view(), name='google-auth'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete-account'),
+    path('telegram/generate-code/', views.TelegramGenerateCodeView.as_view(), name='telegram-generate-code'),
+    path('telegram/verify-code/', views.TelegramVerifyCodeView.as_view(), name='telegram-verify-code'),
+    path('telegram/status/', views.TelegramStatusView.as_view(), name='telegram-status'),
 ]

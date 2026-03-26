@@ -26,13 +26,13 @@ export function AdminLayout() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-950">
+    <div className="flex h-screen bg-surface">
       {/* Sidebar */}
       <aside className="w-56 bg-gray-900 text-white flex flex-col flex-shrink-0">
         {/* Header */}
         <div className="px-4 py-4 border-b border-gray-800">
           <div className="flex items-center gap-2">
-            <Shield className="w-6 h-6 text-blue-400" />
+            <Shield className="w-6 h-6 text-[var(--accent-primary)]" />
             <span className="font-bold text-lg">Admin Panel</span>
           </div>
           <p className="text-xs text-gray-500 mt-1">LifePilot</p>
@@ -49,7 +49,7 @@ export function AdminLayout() {
                 clsx(
                   'flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors mb-0.5',
                   isActive
-                    ? 'bg-blue-600 text-white font-medium'
+                    ? 'bg-[var(--accent-primary)] text-white font-medium'
                     : 'text-gray-400 hover:text-white hover:bg-gray-800',
                 )
               }

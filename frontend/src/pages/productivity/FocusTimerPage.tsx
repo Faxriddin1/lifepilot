@@ -73,8 +73,8 @@ export function FocusTimerPage() {
                   className={clsx(
                     'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                     selectedPreset === i
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                      : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'bg-accent/10 text-accent'
+                      : 'text-foreground-secondary hover:bg-surface'
                   )}
                   disabled={isActive}
                 >
@@ -93,7 +93,7 @@ export function FocusTimerPage() {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="6"
-                  className="text-gray-200 dark:text-gray-800"
+                  className="text-elevated"
                 />
                 <circle
                   cx="140"
@@ -105,14 +105,14 @@ export function FocusTimerPage() {
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={isActive ? dashOffset : circumference}
-                  className="text-primary-600 transition-all duration-1000"
+                  className="text-accent transition-all duration-1000"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl font-bold font-mono text-gray-900 dark:text-gray-100 tracking-wider">
+                <span className="text-5xl font-bold font-mono text-foreground tracking-wider">
                   {isActive ? formatSeconds(remainingSeconds) : formatSeconds(timerMinutes * 60)}
                 </span>
-                <span className="text-sm text-gray-500 mt-2">
+                <span className="text-sm text-foreground-secondary mt-2">
                   {isActive
                     ? isPaused
                       ? t('focusTimer.paused')
@@ -198,12 +198,12 @@ export function FocusTimerPage() {
         <div className="space-y-4">
           <Card>
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-lg bg-accent-50 dark:bg-accent-900/30 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-accent-600" />
+              <div className="w-10 h-10 rounded-lg bg-info-bg flex items-center justify-center">
+                <Zap className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{t('focusTimer.todaysFocus')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm text-foreground-secondary">{t('focusTimer.todaysFocus')}</p>
+                <p className="text-2xl font-bold text-foreground">
                   {formatDuration(totalFocusToday)}
                 </p>
               </div>
@@ -221,15 +221,15 @@ export function FocusTimerPage() {
                 {(historyData?.results ?? []).slice(0, 10).map((session) => (
                   <div
                     key={session.id}
-                    className="flex items-center justify-between py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    className="flex items-center justify-between py-2 px-2 rounded hover:bg-surface"
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <Clock className="w-4 h-4 text-foreground-tertiary flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                        <p className="text-sm text-foreground truncate">
                           {session.task_title || t('focusTimer.freeFocus')}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-foreground-tertiary">
                           {formatDate(session.start_time, 'HH:mm')}
                         </p>
                       </div>
@@ -240,7 +240,7 @@ export function FocusTimerPage() {
                   </div>
                 ))}
                 {(!historyData?.results || historyData.results.length === 0) && (
-                  <p className="text-sm text-gray-400 text-center py-4">
+                  <p className="text-sm text-foreground-tertiary text-center py-4">
                     {t('focusTimer.noSessions')}
                   </p>
                 )}

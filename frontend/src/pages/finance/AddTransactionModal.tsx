@@ -88,26 +88,26 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
     [TransactionType.EXPENSE]: {
       icon: ArrowDownLeft,
       label: t('transactionsPage.expense'),
-      color: 'text-red-600',
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
-      ring: 'ring-red-500',
+      color: 'text-danger',
+      bg: 'bg-danger-bg',
+      border: 'border-danger/30',
+      ring: 'ring-border-focus',
     },
     [TransactionType.INCOME]: {
       icon: ArrowUpRight,
       label: t('transactionsPage.income'),
-      color: 'text-green-600',
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-200 dark:border-green-800',
-      ring: 'ring-green-500',
+      color: 'text-success',
+      bg: 'bg-success-bg',
+      border: 'border-success/30',
+      ring: 'ring-border-focus',
     },
     [TransactionType.TRANSFER]: {
       icon: ArrowLeftRight,
       label: t('transactionsPage.transfer'),
-      color: 'text-blue-600',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800',
-      ring: 'ring-blue-500',
+      color: 'text-accent',
+      bg: 'bg-accent/10',
+      border: 'border-accent/30',
+      ring: 'ring-border-focus',
     },
   };
 
@@ -159,17 +159,17 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-lg bg-background rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-bold text-foreground">
             {t('transactionsPage.addTransaction')}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-surface transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-foreground-secondary" />
           </button>
         </div>
 
@@ -188,7 +188,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                     'flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all duration-200',
                     isActive
                       ? `${cfg.bg} ${cfg.border} ${cfg.color} shadow-sm scale-[1.02]`
-                      : 'border-gray-200 dark:border-gray-700 text-gray-400 hover:border-gray-300 hover:text-gray-600',
+                      : 'border-border text-foreground-secondary hover:border-border hover:text-foreground',
                   )}
                 >
                   <Icon className="w-5 h-5" />
@@ -200,11 +200,11 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
 
           {/* Amount — big input */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+            <label className="block text-sm font-medium text-foreground-secondary mb-1.5">
               {t('transactionsPage.amount')}
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-400">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-foreground-secondary">$</span>
               <input
                 type="number"
                 placeholder="0.00"
@@ -213,20 +213,20 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                 step="0.01"
                 min="0"
                 className={clsx(
-                  'w-full pl-10 pr-4 py-3 text-2xl font-bold rounded-xl border-2 bg-gray-50 dark:bg-gray-800 transition-colors',
+                  'w-full pl-10 pr-4 py-3 text-2xl font-bold rounded-xl border-2 bg-surface transition-colors',
                   'focus:outline-none focus:ring-2',
                   errors.amount
-                    ? 'border-red-300 focus:ring-red-500 text-red-600'
-                    : `border-gray-200 dark:border-gray-700 focus:${currentType.ring} text-gray-900 dark:text-gray-100`,
+                    ? 'border-danger/50 focus:ring-border-focus text-danger'
+                    : `border-border focus:${currentType.ring} text-foreground`,
                 )}
               />
             </div>
-            {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
+            {errors.amount && <p className="mt-1 text-xs text-danger">{errors.amount}</p>}
           </div>
 
           {/* Category — visual grid */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+            <label className="block text-sm font-medium text-foreground-secondary mb-2">
               {t('transactionsPage.category')}
             </label>
 
@@ -234,7 +234,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
             {selectedCategory && !showAllCategories && (
               <button
                 onClick={() => setShowAllCategories(true)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 transition-colors w-full text-left"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border-2 border-border hover:border-border transition-colors w-full text-left"
               >
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -245,10 +245,10 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                     return <Icon className="w-4 h-4" style={{ color: selectedCategory.color }} />;
                   })()}
                 </div>
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 flex-1">
+                <span className="text-sm font-medium text-foreground flex-1">
                   {selectedCategory.name}
                 </span>
-                <span className="text-xs text-gray-400">Изменить</span>
+                <span className="text-xs text-foreground-secondary">{t('common.change', { defaultValue: 'Change' })}</span>
               </button>
             )}
 
@@ -258,13 +258,13 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                 {/* Search */}
                 {filteredCategories.length > 6 && (
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-secondary" />
                     <input
                       type="text"
                       placeholder={t('common.search')}
                       value={catSearch}
                       onChange={(e) => setCatSearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                     />
                   </div>
                 )}
@@ -285,8 +285,8 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                         className={clsx(
                           'flex flex-col items-center gap-1 p-2 rounded-lg transition-all text-center',
                           isSelected
-                            ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-105'
-                            : 'hover:bg-gray-100 dark:hover:bg-gray-800',
+                            ? 'ring-2 ring-border-focus bg-accent/10 scale-105'
+                            : 'hover:bg-surface',
                         )}
                         title={cat.name}
                       >
@@ -296,7 +296,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                         >
                           <Icon className="w-4.5 h-4.5" style={{ color: cat.color }} />
                         </div>
-                        <span className="text-[10px] leading-tight font-medium text-gray-700 dark:text-gray-300 truncate w-full">
+                        <span className="text-[10px] leading-tight font-medium text-foreground truncate w-full">
                           {cat.name}
                         </span>
                       </button>
@@ -309,42 +309,42 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
 
           {/* Description */}
           <div className="relative">
-            <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <FileText className="absolute left-3 top-3 w-4 h-4 text-foreground-secondary" />
             <input
               placeholder={t('transactionsPage.descPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={clsx(
-                'w-full pl-10 pr-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-800 transition-colors',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500',
+                'w-full pl-10 pr-3 py-2.5 text-sm rounded-xl border bg-background transition-colors',
+                'focus:outline-none focus:ring-2 focus:ring-border-focus',
                 errors.description
-                  ? 'border-red-300'
-                  : 'border-gray-200 dark:border-gray-700',
-                'text-gray-900 dark:text-gray-100',
+                  ? 'border-danger/50'
+                  : 'border-border',
+                'text-foreground',
               )}
             />
-            {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
+            {errors.description && <p className="mt-1 text-xs text-danger">{errors.description}</p>}
           </div>
 
           {/* Account + Date row */}
           <div className="grid grid-cols-2 gap-3">
             {/* Account */}
             <div>
-              <label className="flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+              <label className="flex items-center gap-1.5 text-sm font-medium text-foreground-secondary mb-1.5">
                 <Wallet className="w-3.5 h-3.5" /> {t('transactionsPage.account')}
               </label>
               {(accounts ?? []).length === 0 && !showNewAccount ? (
                 <button
                   onClick={() => setShowNewAccount(true)}
-                  className="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-dashed border-blue-300 dark:border-blue-700 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors font-medium"
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-dashed border-accent/50 text-accent hover:bg-accent/10 transition-colors font-medium"
                 >
-                  + {t('common.create', { defaultValue: 'Создать счёт' })}
+                  {t('finance.createAccount', { defaultValue: 'Create account' })}
                 </button>
               ) : showNewAccount ? (
                 <div className="space-y-2">
                   <input
                     type="text"
-                    placeholder="Например: Наличные, Карта Visa..."
+                    placeholder={t('finance.accountPlaceholder', { defaultValue: 'E.g. Cash, Visa Card...' })}
                     value={newAccountName}
                     onChange={(e) => setNewAccountName(e.target.value)}
                     onKeyDown={(e) => {
@@ -366,7 +366,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                       }
                     }}
                     autoFocus
-                    className="w-full px-3 py-2.5 text-sm rounded-xl border border-blue-400 dark:border-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2.5 text-sm rounded-xl border border-accent bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                   />
                   <div className="flex gap-2">
                     <button
@@ -385,15 +385,15 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                         }
                       }}
                       disabled={!newAccountName.trim()}
-                      className="flex-1 px-3 py-1.5 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
+                      className="flex-1 px-3 py-1.5 text-xs rounded-lg bg-accent text-white hover:bg-accent/90 disabled:opacity-50 transition-colors font-medium"
                     >
-                      Создать
+                      {t('common.create', { defaultValue: 'Create' })}
                     </button>
                     <button
                       onClick={() => { setShowNewAccount(false); setNewAccountName(''); }}
-                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      className="px-3 py-1.5 text-xs rounded-lg border border-border text-foreground-secondary hover:bg-surface transition-colors"
                     >
-                      Отмена
+                      {t('common.cancel')}
                     </button>
                   </div>
                 </div>
@@ -409,45 +409,45 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                       }
                     }}
                     className={clsx(
-                      'w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-800 appearance-none',
-                      'focus:outline-none focus:ring-2 focus:ring-blue-500',
-                      errors.accountId ? 'border-red-300' : 'border-gray-200 dark:border-gray-700',
-                      'text-gray-900 dark:text-gray-100',
+                      'w-full px-3 py-2.5 text-sm rounded-xl border bg-background appearance-none',
+                      'focus:outline-none focus:ring-2 focus:ring-border-focus',
+                      errors.accountId ? 'border-danger/50' : 'border-border',
+                      'text-foreground',
                     )}
                   >
                     <option value="">{t('transactionsPage.selectAccount')}</option>
                     {(accounts ?? []).map((a) => (
                       <option key={a.id} value={String(a.id)}>{a.name}</option>
                     ))}
-                    <option value="__new__">+ Новый счёт...</option>
+                    <option value="__new__">{t('finance.newAccount', { defaultValue: '+ New account...' })}</option>
                   </select>
                 </div>
               )}
-              {errors.accountId && <p className="mt-1 text-xs text-red-500">{errors.accountId}</p>}
+              {errors.accountId && <p className="mt-1 text-xs text-danger">{errors.accountId}</p>}
             </div>
 
             {/* Date + Time */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                <label className="flex items-center gap-1.5 text-sm font-medium text-foreground-secondary mb-1.5">
                   <Calendar className="w-3.5 h-3.5" /> {t('transactionsPage.date')}
                 </label>
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                 />
               </div>
               <div>
-                <label className="flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
-                  <Clock className="w-3.5 h-3.5" /> Время
+                <label className="flex items-center gap-1.5 text-sm font-medium text-foreground-secondary mb-1.5">
+                  <Clock className="w-3.5 h-3.5" /> {t('finance.time', { defaultValue: 'Time' })}
                 </label>
                 <input
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                 />
               </div>
             </div>
@@ -455,7 +455,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
 
           {/* Notes — optional, collapsed */}
           <details className="group">
-            <summary className="flex items-center gap-1.5 text-sm text-gray-400 cursor-pointer hover:text-gray-600 transition-colors">
+            <summary className="flex items-center gap-1.5 text-sm text-foreground-secondary cursor-pointer hover:text-foreground transition-colors">
               <FileText className="w-3.5 h-3.5" />
               {t('transactionsPage.notes')}
               <span className="text-[10px]">(опционально)</span>
@@ -465,7 +465,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              className="w-full mt-2 px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 px-3 py-2 text-sm rounded-xl border border-border bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-border-focus"
             />
           </details>
 
@@ -478,10 +478,10 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
                 onChange={(e) => setIsRecurring(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-10 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 transition-colors" />
-              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4 shadow-sm" />
+              <div className="w-10 h-6 bg-elevated rounded-full peer peer-checked:bg-accent transition-colors" />
+              <div className="absolute left-1 top-1 w-4 h-4 bg-background rounded-full transition-transform peer-checked:translate-x-4 shadow-sm" />
             </div>
-            <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-1.5 text-sm text-foreground-secondary">
               <Repeat className="w-3.5 h-3.5" />
               {t('transactionsPage.recurring')}
             </div>
@@ -489,7 +489,7 @@ export function AddTransactionModal({ isOpen, onClose, defaultType }: AddTransac
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+        <div className="px-6 py-4 border-t border-border flex gap-3">
           <Button variant="secondary" onClick={onClose} className="flex-1">
             {t('common.cancel')}
           </Button>

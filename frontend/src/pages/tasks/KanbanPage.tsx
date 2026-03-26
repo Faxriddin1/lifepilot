@@ -54,8 +54,8 @@ function TaskCard({
       ref={overlay ? undefined : setNodeRef}
       style={style}
       className={clsx(
-        'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-sm group/card',
-        'hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all cursor-pointer',
+        'bg-background border border-border rounded-lg p-3 shadow-sm group/card',
+        'hover:shadow-md hover:border-accent/30 transition-all cursor-pointer',
         isDragging && 'opacity-50',
         overlay && 'shadow-xl rotate-2 scale-105',
       )}
@@ -64,13 +64,13 @@ function TaskCard({
       <div className="flex items-start gap-2">
         <button
           {...(overlay ? {} : { ...attributes, ...listeners })}
-          className="mt-0.5 text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing flex-shrink-0"
+          className="mt-0.5 text-foreground-tertiary hover:text-foreground-secondary cursor-grab active:cursor-grabbing flex-shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           <GripVertical className="w-4 h-4" />
         </button>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug">
+          <p className="text-sm font-medium text-foreground leading-snug">
             {task.title}
           </p>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
@@ -82,7 +82,7 @@ function TaskCard({
               <Badge variant="default" size="sm">{task.project_name}</Badge>
             )}
             {task.deadline && (
-              <span className="flex items-center gap-1 text-xs text-gray-400">
+              <span className="flex items-center gap-1 text-xs text-foreground-secondary">
                 <Calendar className="w-3 h-3" />
                 {formatDate(task.deadline, 'MMM d')}
               </span>
@@ -115,24 +115,24 @@ function KanbanColumn({
   });
 
   const colorMap: Record<string, string> = {
-    [TaskStatus.INBOX]: 'bg-gray-400',
-    [TaskStatus.IN_PROGRESS]: 'bg-blue-500',
-    [TaskStatus.REVIEW]: 'bg-amber-500',
-    [TaskStatus.DONE]: 'bg-green-500',
+    [TaskStatus.INBOX]: 'bg-foreground-tertiary',
+    [TaskStatus.IN_PROGRESS]: 'bg-accent',
+    [TaskStatus.REVIEW]: 'bg-warning',
+    [TaskStatus.DONE]: 'bg-success',
   };
 
   return (
     <div className="flex-shrink-0 w-72">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className={clsx('w-2.5 h-2.5 rounded-full', colorMap[columnId] || 'bg-gray-400')} />
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</h3>
-          <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded-full">
+          <div className={clsx('w-2.5 h-2.5 rounded-full', colorMap[columnId] || 'bg-elevated')} />
+          <h3 className="text-sm font-semibold text-foreground">{label}</h3>
+          <span className="text-xs text-foreground-secondary bg-elevated px-1.5 py-0.5 rounded-full">
             {tasks.length}
           </span>
         </div>
         <button
-          className="p-1 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="p-1 rounded text-foreground-secondary hover:text-foreground hover:bg-surface"
           onClick={() => onAddTask(columnId)}
         >
           <Plus className="w-4 h-4" />
@@ -145,15 +145,15 @@ function KanbanColumn({
           className={clsx(
             'space-y-2 min-h-[200px] p-2 rounded-lg border border-dashed transition-colors',
             isOver
-              ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
-              : 'bg-gray-50 dark:bg-gray-800/30 border-gray-200 dark:border-gray-700/50',
+              ? 'bg-accent/5 border-accent/40'
+              : 'bg-surface border-border',
           )}
         >
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} onClickTask={onClickTask} />
           ))}
           {tasks.length === 0 && (
-            <p className="text-center text-xs text-gray-400 py-8">{t('kanban.dropHere')}</p>
+            <p className="text-center text-xs text-foreground-secondary py-8">{t('kanban.dropHere')}</p>
           )}
         </div>
       </SortableContext>
@@ -249,15 +249,15 @@ export function KanbanPage() {
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-foreground-secondary">
           {data?.count ?? 0} {t('kanban.tasksAcross')} {getKanbanColumns().length} {t('kanban.columns')}
         </p>
       </div>
 
       {/* Quick add bar */}
       {quickAddStatus && (
-        <div className="mb-4 flex gap-2 items-center bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
-          <span className="text-sm text-blue-700 dark:text-blue-300 font-medium whitespace-nowrap">
+        <div className="mb-4 flex gap-2 items-center bg-accent/5 p-3 rounded-lg border border-accent/20">
+          <span className="text-sm text-accent font-medium whitespace-nowrap">
             + {getKanbanColumns().find((c) => c.id === quickAddStatus)?.label}:
           </span>
           <Input

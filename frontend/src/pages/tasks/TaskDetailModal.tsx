@@ -64,7 +64,7 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
             />
           ) : (
             <h2
-              className="text-xl font-bold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-primary-600 transition-colors"
+              className="text-xl font-bold text-foreground cursor-pointer hover:text-accent transition-colors"
               onClick={() => {
                 setTitle(task.title);
                 setEditingTitle(true);
@@ -78,7 +78,7 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
         {/* Metadata grid */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
               {t('taskDetail.status')}
             </label>
             <Select
@@ -95,7 +95,7 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
               {t('taskDetail.priority')}
             </label>
             <Select
@@ -110,23 +110,23 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
               {t('taskDetail.dueDate')}
             </label>
-            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Calendar className="w-4 h-4 text-gray-400" />
+            <div className="flex items-center gap-2 text-sm text-foreground">
+              <Calendar className="w-4 h-4 text-foreground-secondary" />
               {task.deadline ? formatDate(task.deadline) : t('taskDetail.noDueDate')}
             </div>
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
               {t('taskDetail.timeTracked')}
             </label>
-            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Clock className="w-4 h-4 text-gray-400" />
+            <div className="flex items-center gap-2 text-sm text-foreground">
+              <Clock className="w-4 h-4 text-foreground-secondary" />
               {task.time_logged ? formatDuration(task.time_logged) : '0m'}
               {task.time_estimate && (
-                <span className="text-gray-400">
+                <span className="text-foreground-secondary">
                   / {formatDuration(task.time_estimate)} {t('taskDetail.est')}
                 </span>
               )}
@@ -137,7 +137,7 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
         {/* Tags */}
         {task.tags && task.tags.length > 0 && (
           <div>
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-2 block">
               {t('taskDetail.tags')}
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -153,7 +153,7 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
 
         {/* Description */}
         <div>
-          <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 block">
+          <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-2 block">
             {t('taskDetail.description')}
           </label>
           <textarea
@@ -162,20 +162,20 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
             onBlur={handleDescriptionSave}
             placeholder={t('taskDetail.descPlaceholder')}
             rows={4}
-            className="w-full rounded-input border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 placeholder:text-gray-400 resize-none"
+            className="w-full rounded-input border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-border-focus placeholder:text-foreground-secondary resize-none"
           />
         </div>
 
         {/* Subtasks */}
         <div>
-          <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 block">
+          <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-2 block">
             {t('taskDetail.subtasks')} ({task.subtasks?.length ?? 0})
           </label>
           <div className="space-y-1.5">
             {(task.subtasks ?? []).map((sub) => (
               <div
                 key={sub.id}
-                className="flex items-center gap-3 py-1.5 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                className="flex items-center gap-3 py-1.5 px-2 rounded hover:bg-surface"
               >
                 <button
                   onClick={() =>
@@ -187,8 +187,8 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
                   className={clsx(
                     'w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors',
                     sub.is_completed
-                      ? 'bg-success-500 border-success-500'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-success-400'
+                      ? 'bg-success border-success'
+                      : 'border-border hover:border-success'
                   )}
                 >
                   {sub.is_completed && <Check className="w-3 h-3 text-white" />}
@@ -197,8 +197,8 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
                   className={clsx(
                     'text-sm',
                     sub.is_completed
-                      ? 'text-gray-400 line-through'
-                      : 'text-gray-700 dark:text-gray-300'
+                      ? 'text-foreground-secondary line-through'
+                      : 'text-foreground'
                   )}
                 >
                   {sub.title}
@@ -236,8 +236,8 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-400">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
+          <p className="text-xs text-foreground-secondary">
             {t('taskDetail.created')} {formatDate(task.created_at)}
             {task.updated_at !== task.created_at &&
               ` | ${t('taskDetail.updated')} ${formatDate(task.updated_at)}`}

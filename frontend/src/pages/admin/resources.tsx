@@ -7,12 +7,12 @@ const fmtDateTime = (val: string) => val ? new Date(val).toLocaleString('ru-RU',
 
 /** Рендер boolean значения. */
 const boolBadge = (val: boolean) => (
-  <span className={val ? 'text-green-600 font-medium' : 'text-red-500 font-medium'}>{val ? '✅ Да' : '❌ Нет'}</span>
+  <span className={val ? 'text-success font-medium' : 'text-danger font-medium'}>{val ? '✅ Да' : '❌ Нет'}</span>
 );
 
 // ─── Users ───────────────────────────────────────────────────────
 export const usersColumns: ColumnDef[] = [
-  { key: 'email', label: 'Email', render: (v) => <span className="font-medium text-blue-600">{v}</span> },
+  { key: 'email', label: 'Email', render: (v) => <span className="font-medium text-accent">{v}</span> },
   { key: 'name', label: 'Имя' },
   { key: 'is_active', label: 'Активен', render: (v) => boolBadge(v) },
   { key: 'is_staff', label: 'Админ', render: (v) => boolBadge(v) },
@@ -29,7 +29,7 @@ export const usersFilters = [
 // ─── Tasks ───────────────────────────────────────────────────────
 export const tasksColumns: ColumnDef[] = [
   { key: 'title', label: 'Название', width: '30%' },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'status', label: 'Статус', render: (v) => <Badge variant="default" size="sm">{v}</Badge> },
   { key: 'priority', label: 'Приоритет', render: (v) => <Badge variant="default" size="sm">{v}</Badge> },
   { key: 'project_name', label: 'Проект', render: (v) => v || '—' },
@@ -51,7 +51,7 @@ export const tasksFilters = [
 // ─── Projects ────────────────────────────────────────────────────
 export const projectsColumns: ColumnDef[] = [
   { key: 'name', label: 'Название', width: '30%' },
-  { key: 'user_email', label: 'Владелец', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Владелец', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'task_count', label: 'Задач' },
   { key: 'is_archived', label: 'Архив', render: (v) => boolBadge(!v) },
   { key: 'created_at', label: 'Создан', render: (v) => fmtDate(v) },
@@ -60,7 +60,7 @@ export const projectsColumns: ColumnDef[] = [
 // ─── Accounts ────────────────────────────────────────────────────
 export const accountsColumns: ColumnDef[] = [
   { key: 'name', label: 'Название' },
-  { key: 'user_email', label: 'Владелец', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Владелец', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'account_type', label: 'Тип' },
   { key: 'balance', label: 'Баланс', render: (v, r) => <span className="font-mono font-medium">{Number(v).toLocaleString()} {r.currency}</span> },
   { key: 'is_active', label: 'Активен', render: (v) => boolBadge(v) },
@@ -69,9 +69,9 @@ export const accountsColumns: ColumnDef[] = [
 // ─── Transactions ────────────────────────────────────────────────
 export const transactionsColumns: ColumnDef[] = [
   { key: 'date', label: 'Дата', render: (v) => fmtDate(v) },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'transaction_type', label: 'Тип', render: (v) => (
-    <span className={v === 'income' ? 'text-green-600 font-medium' : v === 'expense' ? 'text-red-600 font-medium' : 'text-blue-600 font-medium'}>
+    <span className={v === 'income' ? 'text-success font-medium' : v === 'expense' ? 'text-danger font-medium' : 'text-accent font-medium'}>
       {v === 'income' ? '↑ Доход' : v === 'expense' ? '↓ Расход' : '↔ Перевод'}
     </span>
   )},
@@ -89,7 +89,7 @@ export const transactionsFilters = [
 // ─── Budgets ─────────────────────────────────────────────────────
 export const budgetsColumns: ColumnDef[] = [
   { key: 'category_name', label: 'Категория' },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'amount', label: 'Сумма', render: (v) => <span className="font-mono">{Number(v).toLocaleString()}</span> },
   { key: 'period', label: 'Период' },
   { key: 'start_date', label: 'Начало', render: (v) => fmtDate(v) },
@@ -99,13 +99,13 @@ export const budgetsColumns: ColumnDef[] = [
 // ─── Goals ───────────────────────────────────────────────────────
 export const goalsColumns: ColumnDef[] = [
   { key: 'name', label: 'Название' },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'target_amount', label: 'Цель', render: (v) => <span className="font-mono">{Number(v).toLocaleString()}</span> },
   { key: 'current_amount', label: 'Текущая', render: (v) => <span className="font-mono">{Number(v).toLocaleString()}</span> },
   { key: 'progress', label: 'Прогресс', render: (v) => (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-        <div className="h-full bg-green-500 rounded-full" style={{ width: `${Math.min(v, 100)}%` }} />
+      <div className="w-16 h-2 bg-elevated rounded-full overflow-hidden">
+        <div className="h-full bg-success rounded-full" style={{ width: `${Math.min(v, 100)}%` }} />
       </div>
       <span className="text-xs font-medium">{v}%</span>
     </div>
@@ -116,7 +116,7 @@ export const goalsColumns: ColumnDef[] = [
 
 // ─── Focus Sessions ──────────────────────────────────────────────
 export const focusSessionsColumns: ColumnDef[] = [
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'session_type', label: 'Тип' },
   { key: 'status', label: 'Статус', render: (v) => (
     <Badge variant={v === 'completed' ? 'success' : v === 'active' ? 'warning' : 'default'} size="sm">{v}</Badge>
@@ -129,7 +129,7 @@ export const focusSessionsColumns: ColumnDef[] = [
 // ─── Habits ──────────────────────────────────────────────────────
 export const habitsColumns: ColumnDef[] = [
   { key: 'name', label: 'Название' },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'frequency', label: 'Частота' },
   { key: 'target_count', label: 'Цель' },
   { key: 'is_active', label: 'Активна', render: (v) => boolBadge(v) },
@@ -139,12 +139,12 @@ export const habitsColumns: ColumnDef[] = [
 // ─── Daily Logs ──────────────────────────────────────────────────
 export const dailyLogsColumns: ColumnDef[] = [
   { key: 'date', label: 'Дата', render: (v) => fmtDate(v) },
-  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-gray-500">{v}</span> },
+  { key: 'user_email', label: 'Пользователь', render: (v) => <span className="text-xs text-foreground-secondary">{v}</span> },
   { key: 'mood', label: 'Настроение', render: (v) => v || '—' },
   { key: 'energy_level', label: 'Энергия', render: (v) => (
     <div className="flex gap-0.5">
       {[1,2,3,4,5].map(i => (
-        <div key={i} className={`w-3 h-3 rounded-sm ${i <= v ? 'bg-amber-400' : 'bg-gray-200 dark:bg-gray-700'}`} />
+        <div key={i} className={`w-3 h-3 rounded-sm ${i <= v ? 'bg-warning' : 'bg-elevated'}`} />
       ))}
     </div>
   )},

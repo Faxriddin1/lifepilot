@@ -10,7 +10,7 @@ export function AboutPage() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
@@ -38,11 +38,11 @@ export function AboutPage() {
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <Target className="w-5 h-5 text-blue-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-foreground">
               {t('about.missionTitle')}
             </h2>
           </div>
-          <p className="text-gray-600 leading-relaxed text-lg">
+          <p className="text-foreground-secondary leading-relaxed text-lg">
             {t('about.missionText')}
           </p>
         </div>
@@ -53,11 +53,11 @@ export function AboutPage() {
             <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
               <Heart className="w-5 h-5 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-foreground">
               {t('about.whyFreeTitle')}
             </h2>
           </div>
-          <p className="text-gray-600 leading-relaxed text-lg">
+          <p className="text-foreground-secondary leading-relaxed text-lg">
             {t('about.whyFreeText')}
           </p>
         </div>
@@ -68,7 +68,7 @@ export function AboutPage() {
             <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
               <Globe className="w-5 h-5 text-purple-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-foreground">
               {t('about.techTitle')}
             </h2>
           </div>
@@ -81,9 +81,9 @@ export function AboutPage() {
               { label: 'Hosting', value: 'Google Cloud Platform' },
               { label: t('about.languagesLabel'), value: t('about.languagesValue') },
             ].map((item) => (
-              <div key={item.label} className="bg-gray-50 rounded-xl p-4">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{item.label}</p>
-                <p className="text-sm font-semibold text-gray-700">{item.value}</p>
+              <div key={item.label} className="bg-surface rounded-xl p-4">
+                <p className="text-xs font-bold text-foreground-tertiary uppercase tracking-wider mb-1">{item.label}</p>
+                <p className="text-sm font-semibold text-foreground">{item.value}</p>
               </div>
             ))}
           </div>
@@ -95,7 +95,7 @@ export function AboutPage() {
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <Mail className="w-5 h-5 text-blue-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-foreground">
               {t('about.contactTitle')}
             </h2>
           </div>
@@ -113,12 +113,12 @@ export function AboutPage() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-200 py-8 text-center text-sm text-gray-400">
+      <div className="border-t border-border py-8 text-center text-sm text-foreground-tertiary">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-gray-600">LifePilot</span>
+          <span className="font-bold text-foreground-secondary">LifePilot</span>
         </div>
         &copy; {new Date().getFullYear()} LifePilot
       </div>

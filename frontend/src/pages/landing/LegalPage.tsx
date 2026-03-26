@@ -269,7 +269,7 @@ export function LegalPage() {
   const data = content[legalType][lang];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -290,29 +290,29 @@ export function LegalPage() {
           {data.body.split('\n').map((line, i) => {
             if (!line.trim()) return <br key={i} />;
             if (/^\d+\.\s[A-ZА-Я]/.test(line)) {
-              return <h2 key={i} className="text-xl font-bold text-gray-900 mt-8 mb-3">{line}</h2>;
+              return <h2 key={i} className="text-xl font-bold text-foreground mt-8 mb-3">{line}</h2>;
             }
             if (/^\d+\.\d+\s/.test(line)) {
-              return <h3 key={i} className="text-lg font-semibold text-gray-800 mt-4 mb-2">{line}</h3>;
+              return <h3 key={i} className="text-lg font-semibold text-foreground mt-4 mb-2">{line}</h3>;
             }
             if (line.startsWith('•')) {
-              return <p key={i} className="text-gray-600 pl-4 mb-1">{line}</p>;
+              return <p key={i} className="text-foreground-secondary pl-4 mb-1">{line}</p>;
             }
             if (line.startsWith('ВАЖНО:') || line.startsWith('IMPORTANT:')) {
               return <p key={i} className="text-blue-700 font-semibold bg-blue-50 p-3 rounded-lg my-3">{line}</p>;
             }
-            return <p key={i} className="text-gray-600 mb-2 leading-relaxed">{line}</p>;
+            return <p key={i} className="text-foreground-secondary mb-2 leading-relaxed">{line}</p>;
           })}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-200 py-8 text-center text-sm text-gray-400">
+      <div className="border-t border-border py-8 text-center text-sm text-foreground-tertiary">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-gray-600">LifePilot</span>
+          <span className="font-bold text-foreground-secondary">LifePilot</span>
         </div>
         &copy; {new Date().getFullYear()} LifePilot
       </div>

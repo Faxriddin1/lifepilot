@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Spinner } from '@/components/ui/Spinner';
 import { useTasksQuery } from '@/hooks/useTasks';
-import { PRIORITY_COLORS, getPriorityLabel, getStatusLabel } from '@/utils/constants';
+import { PRIORITY_COLORS, PRIORITY_DOT_COLORS, getPriorityLabel, getStatusLabel } from '@/utils/constants';
 import { type Task, type Priority, type TaskStatus } from '@/types';
 import { TaskDetailModal } from './TaskDetailModal';
 
@@ -107,18 +107,18 @@ export function CalendarPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={prevMonth}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-surface transition-colors"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <ChevronLeft className="w-5 h-5 text-foreground-secondary" />
           </button>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize min-w-[220px] text-center">
+          <h2 className="text-xl font-bold text-foreground capitalize min-w-[220px] text-center">
             {monthName}
           </h2>
           <button
             onClick={nextMonth}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-surface transition-colors"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <ChevronRight className="w-5 h-5 text-foreground-secondary" />
           </button>
         </div>
         <Button variant="secondary" size="sm" onClick={goToday}>
@@ -129,17 +129,17 @@ export function CalendarPage() {
       <div className="flex gap-4">
         {/* Calendar Grid */}
         <div className={clsx(
-          'flex-1 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm transition-all',
+          'flex-1 border border-border rounded-xl overflow-hidden shadow-sm transition-all',
           selectedDateKey && 'max-w-[calc(100%-320px)]',
         )}>
           {/* Weekday headers */}
-          <div className="grid grid-cols-7 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-7 bg-surface border-b border-border">
             {weekdays.map((day, i) => (
               <div
                 key={day}
                 className={clsx(
                   'py-3 text-center text-sm font-semibold tracking-wide',
-                  i >= 5 ? 'text-red-400' : 'text-gray-600 dark:text-gray-400',
+                  i >= 5 ? 'text-danger' : 'text-foreground-secondary',
                 )}
               >
                 {day}
@@ -163,11 +163,11 @@ export function CalendarPage() {
                   key={idx}
                   onClick={() => setSelectedDateKey(isSelected ? null : key)}
                   className={clsx(
-                    'min-h-[110px] p-2 border-b border-r border-gray-200 dark:border-gray-700 cursor-pointer transition-all duration-150',
-                    !day.isCurrentMonth && 'bg-gray-50 dark:bg-gray-900/40',
-                    day.isCurrentMonth && !isSelected && 'hover:bg-blue-50/50 dark:hover:bg-blue-900/10',
-                    isWeekend && day.isCurrentMonth && 'bg-orange-50/30 dark:bg-orange-900/5',
-                    isSelected && 'bg-blue-50 dark:bg-blue-900/20 ring-2 ring-inset ring-blue-400',
+                    'min-h-[110px] p-2 border-b border-r border-border cursor-pointer transition-all duration-150',
+                    !day.isCurrentMonth && 'bg-surface',
+                    day.isCurrentMonth && !isSelected && 'hover:bg-accent/5',
+                    isWeekend && day.isCurrentMonth && 'bg-warning/5',
+                    isSelected && 'bg-accent/10 ring-2 ring-inset ring-accent/40',
                     idx % 7 === 6 && 'border-r-0',
                     isLastRow && 'border-b-0',
                   )}
@@ -177,15 +177,15 @@ export function CalendarPage() {
                     <span
                       className={clsx(
                         'text-sm font-bold w-7 h-7 flex items-center justify-center rounded-full transition-colors',
-                        isToday && 'bg-blue-600 text-white shadow-sm',
-                        !isToday && day.isCurrentMonth && 'text-gray-800 dark:text-gray-200',
-                        !isToday && !day.isCurrentMonth && 'text-gray-400 dark:text-gray-600',
+                        isToday && 'bg-accent text-white shadow-sm',
+                        !isToday && day.isCurrentMonth && 'text-foreground',
+                        !isToday && !day.isCurrentMonth && 'text-foreground-secondary',
                       )}
                     >
                       {day.date.getDate()}
                     </span>
                     {dayTasks.length > 0 && (
-                      <span className="text-[10px] font-semibold text-blue-500 bg-blue-100 dark:bg-blue-900/40 dark:text-blue-400 rounded-full px-1.5 py-0.5">
+                      <span className="text-[10px] font-semibold text-accent bg-accent/10 rounded-full px-1.5 py-0.5">
                         {dayTasks.length}
                       </span>
                     )}
@@ -201,19 +201,17 @@ export function CalendarPage() {
                           setSelectedDateKey(key);
                           setSelectedTask(task);
                         }}
-                        className="text-[11px] leading-tight px-1.5 py-1 rounded-md truncate cursor-pointer transition-all hover:scale-[1.02] hover:shadow-sm font-medium"
-                        style={{
-                          backgroundColor: `${PRIORITY_COLORS[task.priority as Priority]}18`,
-                          color: PRIORITY_COLORS[task.priority as Priority],
-                          borderLeft: `3px solid ${PRIORITY_COLORS[task.priority as Priority]}`,
-                        }}
+                        className={clsx(
+                          'text-[11px] leading-tight px-1.5 py-1 rounded-md truncate cursor-pointer transition-all hover:scale-[1.02] hover:shadow-sm font-medium border-l-[3px]',
+                          PRIORITY_COLORS[task.priority as Priority]
+                        )}
                         title={task.title}
                       >
                         {task.title}
                       </div>
                     ))}
                     {dayTasks.length > 3 && (
-                      <div className="text-[10px] text-gray-400 dark:text-gray-500 pl-1.5 font-medium">
+                      <div className="text-[10px] text-foreground-secondary pl-1.5 font-medium">
                         +{dayTasks.length - 3} {t('calendar.more')}
                       </div>
                     )}
@@ -226,39 +224,39 @@ export function CalendarPage() {
 
         {/* Side Panel — tasks of selected day */}
         {selectedDateKey && (
-          <div className="w-[300px] flex-shrink-0 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm bg-white dark:bg-gray-900 animate-fade-in">
+          <div className="w-[300px] flex-shrink-0 border border-border rounded-xl overflow-hidden shadow-sm bg-background animate-fade-in">
             {/* Panel header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between px-4 py-3 bg-surface border-b border-border">
               <div>
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100 capitalize">
+                <p className="text-sm font-bold text-foreground capitalize">
                   {formatSelectedDate(selectedDateKey)}
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-foreground-secondary mt-0.5">
                   {selectedDayTasks.length} {t('calendar.tasks')}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedDateKey(null)}
-                className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="p-1 rounded-md hover:bg-elevated transition-colors"
               >
-                <X className="w-4 h-4 text-gray-500" />
+                <X className="w-4 h-4 text-foreground-secondary" />
               </button>
             </div>
 
             {/* Task list */}
             <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
               {selectedDayTasks.length === 0 ? (
-                <div className="p-6 text-center text-sm text-gray-400">
-                  <Clock className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <div className="p-6 text-center text-sm text-foreground-secondary">
+                  <Clock className="w-8 h-8 mx-auto mb-2 text-foreground-tertiary" />
                   {t('calendar.noTasksForDay')}
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                <div className="divide-y divide-border">
                   {selectedDayTasks.map((task) => (
                     <div
                       key={task.id}
                       onClick={() => setSelectedTask(task)}
-                      className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors group"
+                      className="px-4 py-3 hover:bg-surface cursor-pointer transition-colors group"
                     >
                       <div className="flex items-start gap-2">
                         <div
@@ -266,7 +264,7 @@ export function CalendarPage() {
                           style={{ backgroundColor: PRIORITY_COLORS[task.priority as Priority] }}
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                          <p className="text-sm font-medium text-foreground truncate group-hover:text-accent transition-colors">
                             {task.title}
                           </p>
                           <div className="flex items-center gap-2 mt-1.5">
@@ -276,18 +274,18 @@ export function CalendarPage() {
                             >
                               {getStatusLabel(task.status as TaskStatus)}
                             </Badge>
-                            <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                            <span className="flex items-center gap-0.5 text-[10px] text-foreground-secondary">
                               <Flag className="w-3 h-3" />
                               {getPriorityLabel(task.priority as Priority)}
                             </span>
                           </div>
                           {task.project_name && (
-                            <p className="text-[10px] text-gray-400 mt-1">
+                            <p className="text-[10px] text-foreground-secondary mt-1">
                               {task.project_name}
                             </p>
                           )}
                         </div>
-                        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 mt-0.5 flex-shrink-0 transition-colors" />
+                        <ChevronRight className="w-4 h-4 text-foreground-tertiary group-hover:text-foreground-secondary mt-0.5 flex-shrink-0 transition-colors" />
                       </div>
                     </div>
                   ))}
@@ -299,12 +297,12 @@ export function CalendarPage() {
       </div>
 
       {/* Stats bar */}
-      <div className="flex gap-4 mt-4 text-sm text-gray-500">
+      <div className="flex gap-4 mt-4 text-sm text-foreground-secondary">
         <span>
-          {t('calendar.total')}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.length}</span> {t('calendar.tasks')}
+          {t('calendar.total')}: <span className="font-semibold text-foreground">{tasks.length}</span> {t('calendar.tasks')}
         </span>
         <span>
-          {t('calendar.withDeadline')}: <span className="font-semibold text-gray-700 dark:text-gray-300">{tasks.filter((t) => t.deadline).length}</span>
+          {t('calendar.withDeadline')}: <span className="font-semibold text-foreground">{tasks.filter((t) => t.deadline).length}</span>
         </span>
       </div>
 

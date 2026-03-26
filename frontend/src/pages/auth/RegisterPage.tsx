@@ -10,7 +10,7 @@ import { authApi } from '@/api/auth';
 import { showApiError } from '@/utils/errorHandler';
 import { validateRegisterForm } from '@/utils/validation';
 import { PasswordStrength } from '@/components/ui/PasswordStrength';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /** Страница регистрации нового пользователя с валидацией имени, email и пароля. */
 export function RegisterPage() {
@@ -112,14 +112,14 @@ export function RegisterPage() {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">LifePilot</span>
+            <span className="text-xl font-bold text-foreground">LifePilot</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{t('register.title')}</h1>
-          <p className="text-gray-500 mb-8">{t('register.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">{t('register.title')}</h1>
+          <p className="text-foreground-secondary mb-8">{t('register.subtitle')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
@@ -154,7 +154,7 @@ export function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-gray-600"
+                  className="hover:text-foreground-secondary"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -181,11 +181,11 @@ export function RegisterPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-            <span className="text-xs text-gray-400 uppercase font-medium">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-foreground-secondary uppercase font-medium">
               {t('auth.orContinueWith', { defaultValue: 'or' })}
             </span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Google Sign-In */}
@@ -207,16 +207,16 @@ export function RegisterPage() {
             )}
           </div>
 
-          <p className="mt-4 text-xs text-gray-500 text-center">
+          <p className="mt-4 text-xs text-foreground-secondary text-center">
             {t('register.termsPrefix')}{' '}
-            <span className="text-primary-600">{t('register.termsLink')}</span>{' '}
+            <span className="text-accent">{t('register.termsLink')}</span>{' '}
             {t('register.termsAnd')}{' '}
-            <span className="text-primary-600">{t('register.privacyLink')}</span>.
+            <span className="text-accent">{t('register.privacyLink')}</span>.
           </p>
 
-          <p className="mt-8 text-center text-sm text-gray-500">
+          <p className="mt-8 text-center text-sm text-foreground-secondary">
             {t('register.haveAccount')}{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/login" className="text-accent hover:text-accent font-medium">
               {t('auth.signInLink')}
             </Link>
           </p>

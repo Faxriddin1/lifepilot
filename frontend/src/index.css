@@ -1,26 +1,10 @@
+@import './styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Data colors — WCAG 1.4.1 accessible (not red/green) */
-    --color-income: #3B82F6;     /* blue-500 */
-    --color-expense: #F97316;    /* orange-500 */
-    --color-positive: #3B82F6;   /* trend up */
-    --color-negative: #F97316;   /* trend down */
-    /* Alert colors — ONLY for exception highlighting */
-    --color-alert-danger: #EF4444;   /* red-500 */
-    --color-alert-warning: #EAB308;  /* yellow-500 */
-    --color-alert-success: #22C55E;  /* green-500 */
-    /* Tooltip bg */
-    --tooltip-bg: white;
-  }
-
-  .dark {
-    --tooltip-bg: #1f2937;
-  }
-
   *,
   *::before,
   *::after {
@@ -34,18 +18,21 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 
   ::selection {
-    @apply bg-primary-100 text-primary-900;
+    background-color: var(--accent-primary);
+    color: var(--text-inverse);
+    opacity: 0.2;
   }
 }
 
 @layer components {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #d1d5db transparent;
+    scrollbar-color: var(--border-default) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -58,24 +45,12 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
+    background-color: var(--border-default);
     border-radius: 3px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: #9ca3af;
-  }
-
-  .dark .scrollbar-thin {
-    scrollbar-color: #4b5563 transparent;
-  }
-
-  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #4b5563;
-  }
-
-  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: #6b7280;
+    background-color: var(--border-hover);
   }
 }
 
@@ -101,7 +76,8 @@
 
 /* Custom focus ring for accessibility */
 :focus-visible {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--border-focus);
 }
 
 /* Number input hide spinners */
@@ -120,7 +96,7 @@ html.dark {
   color-scheme: dark;
 }
 
-/* Toast container override to avoid z-index issues */
+/* Toast container z-index */
 [data-sonner-toaster] {
   z-index: 9999 !important;
 }

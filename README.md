@@ -47,21 +47,40 @@ LifePilot combines task management, productivity tools, and personal finance int
 - Financial reports page
 
 ### Dashboard
-- BI-optimized layout with StatCard component (sparklines, trend indicators, color-coded alerts)
-- Compact summary: today's tasks, focus time, account balance, charts
+- Bento Grid layout with StatCard component (sparklines, trend indicators, alert border-l color-coding)
+- Compact summary: today's tasks, focus time, account balance, cashflow chart, habits, budgets
+
+### UI/UX (2026 Design System)
+- **Design Tokens:** 70+ semantic CSS variables -- colors, shadows, radius, spacing, transitions, typography
+- **Theming:** Dark/Light via CSS variables, no hardcoded Tailwind color classes, no theme flash
+- **Command Palette:** `Ctrl+K` / `⌘K` for quick navigation and actions (cmdk)
+- **Sidebar:** Collapsible (240 to 48px), keyboard shortcut `[`, mobile sheet overlay
+- **Animations:** Framer Motion page transitions, modal scale+fade, button active:scale
+- **Toast:** Sonner notifications (success, error, promise)
+- **Skeleton:** Loading placeholders for all pages
+- **Accessibility:** focus-visible ring, prefers-reduced-motion, tabular-nums for financial data
+- **Typography:** Inter + JetBrains Mono
 
 ### Settings
 - Profile management and change password
-- Theme: light and dark mode
+- Theme: light and dark mode (no flash on page load)
 - Language: English, Russian, Uzbek (Latin), Uzbek (Cyrillic)
 - 50+ currencies, all IANA timezones
 - Date format, number format, first day of week (Monday/Sunday)
+- Telegram bot linking
 - Export data, delete account
 
 ### Landing Page
 - Animated intro screen with cursor particle effects
 - 3D tilt cards, gradient mesh backgrounds
 - Fully responsive, 4-language support
+
+### Telegram Bot
+- Natural language AI (Gemini 2.5 Flash) -- create tasks, log expenses, check balance via chat
+- Voice messages (Google Speech-to-Text) and receipt photos (Google Vision OCR)
+- 28 supported intents with confirmation flow
+- Multi-language (EN, RU, UZ, UZ-Cyr)
+- Rate limiting, encrypted JWT storage (Fernet)
 
 ### Admin Panel (11 pages at `/admin`)
 - Dashboard with system metrics, registration growth chart
@@ -82,11 +101,12 @@ LifePilot combines task management, productivity tools, and personal finance int
 | Layer | Technologies |
 |-------|-------------|
 | **Backend** | Django 5.0, Django REST Framework, PostgreSQL 16, Redis 7, Celery |
-| **Frontend** | React 18, TypeScript 5, Vite, TailwindCSS 3, Zustand, TanStack Query |
+| **Frontend** | React 18, TypeScript 5, Vite, TailwindCSS 3, Zustand, TanStack Query, Framer Motion, Sonner, cmdk |
+| **Design System** | 70+ semantic CSS variables (tokens.css), dark/light themes, zero hardcoded colors |
 | **Auth** | JWT (SimpleJWT) with refresh token rotation + blacklist, Google OAuth 2.0 |
 | **i18n** | react-i18next (EN, RU, UZ Latin, UZ Cyrillic) |
-| **Infra** | Docker Compose (db, redis, backend, frontend, celery) |
-| **Deploy** | Google Cloud VM, Nginx reverse proxy, SSL pending |
+| **Infra** | Docker Compose (db, redis, backend, frontend, celery, telegram bot) |
+| **Deploy** | Google Cloud VM, Nginx reverse proxy, SSL (Let's Encrypt) |
 
 ---
 
@@ -186,13 +206,20 @@ PM/
 │   │   └── admin_panel/       # Admin API (dashboard, CRUD for all models)
 │   ├── manage.py
 │   └── requirements.txt
+├── bot/                         # Telegram Bot (aiogram 3.x + Gemini AI)
+│   ├── handlers/              # Message handlers (text, voice, photo, callbacks)
+│   ├── services/              # AI parser, speech, vision, LifePilot API client
+│   ├── middleware/             # Auth, rate limit, locale, logging
+│   └── bot.py                 # Entry point
 ├── frontend/
 │   ├── src/
+│   │   ├── styles/            # tokens.css (70+ design tokens, light/dark themes)
 │   │   ├── api/               # Axios client + API modules
 │   │   ├── components/
-│   │   │   ├── ui/            # Button, Input, Modal, Card, Badge, Select, StatCard, BulletGraph, WaterfallChart, PasswordStrength
-│   │   │   └── layout/        # AppLayout, Sidebar, TopBar
-│   │   ├── hooks/             # React Query hooks (useTasks, useFinance, useFocus, etc.)
+│   │   │   ├── ui/            # Button, Input, Modal, Card, Badge, Select, StatCard, Skeleton, PageTransition, BulletGraph, WaterfallChart...
+│   │   │   └── layout/        # AppLayout (AnimatePresence), Sidebar (collapsible + [), TopBar (⌘K)
+│   │   │   └── CommandPalette.tsx  # ⌘K command palette (cmdk)
+│   │   ├── hooks/             # React Query hooks (useTasks, useFinance, useFocus, useDashboard)
 │   │   ├── i18n/              # Localization config + locales (en, ru, uz, uz-cyr)
 │   │   ├── pages/
 │   │   │   ├── auth/          # LoginPage, RegisterPage
@@ -362,7 +389,8 @@ All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination:
 - CSRF, XSS, Clickjacking protection
 - `SECURE_CONTENT_TYPE_NOSNIFF`, `X_FRAME_OPTIONS='DENY'`
 - Serializer-level validation + frontend form validation
-- PBKDF2 password hashing with password strength indicator
+- Argon2 password hashing (with PBKDF2 fallback) and password strength indicator
+- Server-side HTML sanitization via bleach (SanitizeMixin on all text-input serializers)
 - Circular reference prevention (subtasks max depth 3)
 - Admin panel restricted to `is_staff=True`
 - Change password, account deletion, data export in settings
@@ -382,11 +410,13 @@ All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination:
 
 ## Deployment
 
-- **Hosting:** Google Cloud VM (Compute Engine) -- 34.122.146.176
-- **Stack:** Docker Compose (PostgreSQL, Redis, Django, React, Celery)
-- **Web server:** Nginx as reverse proxy
-- **SSL:** Pending -- Let's Encrypt (certbot) for https://lifepilot.uz
+- **Hosting:** Google Cloud VM (Compute Engine)
+- **Stack:** Docker Compose prod (PostgreSQL 16, Redis 7, Django/gunicorn, React/nginx, Celery, Telegram Bot)
+- **Web server:** Nginx (host-level) as reverse proxy
+- **SSL:** Let's Encrypt (certbot) -- HTTPS enforced, HSTS enabled
+- **Security Headers:** X-Frame-Options, X-Content-Type-Options, XSS-Protection, Referrer-Policy, Permissions-Policy
 - **Domain:** lifepilot.uz
+- **CI/CD:** GitHub Actions (lint + build on PR, deploy on push to main)
 
 ---
 

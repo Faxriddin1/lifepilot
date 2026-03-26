@@ -44,7 +44,7 @@ export function BulletGraph({
       {(label || valueText) && (
         <div className="flex items-center justify-between mb-1.5">
           {label && (
-            <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+            <span className="text-sm font-medium text-foreground truncate">
               {label}
             </span>
           )}
@@ -52,18 +52,18 @@ export function BulletGraph({
             {valueText && (
               <span className={clsx(
                 'text-xs font-semibold',
-                isOver ? 'text-red-500' : isOverPacing ? 'text-amber-500' : 'text-gray-500',
+                isOver ? 'text-danger' : isOverPacing ? 'text-warning' : 'text-foreground-secondary',
               )}>
                 {valueText}
               </span>
             )}
             {isOver && (
-              <span className="text-[10px] bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded font-medium">
+              <span className="text-[10px] bg-danger-bg text-danger px-1.5 py-0.5 rounded font-medium">
                 !
               </span>
             )}
             {!isOver && isOverPacing && (
-              <span className="text-[10px] bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-medium">
+              <span className="text-[10px] bg-warning-bg text-warning px-1.5 py-0.5 rounded font-medium">
                 ⚡
               </span>
             )}
@@ -75,17 +75,17 @@ export function BulletGraph({
       <div className={clsx('relative w-full rounded-md overflow-visible', h)}>
         {/* Qualitative ranges (background) */}
         <div className="absolute inset-0 flex rounded-md overflow-hidden">
-          <div className="bg-green-100 dark:bg-green-900/20" style={{ width: '60%' }} />
-          <div className="bg-amber-100 dark:bg-amber-900/20" style={{ width: '25%' }} />
-          <div className="bg-red-100 dark:bg-red-900/20" style={{ width: '15%' }} />
+          <div className="bg-success/10" style={{ width: '60%' }} />
+          <div className="bg-warning/10" style={{ width: '25%' }} />
+          <div className="bg-danger/10" style={{ width: '15%' }} />
         </div>
 
         {/* Value bar */}
         <div
           className={clsx(
-            'absolute top-1/2 -translate-y-1/2 rounded-sm transition-all duration-500',
+            'absolute top-1/2 -translate-y-1/2 rounded-sm transition-all duration-[500ms]',
             size === 'sm' ? 'h-2.5' : 'h-3.5',
-            isOver ? 'bg-red-500' : pct > 85 ? 'bg-red-400' : pct > 60 ? 'bg-amber-400' : 'bg-gray-700 dark:bg-gray-300',
+            isOver ? 'bg-danger' : pct > 85 ? 'bg-danger/80' : pct > 60 ? 'bg-warning/80' : 'bg-foreground',
           )}
           style={{ width: `${Math.min(pct, 100)}%`, left: 0 }}
         />
@@ -93,11 +93,11 @@ export function BulletGraph({
         {/* Pacing line */}
         {pacingPct !== undefined && (
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-gray-900 dark:bg-white z-10"
+            className="absolute top-0 bottom-0 w-0.5 bg-foreground z-10"
             style={{ left: `${pacingPct}%` }}
             title={`Pacing: ${Math.round(pacingPct)}%`}
           >
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-transparent border-t-gray-900 dark:border-t-white" />
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-transparent border-t-foreground" />
           </div>
         )}
       </div>

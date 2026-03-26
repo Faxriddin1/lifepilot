@@ -1,0 +1,169 @@
+/* ================================================================
+   LifePilot Design Tokens — 2026 Design System
+   Semantic CSS variables for consistent theming.
+   ================================================================ */
+
+:root {
+  /* Backgrounds */
+  --bg-primary: #FFFFFF;
+  --bg-surface: #F9FAFB;
+  --bg-elevated: #F3F4F6;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-sidebar: #FAFAF8;
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+  --text-placeholder: #D1D5DB;
+  --text-inverse: #FFFFFF;
+
+  /* Borders */
+  --border-default: #E5E7EB;
+  --border-hover: #D1D5DB;
+  --border-focus: #3B82F6;
+
+  /* Brand / Accent */
+  --accent-primary: #3B82F6;
+  --accent-primary-hover: #2563EB;
+  --accent-brand: #5E6AD2;
+
+  /* Semantic */
+  --color-success: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEF2F2;
+  --color-info: #3B82F6;
+  --color-info-bg: #EFF6FF;
+
+  /* Finance-specific */
+  --color-income: #3B82F6;
+  --color-expense: #F97316;
+  --color-transfer: #8B5CF6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Transitions */
+  --duration-fast: 80ms;
+  --duration-normal: 150ms;
+  --duration-slow: 200ms;
+  --duration-chart: 500ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sidebar */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 48px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', monospace;
+}
+
+.dark {
+  /* Backgrounds */
+  --bg-primary: #0F172A;
+  --bg-surface: #1E293B;
+  --bg-elevated: #334155;
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+  --bg-sidebar: #0C1222;
+
+  /* Text */
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+  --text-placeholder: #475569;
+  --text-inverse: #0F172A;
+
+  /* Borders */
+  --border-default: #334155;
+  --border-hover: #475569;
+  --border-focus: #38BDF8;
+
+  /* Brand / Accent */
+  --accent-primary: #38BDF8;
+  --accent-primary-hover: #0EA5E9;
+  --accent-brand: #818CF8;
+
+  /* Semantic */
+  --color-success: #4ADE80;
+  --color-success-bg: rgba(74, 222, 128, 0.1);
+  --color-warning: #FBBF24;
+  --color-warning-bg: rgba(251, 191, 36, 0.1);
+  --color-danger: #F87171;
+  --color-danger-bg: rgba(248, 113, 113, 0.1);
+  --color-info: #38BDF8;
+  --color-info-bg: rgba(56, 189, 248, 0.1);
+
+  /* Finance */
+  --color-income: #38BDF8;
+  --color-expense: #FB923C;
+  --color-transfer: #A78BFA;
+
+  /* Shadows — minimal in dark mode */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}
+
+/* ================================================================
+   Global resets using tokens
+   ================================================================ */
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Tabular nums for financial data */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+/* Task checkbox bounce animation */
+@keyframes checkBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.animate-check-bounce {
+  animation: checkBounce 200ms ease-out;
+}
+
+/* Smooth number transition for counters */
+.transition-number {
+  transition: all var(--duration-normal) var(--ease-out);
+  font-variant-numeric: tabular-nums;
+}

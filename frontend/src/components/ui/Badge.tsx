@@ -13,21 +13,21 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  primary: 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400',
-  success: 'bg-success-50 text-success-700 dark:bg-success-900/30 dark:text-success-400',
-  warning: 'bg-warning-50 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400',
-  danger: 'bg-danger-50 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400',
-  accent: 'bg-accent-50 text-accent-700 dark:bg-accent-900/30 dark:text-accent-400',
+  default: 'bg-surface text-foreground border-border',
+  primary: 'bg-info-bg text-accent border-accent/20',
+  success: 'bg-success-bg text-success border-success/20',
+  warning: 'bg-warning-bg text-warning border-warning/20',
+  danger: 'bg-danger-bg text-danger border-danger/20',
+  accent: 'bg-[var(--accent-brand)]/10 text-brand border-brand/20',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-gray-400',
-  primary: 'bg-primary-500',
-  success: 'bg-success-500',
-  warning: 'bg-warning-500',
-  danger: 'bg-danger-500',
-  accent: 'bg-accent-500',
+  default: 'bg-foreground-tertiary',
+  primary: 'bg-accent',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-danger',
+  accent: 'bg-brand',
 };
 
 /** Бейдж-метка с цветовыми вариантами, размерами и опциональной точкой-индикатором. */
@@ -35,7 +35,7 @@ export function Badge({ children, variant = 'default', size = 'sm', dot = false,
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 font-medium rounded-full',
+        'inline-flex items-center gap-1.5 font-medium rounded-md border transition-colors',
         variantStyles[variant],
         size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-sm px-2.5 py-1',
         className

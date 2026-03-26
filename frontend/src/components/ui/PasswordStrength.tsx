@@ -7,7 +7,7 @@ interface PasswordStrengthProps {
   password: string;
 }
 
-const STRENGTH_COLORS = ['bg-red-500', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-400', 'bg-green-500'];
+const STRENGTH_COLORS = ['bg-danger', 'bg-danger', 'bg-expense', 'bg-warning', 'bg-success/80', 'bg-success'];
 const STRENGTH_LABELS_EN = ['', 'Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
 const STRENGTH_LABELS_RU = ['', 'Очень слабый', 'Слабый', 'Средний', 'Сильный', 'Очень сильный'];
 
@@ -39,14 +39,14 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
               key={i}
               className={clsx(
                 'h-1.5 flex-1 rounded-full transition-all duration-300',
-                i <= strength ? STRENGTH_COLORS[strength] : 'bg-gray-200 dark:bg-gray-700',
+                i <= strength ? STRENGTH_COLORS[strength] : 'bg-elevated',
               )}
             />
           ))}
         </div>
         <span className={clsx(
           'text-xs font-medium',
-          strength <= 2 ? 'text-red-500' : strength <= 3 ? 'text-yellow-500' : 'text-green-500',
+          strength <= 2 ? 'text-danger' : strength <= 3 ? 'text-warning' : 'text-success',
         )}>
           {labels[strength]}
         </span>
@@ -57,13 +57,13 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
         {requirements.map((req) => (
           <div key={req.key} className="flex items-center gap-1.5">
             {req.met ? (
-              <Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+              <Check className="w-3.5 h-3.5 text-success flex-shrink-0" />
             ) : (
-              <X className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+              <X className="w-3.5 h-3.5 text-foreground-tertiary flex-shrink-0" />
             )}
             <span className={clsx(
               'text-xs transition-colors',
-              req.met ? 'text-green-600 dark:text-green-400' : 'text-gray-400',
+              req.met ? 'text-success' : 'text-foreground-tertiary',
             )}>
               {req.label}
             </span>

@@ -12,11 +12,11 @@ interface ProgressBarProps {
 }
 
 const barColors: Record<ProgressVariant, string> = {
-  primary: 'bg-primary-600',
-  success: 'bg-success-500',
-  warning: 'bg-warning-500',
-  danger: 'bg-danger-500',
-  accent: 'bg-accent-500',
+  primary: 'bg-accent',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-danger',
+  accent: 'bg-brand',
 };
 
 const sizeMap = {
@@ -38,19 +38,19 @@ export function ProgressBar({
   return (
     <div className={clsx('w-full', className)}>
       {showLabel && (
-        <div className="flex justify-between text-xs text-gray-500 mb-1">
+        <div className="flex justify-between text-xs text-foreground-secondary mb-1">
           <span>{percentage}%</span>
         </div>
       )}
       <div
         className={clsx(
-          'w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden',
+          'w-full bg-elevated rounded-full overflow-hidden',
           sizeMap[size]
         )}
       >
         <div
           className={clsx(
-            'h-full rounded-full transition-all duration-500 ease-out',
+            'h-full rounded-full transition-all duration-[500ms] ease-out',
             barColors[variant]
           )}
           style={{ width: `${percentage}%` }}

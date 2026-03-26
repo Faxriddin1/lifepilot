@@ -64,7 +64,7 @@ export function LandingPage() {
       {/* ═══ INTRO SCREEN ═══ */}
       {showIntro && <IntroScreen onComplete={onIntroComplete} />}
 
-      <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden landing-grain">
+      <div className="min-h-screen bg-background text-foreground overflow-x-hidden landing-grain">
 
         {/* ═══ NAVBAR ═══ */}
         <nav className="landing-nav fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-gray-100/50">
@@ -79,8 +79,8 @@ export function LandingPage() {
             </div>
 
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors duration-200">{t.navFeatures}</a>
-              <a href="#how" className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors duration-200">{t.navAbout}</a>
+              <a href="#features" className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors duration-200">{t.navFeatures}</a>
+              <a href="#how" className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors duration-200">{t.navAbout}</a>
             </div>
 
             <div className="flex items-center gap-3">
@@ -88,7 +88,7 @@ export function LandingPage() {
               <div className="relative">
                 <button
                   onClick={() => setLangOpen(!langOpen)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all duration-200"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-foreground-secondary hover:bg-surface transition-all duration-200"
                 >
                   <Globe className="w-4 h-4" />
                   <span className="hidden sm:inline">{LANG_LABELS[lang]}</span>
@@ -115,7 +115,7 @@ export function LandingPage() {
                 )}
               </div>
 
-              <button onClick={goLogin} className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors hidden sm:block">
+              <button onClick={goLogin} className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors hidden sm:block">
                 {t.navLogin}
               </button>
               <button
@@ -128,7 +128,7 @@ export function LandingPage() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="sm:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="sm:hidden p-2 rounded-lg hover:bg-surface transition-colors"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -138,10 +138,10 @@ export function LandingPage() {
           {/* Mobile menu drawer */}
           {mobileMenuOpen && (
             <div className="sm:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3" style={{ animation: 'landing-fade-up 0.2s ease-out' }}>
-              <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-gray-600 py-2">{t.navFeatures}</a>
-              <a href="#how" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-gray-600 py-2">{t.navAbout}</a>
+              <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-foreground-secondary py-2">{t.navFeatures}</a>
+              <a href="#how" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-foreground-secondary py-2">{t.navAbout}</a>
               <hr className="border-gray-100" />
-              <button onClick={() => { goLogin(); setMobileMenuOpen(false); }} className="block w-full text-left text-sm font-semibold text-gray-600 py-2">{t.navLogin}</button>
+              <button onClick={() => { goLogin(); setMobileMenuOpen(false); }} className="block w-full text-left text-sm font-semibold text-foreground-secondary py-2">{t.navLogin}</button>
               <button
                 onClick={() => { goRegister(); setMobileMenuOpen(false); }}
                 className="w-full py-2.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-sm font-bold rounded-xl"
@@ -191,7 +191,7 @@ export function LandingPage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-medium px-2 sm:px-0">
+            <p className="text-base sm:text-lg md:text-xl text-foreground-secondary max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-medium px-2 sm:px-0">
               {t.heroSubtitle}
             </p>
 
@@ -208,7 +208,7 @@ export function LandingPage() {
               </div>
               <a
                 href="#how"
-                className="landing-btn-primary w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-gray-50 border-2 border-gray-200 text-gray-700 text-base sm:text-lg font-bold rounded-2xl hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50/50 flex items-center justify-center gap-2"
+                className="landing-btn-primary w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-surface border-2 border-border text-foreground text-base sm:text-lg font-bold rounded-2xl hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50/50 flex items-center justify-center gap-2"
               >
                 {t.heroSecondary}
               </a>
@@ -224,7 +224,7 @@ export function LandingPage() {
                 {t.featuresTag}
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-5 tracking-tight px-2 sm:px-0">{t.featuresTitle}</h2>
-              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto font-medium px-2 sm:px-0">{t.featuresSubtitle}</p>
+              <p className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto font-medium px-2 sm:px-0">{t.featuresSubtitle}</p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -234,7 +234,7 @@ export function LandingPage() {
                   <CheckSquare className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureTasksTitle}</h3>
-                <p className="text-gray-500 mb-6 leading-relaxed">{t.featureTasksDesc}</p>
+                <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureTasksDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureTasksBullet1, t.featureTasksBullet2, t.featureTasksBullet3].map((b) => (
                     <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
@@ -253,7 +253,7 @@ export function LandingPage() {
                   <Timer className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureFocusTitle}</h3>
-                <p className="text-gray-500 mb-6 leading-relaxed">{t.featureFocusDesc}</p>
+                <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureFocusDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureFocusBullet1, t.featureFocusBullet2, t.featureFocusBullet3].map((b) => (
                     <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
@@ -272,7 +272,7 @@ export function LandingPage() {
                   <Wallet className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureFinanceTitle}</h3>
-                <p className="text-gray-500 mb-6 leading-relaxed">{t.featureFinanceDesc}</p>
+                <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureFinanceDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureFinanceBullet1, t.featureFinanceBullet2, t.featureFinanceBullet3].map((b) => (
                     <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
@@ -318,7 +318,7 @@ export function LandingPage() {
                     </span>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-gray-500 leading-relaxed font-medium">{step.desc}</p>
+                  <p className="text-foreground-secondary leading-relaxed font-medium">{step.desc}</p>
                 </div>
               ))}
             </div>
@@ -331,7 +331,7 @@ export function LandingPage() {
 
           <div className="max-w-3xl mx-auto text-center landing-reveal px-2 sm:px-0">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-6 tracking-tight">{t.ctaTitle}</h2>
-            <p className="text-base sm:text-lg text-gray-500 mb-8 sm:mb-12 font-medium">{t.ctaSubtitle}</p>
+            <p className="text-base sm:text-lg text-foreground-secondary mb-8 sm:mb-12 font-medium">{t.ctaSubtitle}</p>
             <div className="magnetic-btn inline-flex w-full sm:w-auto">
               <button
                 onClick={goRegister}
@@ -341,7 +341,7 @@ export function LandingPage() {
                 <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1.5 transition-transform duration-200" />
               </button>
             </div>
-            <p className="text-xs sm:text-sm text-gray-400 mt-4 sm:mt-6 flex items-center justify-center gap-2 font-medium">
+            <p className="text-xs sm:text-sm text-foreground-tertiary mt-4 sm:mt-6 flex items-center justify-center gap-2 font-medium">
               <Shield className="w-4 h-4" />
               {t.ctaNoCard}
             </p>

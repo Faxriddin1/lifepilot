@@ -15,7 +15,7 @@ const sizeMap = {
 export function Spinner({ size = 'md', className }: SpinnerProps) {
   return (
     <svg
-      className={clsx('animate-spin text-primary-600', sizeMap[size], className)}
+      className={clsx('animate-spin text-accent', sizeMap[size], className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -40,7 +40,7 @@ export function Spinner({ size = 'md', className }: SpinnerProps) {
 /** Полноэкранный спиннер загрузки, центрированный по вертикали и горизонтали. */
 export function FullPageSpinner() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-background">
       <Spinner size="lg" />
     </div>
   );

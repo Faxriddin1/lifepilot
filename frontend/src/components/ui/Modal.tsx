@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
@@ -20,7 +21,7 @@ const sizeMap: Record<ModalSize, string> = {
   xl: 'max-w-4xl',
 };
 
-/** Модальное окно с оверлеем, заголовком, футером и закрытием по Escape. */
+/** Модальное окно с анимацией, оверлеем, заголовком, футером и закрытием по Escape. */
 export function Modal({ isOpen, onClose, title, size = 'md', children, footer }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -41,39 +42,54 @@ export function Modal({ isOpen, onClose, title, size = 'md', children, footer }:
     return () => window.removeEventListener('keydown', handleEsc);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/50 animate-fade-in"
-        onClick={onClose}
-      />
-      <div
-        className={clsx(
-          'relative w-full mx-4 bg-white dark:bg-gray-900 rounded-modal shadow-modal animate-slide-up',
-          'max-h-[90vh] flex flex-col',
-          sizeMap[size]
-        )}
-      >
-        {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
-            <button
-              onClick={onClose}
-              className="p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-        <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
-        {footer && (
-          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-3">
-            {footer}
-          </div>
-        )}
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="absolute inset-0 bg-[var(--bg-overlay)] backdrop-blur-sm"
+            onClick={onClose}
+          />
+          {/* Content */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 4 }}
+            transition={{
+              duration: 0.2,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className={clsx(
+              'relative w-full mx-4 bg-background border border-border rounded-xl shadow-lg',
+              'max-h-[90vh] flex flex-col',
+              sizeMap[size]
+            )}
+          >
+            {title && (
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+                <button
+                  onClick={onClose}
+                  className="p-1 rounded-md text-foreground-tertiary hover:text-foreground hover:bg-surface transition-colors duration-normal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+            <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
+            {footer && (
+              <div className="px-6 py-4 border-t border-border flex items-center justify-end gap-2">
+                {footer}
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

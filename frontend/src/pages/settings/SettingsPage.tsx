@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   User, Palette, Moon, Sun, Globe, DollarSign, Clock,
   Lock, Shield, Trash2, Download, Calendar, Hash, Bell,
-  AlertTriangle,
+  AlertTriangle, MessageCircle, Link2, Unlink, Copy, Check,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Card } from '@/components/ui/Card';
@@ -46,6 +46,74 @@ export function SettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [deleting, setDeleting] = useState(false);
+
+  // Telegram state
+  const [telegramLinked, setTelegramLinked] = useState(false);
+  const [telegramId, setTelegramId] = useState<number | null>(null);
+  const [telegramCode, setTelegramCode] = useState('');
+  const [codeExpiry, setCodeExpiry] = useState(0);
+  const [generatingCode, setGeneratingCode] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const [unlinking, setUnlinking] = useState(false);
+
+  // Load Telegram status
+  useEffect(() => {
+    authApi.telegramStatus()
+      .then((res) => {
+        setTelegramLinked(res.linked);
+        if (res.telegram_id) setTelegramId(res.telegram_id);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Code expiry countdown
+  useEffect(() => {
+    if (codeExpiry <= 0) return;
+    const timer = setInterval(() => {
+      setCodeExpiry((prev) => {
+        if (prev <= 1) {
+          setTelegramCode('');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [codeExpiry]);
+
+  const handleGenerateCode = async () => {
+    setGeneratingCode(true);
+    try {
+      const res = await authApi.telegramGenerateCode();
+      setTelegramCode(res.code);
+      setCodeExpiry(res.expires_in);
+      setCodeCopied(false);
+    } catch (err) {
+      showApiError(err);
+    } finally {
+      setGeneratingCode(false);
+    }
+  };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(telegramCode);
+    setCodeCopied(true);
+    setTimeout(() => setCodeCopied(false), 2000);
+  };
+
+  const handleUnlinkTelegram = async () => {
+    setUnlinking(true);
+    try {
+      await authApi.telegramUnlink();
+      setTelegramLinked(false);
+      setTelegramId(null);
+      showSuccess('Telegram отвязан');
+    } catch (err) {
+      showApiError(err);
+    } finally {
+      setUnlinking(false);
+    }
+  };
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'profile', label: t('settings.profile'), icon: <User className="w-4 h-4" /> },
@@ -123,7 +191,7 @@ export function SettingsPage() {
   return (
     <div className="max-w-3xl mx-auto animate-fade-in">
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto">
+      <div className="flex gap-1 mb-6 border-b border-border overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -131,8 +199,8 @@ export function SettingsPage() {
             className={clsx(
               'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap',
               activeTab === tab.id
-                ? 'border-primary-600 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-foreground-secondary hover:text-foreground hover:border-border'
             )}
           >
             {tab.icon}
@@ -144,17 +212,17 @@ export function SettingsPage() {
       {/* ═══ PROFILE TAB ═══ */}
       {activeTab === 'profile' && (
         <Card>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">{t('settings.profileInfo')}</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-6">{t('settings.profileInfo')}</h3>
 
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-full bg-primary-600 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center">
               <span className="text-xl font-bold text-white">
                 {name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{user?.email}</p>
-              <p className="text-xs text-gray-500">{t('settingsNew.memberSince')}: {user?.date_joined ? new Date(user.date_joined).toLocaleDateString() : '—'}</p>
+              <p className="text-sm font-medium text-foreground">{user?.email}</p>
+              <p className="text-xs text-foreground-secondary">{t('settingsNew.memberSince')}: {user?.date_joined ? new Date(user.date_joined).toLocaleDateString() : '—'}</p>
             </div>
           </div>
 
@@ -179,24 +247,24 @@ export function SettingsPage() {
         <div className="space-y-4">
           {/* Appearance */}
           <Card>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('settings.appearance')}</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">{t('settings.appearance')}</h3>
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-3">
-                {theme === 'dark' ? <Moon className="w-5 h-5 text-gray-400" /> : <Sun className="w-5 h-5 text-warning-500" />}
+                {theme === 'dark' ? <Moon className="w-5 h-5 text-foreground-tertiary" /> : <Sun className="w-5 h-5 text-warning-500" />}
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{t('settings.darkMode')}</p>
-                  <p className="text-xs text-gray-500">{t('settings.darkModeDesc')}</p>
+                  <p className="text-sm font-medium text-foreground">{t('settings.darkMode')}</p>
+                  <p className="text-xs text-foreground-secondary">{t('settings.darkModeDesc')}</p>
                 </div>
               </div>
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className={clsx(
                   'relative w-11 h-6 rounded-full transition-colors',
-                  theme === 'dark' ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+                  theme === 'dark' ? 'bg-accent' : 'bg-elevated'
                 )}
               >
                 <div className={clsx(
-                  'absolute top-1 w-4 h-4 bg-white rounded-full transition-transform',
+                  'absolute top-1 w-4 h-4 bg-background rounded-full transition-transform',
                   theme === 'dark' ? 'left-6' : 'left-1'
                 )} />
               </button>
@@ -205,10 +273,10 @@ export function SettingsPage() {
 
           {/* Regional */}
           <Card>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('settings.regional')}</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">{t('settings.regional')}</h3>
             <div className="space-y-4 max-w-md">
               <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <Globe className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settings.language')}
                   options={[
@@ -222,7 +290,7 @@ export function SettingsPage() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <DollarSign className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <DollarSign className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settings.currency')}
                   options={SUPPORTED_CURRENCIES.map((c) => ({
@@ -234,7 +302,7 @@ export function SettingsPage() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <Clock className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settings.timezone')}
                   options={TIMEZONES.map((tz) => ({ value: tz.value, label: tz.label }))}
@@ -247,12 +315,12 @@ export function SettingsPage() {
 
           {/* Formatting */}
           <Card>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               {t('settingsNew.formatting')}
             </h3>
             <div className="space-y-4 max-w-md">
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <Calendar className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settingsNew.dateFormat')}
                   options={[
@@ -266,7 +334,7 @@ export function SettingsPage() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <Calendar className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settingsNew.firstDayOfWeek')}
                   options={[
@@ -278,7 +346,7 @@ export function SettingsPage() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <Hash className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <Hash className="w-5 h-5 text-foreground-tertiary flex-shrink-0" />
                 <Select
                   label={t('settingsNew.numberFormat')}
                   options={[
@@ -301,8 +369,8 @@ export function SettingsPage() {
           {/* Change Password */}
           <Card>
             <div className="flex items-center gap-3 mb-4">
-              <Lock className="w-5 h-5 text-gray-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <Lock className="w-5 h-5 text-foreground-tertiary" />
+              <h3 className="text-lg font-semibold text-foreground">
                 {t('settingsNew.changePassword')}
               </h3>
             </div>
@@ -341,15 +409,103 @@ export function SettingsPage() {
             </div>
           </Card>
 
+          {/* Telegram Bot */}
+          <Card>
+            <div className="flex items-center gap-3 mb-4">
+              <MessageCircle className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-semibold text-foreground">
+                Telegram Bot
+              </h3>
+              {telegramLinked && (
+                <span className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success-bg text-success">
+                  <Link2 className="w-3 h-3" /> Подключён
+                </span>
+              )}
+            </div>
+
+            {telegramLinked ? (
+              <div className="space-y-3">
+                <p className="text-sm text-foreground-secondary">
+                  Telegram аккаунт привязан (ID: {telegramId}). Вы можете управлять задачами, финансами и привычками через бота.
+                </p>
+                <div className="flex gap-3">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<MessageCircle className="w-4 h-4" />}
+                    onClick={() => window.open('https://t.me/lifepilot_uzbot', '_blank')}
+                  >
+                    Открыть бота
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    icon={<Unlink className="w-4 h-4" />}
+                    onClick={handleUnlinkTelegram}
+                    loading={unlinking}
+                  >
+                    Отвязать
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm text-foreground-secondary">
+                  Подключите Telegram-бота для управления задачами, финансами и привычками через чат. Поддерживает текст, голос и фото чеков.
+                </p>
+
+                {telegramCode ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-4 bg-info-bg rounded-lg">
+                      <div className="flex-1">
+                        <p className="text-xs text-foreground-secondary mb-1">Ваш код привязки:</p>
+                        <p className="text-3xl font-mono font-bold tracking-[0.3em] text-accent">
+                          {telegramCode}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleCopyCode}
+                        className="p-2 rounded-lg hover:bg-surface transition-colors"
+                      >
+                        {codeCopied ? <Check className="w-5 h-5 text-success" /> : <Copy className="w-5 h-5 text-foreground-tertiary" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-foreground-tertiary">
+                      Код действителен {Math.floor(codeExpiry / 60)}:{(codeExpiry % 60).toString().padStart(2, '0')} мин.
+                      Отправьте его боту <a href="https://t.me/lifepilot_uzbot" target="_blank" className="text-accent hover:underline">@lifepilot_uzbot</a>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <Button
+                      icon={<Link2 className="w-4 h-4" />}
+                      onClick={handleGenerateCode}
+                      loading={generatingCode}
+                    >
+                      Получить код привязки
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      icon={<MessageCircle className="w-4 h-4" />}
+                      onClick={() => window.open('https://t.me/lifepilot_uzbot', '_blank')}
+                    >
+                      Открыть бота
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </Card>
+
           {/* Export Data */}
           <Card>
             <div className="flex items-center gap-3 mb-4">
-              <Download className="w-5 h-5 text-gray-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <Download className="w-5 h-5 text-foreground-tertiary" />
+              <h3 className="text-lg font-semibold text-foreground">
                 {t('settingsNew.exportData')}
               </h3>
             </div>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-foreground-secondary mb-4">
               {t('settingsNew.exportDesc')}
             </p>
             <Button variant="secondary" icon={<Download className="w-4 h-4" />} onClick={handleExportData}>
@@ -358,14 +514,14 @@ export function SettingsPage() {
           </Card>
 
           {/* Delete Account */}
-          <Card className="border-red-200 dark:border-red-900">
+          <Card className="border-danger/30">
             <div className="flex items-center gap-3 mb-4">
-              <Trash2 className="w-5 h-5 text-red-500" />
-              <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">
+              <Trash2 className="w-5 h-5 text-danger" />
+              <h3 className="text-lg font-semibold text-danger">
                 {t('settingsNew.deleteAccount')}
               </h3>
             </div>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-foreground-secondary mb-4">
               {t('settingsNew.deleteWarning')}
             </p>
             <Button
@@ -386,9 +542,9 @@ export function SettingsPage() {
         title={t('settingsNew.confirmDeletion')}
       >
         <div className="space-y-4">
-          <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
-            <p className="text-sm text-red-700 dark:text-red-400">
+          <div className="flex items-center gap-3 p-3 bg-danger-bg rounded-lg">
+            <AlertTriangle className="w-5 h-5 text-danger flex-shrink-0" />
+            <p className="text-sm text-danger">
               {t('settingsNew.confirmDeletionDesc')}
             </p>
           </div>

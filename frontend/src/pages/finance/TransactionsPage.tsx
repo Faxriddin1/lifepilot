@@ -22,7 +22,7 @@ import { formatCurrency, formatDate } from '@/utils/formatters';
 import { TransactionType, type TransactionFilters } from '@/types';
 import { AddTransactionModal } from './AddTransactionModal';
 import { useUiStore } from '@/store/uiStore';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 /** Страница списка транзакций с фильтрацией по типу, категории, дате и пагинацией. */
 export function TransactionsPage() {
@@ -128,44 +128,44 @@ export function TransactionsPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-800">
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                <tr className="border-b border-border">
+                  <th className="text-left text-xs font-semibold text-foreground-secondary uppercase tracking-wider px-3 py-2">
                     {t('transactionsPage.date')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-xs font-semibold text-foreground-secondary uppercase tracking-wider px-3 py-2">
                     {t('transactionsPage.description')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-xs font-semibold text-foreground-secondary uppercase tracking-wider px-3 py-2">
                     {t('transactionsPage.category')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-xs font-semibold text-foreground-secondary uppercase tracking-wider px-3 py-2">
                     {t('transactionsPage.account')}
                   </th>
-                  <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-right text-xs font-semibold text-foreground-secondary uppercase tracking-wider px-3 py-2">
                     {t('transactionsPage.amount')}
                   </th>
-                  <th className="w-10 px-4 py-3" />
+                  <th className="w-10 px-3 py-2" />
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((tx) => (
                   <tr
                     key={tx.id}
-                    className="border-b border-gray-100 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors"
+                    className="border-b border-border hover:bg-surface transition-colors"
                   >
-                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                    <td className="px-3 py-2 text-sm text-foreground-secondary whitespace-nowrap">
                       {formatDate(tx.date, 'MMM d, yyyy')}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-2">
                       <div className="flex items-center gap-2">
                         <div
                           className={clsx(
-                            'w-7 h-7 rounded flex items-center justify-center flex-shrink-0',
+                            'w-6 h-6 rounded flex items-center justify-center flex-shrink-0',
                             (tx.transaction_type || tx.type) === TransactionType.INCOME
-                              ? 'bg-success-50 text-success-600'
+                              ? 'bg-success-bg text-success'
                               : (tx.transaction_type || tx.type) === TransactionType.EXPENSE
-                                ? 'bg-danger-50 text-danger-600'
-                                : 'bg-primary-50 text-primary-600'
+                                ? 'bg-danger-bg text-danger'
+                                : 'bg-accent/10 text-accent'
                           )}
                         >
                           {(tx.transaction_type || tx.type) === TransactionType.INCOME ? (
@@ -176,28 +176,28 @@ export function TransactionsPage() {
                             <ArrowLeftRight className="w-3.5 h-3.5" />
                           )}
                         </div>
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <span className="text-sm font-medium text-foreground">
                           {tx.note || tx.description}
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-2">
                       <Badge variant="default" size="sm">
                         {tx.category_name ?? t('transactionsPage.uncategorized')}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-3 py-2 text-sm text-foreground-secondary">
                       {tx.account_name ?? '--'}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-3 py-2 text-right">
                       <span
                         className={clsx(
                           'text-sm font-semibold',
                           (tx.transaction_type || tx.type) === TransactionType.INCOME
-                            ? 'text-success-600'
+                            ? 'text-success'
                             : (tx.transaction_type || tx.type) === TransactionType.EXPENSE
-                              ? 'text-danger-600'
-                              : 'text-primary-600'
+                              ? 'text-danger'
+                              : 'text-accent'
                         )}
                       >
                         {(tx.transaction_type || tx.type) === TransactionType.INCOME
@@ -208,8 +208,8 @@ export function TransactionsPage() {
                         {formatCurrency(tx.amount)}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <button className="p-1 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <td className="px-3 py-2">
+                      <button className="p-1 rounded text-foreground-secondary hover:text-foreground hover:bg-surface">
                         <MoreHorizontal className="w-4 h-4" />
                       </button>
                     </td>
@@ -221,8 +221,8 @@ export function TransactionsPage() {
 
           {/* Pagination */}
           {data && data.count > (filters.page_size ?? 20) && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800">
-              <p className="text-sm text-gray-500">{data.count} {t('transactionsPage.totalTransactions')}</p>
+            <div className="flex items-center justify-between px-3 py-2 border-t border-border">
+              <p className="text-sm text-foreground-secondary">{data.count} {t('transactionsPage.totalTransactions')}</p>
               <div className="flex gap-2">
                 <Button
                   size="sm"

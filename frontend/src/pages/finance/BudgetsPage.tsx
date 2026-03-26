@@ -100,25 +100,25 @@ export function BudgetsPage() {
         <Card className="mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-gray-500">{t('budgetsNew.totalBudget')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-sm text-foreground-secondary">{t('budgetsNew.totalBudget')}</p>
+              <p className="text-2xl font-bold text-foreground">
                 {formatCurrency(totalBudget)}
               </p>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <div className="text-center">
-                <p className="text-xs text-gray-400">{t('budgetsNew.spent')}</p>
-                <p className="text-lg font-bold text-red-600">{formatCurrency(totalSpent)}</p>
+                <p className="text-xs text-foreground-secondary">{t('budgetsNew.spent')}</p>
+                <p className="text-lg font-bold text-danger">{formatCurrency(totalSpent)}</p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-400">{t('budgetsNew.remaining')}</p>
-                <p className={clsx('text-lg font-bold', totalRemaining >= 0 ? 'text-green-600' : 'text-red-600')}>
+                <p className="text-xs text-foreground-secondary">{t('budgetsNew.remaining')}</p>
+                <p className={clsx('text-lg font-bold', totalRemaining >= 0 ? 'text-success' : 'text-danger')}>
                   {formatCurrency(Math.abs(totalRemaining))}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-xs text-gray-400">{t('budgetsNew.used')}</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{Math.round(totalPct)}%</p>
+                <p className="text-xs text-foreground-secondary">{t('budgetsNew.used')}</p>
+                <p className="text-lg font-bold text-foreground">{Math.round(totalPct)}%</p>
               </div>
             </div>
             <Button icon={<Plus className="w-4 h-4" />} onClick={() => setShowModal(true)}>
@@ -144,7 +144,7 @@ export function BudgetsPage() {
           onAction={() => setShowModal(true)}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {budgets.map((budget) => {
             const budgetAmount = parseFloat(String(budget.amount || 0));
             const spent = parseFloat(String(budget.spent_amount || budget.spent || 0));
@@ -156,7 +156,7 @@ export function BudgetsPage() {
             // Find category info
             const cat = expenseCategories.find((c) => String(c.id) === String(budget.category));
             const CatIcon = cat ? getCatIcon(cat.icon || '') : TrendingDown;
-            const catColor = cat?.color || '#6B7280';
+            const catColor = cat?.color || 'var(--text-secondary)';
             const catName = budget.category_name || cat?.name || t('budgetsNew.uncategorized');
 
             return (
@@ -164,7 +164,7 @@ export function BudgetsPage() {
                 {/* Color accent bar */}
                 <div
                   className="absolute top-0 left-0 right-0 h-1"
-                  style={{ backgroundColor: isOver ? '#EF4444' : isWarning ? '#F59E0B' : catColor }}
+                  style={{ backgroundColor: isOver ? 'var(--color-danger)' : isWarning ? 'var(--color-warning)' : catColor }}
                 />
 
                 <div className="pt-2">
@@ -178,10 +178,10 @@ export function BudgetsPage() {
                         <CatIcon className="w-5 h-5" style={{ color: catColor }} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        <h3 className="text-sm font-bold text-foreground">
                           {catName}
                         </h3>
-                        <p className="text-xs text-gray-400 capitalize">{budget.period}</p>
+                        <p className="text-xs text-foreground-secondary capitalize">{budget.period}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
@@ -198,7 +198,7 @@ export function BudgetsPage() {
                       )}
                       <button
                         onClick={() => deleteBudget.mutate(budget.id)}
-                        className="p-1 rounded text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                        className="p-1 rounded text-foreground-tertiary hover:text-danger opacity-0 group-hover:opacity-100 transition-all"
                         title={t('budgetsNew.delete')}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -209,16 +209,16 @@ export function BudgetsPage() {
                   {/* Amount display */}
                   <div className="flex items-baseline justify-between mb-2">
                     <div>
-                      <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                      <span className="text-xl font-bold text-foreground">
                         {formatCurrency(spent)}
                       </span>
-                      <span className="text-sm text-gray-400 ml-1">
+                      <span className="text-sm text-foreground-secondary ml-1">
                         / {formatCurrency(budgetAmount)}
                       </span>
                     </div>
                     <span className={clsx(
                       'text-sm font-bold',
-                      isOver ? 'text-red-600' : isWarning ? 'text-amber-600' : 'text-gray-500',
+                      isOver ? 'text-danger' : isWarning ? 'text-warning' : 'text-foreground-secondary',
                     )}>
                       {Math.round(pct)}%
                     </span>
@@ -237,7 +237,7 @@ export function BudgetsPage() {
                     <span
                       className={clsx(
                         'font-medium',
-                        remaining < 0 ? 'text-red-600' : 'text-green-600'
+                        remaining < 0 ? 'text-danger' : 'text-success'
                       )}
                     >
                       {remaining >= 0
@@ -256,15 +256,15 @@ export function BudgetsPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+          <div className="relative w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
             {/* Header */}
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-bold text-foreground">
                 {step === 'category'
                   ? t('budgetsNew.chooseCategory')
                   : t('budgetsNew.setLimit')}
               </h2>
-              <p className="text-sm text-gray-400 mt-0.5">
+              <p className="text-sm text-foreground-secondary mt-0.5">
                 {step === 'category'
                   ? t('budgetsNew.whichCategoryBudget')
                   : `${selectedCat?.name} — ${t('budgetsNew.howMuchPlan')}`}
@@ -284,7 +284,7 @@ export function BudgetsPage() {
                           setSelectedCat(cat);
                           setStep('amount');
                         }}
-                        className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all hover:scale-105"
+                        className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-surface transition-all hover:scale-105"
                       >
                         <div
                           className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -292,7 +292,7 @@ export function BudgetsPage() {
                         >
                           <Icon className="w-5 h-5" style={{ color: cat.color }} />
                         </div>
-                        <span className="text-[11px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
+                        <span className="text-[11px] font-medium text-foreground text-center leading-tight">
                           {cat.name}
                         </span>
                       </button>
@@ -303,7 +303,7 @@ export function BudgetsPage() {
                 /* Step 2: Amount + period */
                 <div className="space-y-5">
                   {/* Selected category */}
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-surface">
                     {selectedCat && (() => {
                       const Icon = getCatIcon(selectedCat.icon || '');
                       return (
@@ -314,10 +314,10 @@ export function BudgetsPage() {
                           >
                             <Icon className="w-5 h-5" style={{ color: selectedCat.color }} />
                           </div>
-                          <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCat.name}</span>
+                          <span className="font-medium text-foreground">{selectedCat.name}</span>
                           <button
                             onClick={() => setStep('category')}
-                            className="ml-auto text-xs text-blue-500 hover:text-blue-700"
+                            className="ml-auto text-xs text-accent hover:text-accent/80"
                           >
                             {t('budgetsNew.change')}
                           </button>
@@ -328,11 +328,11 @@ export function BudgetsPage() {
 
                   {/* Amount */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                    <label className="block text-sm font-medium text-foreground-secondary mb-1.5">
                       {t('budgetsNew.budgetLimit')}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-gray-400">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-foreground-secondary">$</span>
                       <input
                         type="number"
                         placeholder="0.00"
@@ -341,14 +341,14 @@ export function BudgetsPage() {
                         autoFocus
                         step="0.01"
                         min="0"
-                        className="w-full pl-10 pr-4 py-3 text-xl font-bold rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-4 py-3 text-xl font-bold rounded-xl border-2 border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-border-focus"
                       />
                     </div>
                   </div>
 
                   {/* Period — visual buttons */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                    <label className="block text-sm font-medium text-foreground-secondary mb-2">
                       {t('budgetsNew.period')}
                     </label>
                     <div className="grid grid-cols-4 gap-2">
@@ -364,8 +364,8 @@ export function BudgetsPage() {
                           className={clsx(
                             'py-2 text-sm font-medium rounded-lg transition-all',
                             period === p.value
-                              ? 'bg-blue-600 text-white shadow-sm'
-                              : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200',
+                              ? 'bg-accent text-white shadow-sm'
+                              : 'bg-elevated text-foreground-secondary hover:bg-surface',
                           )}
                         >
                           {p.label}
@@ -378,7 +378,7 @@ export function BudgetsPage() {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+            <div className="px-6 py-4 border-t border-border flex gap-3">
               <Button variant="secondary" onClick={step === 'amount' ? () => setStep('category') : closeModal} className="flex-1">
                 {step === 'amount' ? t('budgetsNew.back') : t('common.cancel')}
               </Button>

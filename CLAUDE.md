@@ -8,11 +8,12 @@ All-in-one platform for task management, productivity and personal finance. Free
 ## Tech Stack
 
 - **Backend:** Django 5.0 + Django REST Framework + PostgreSQL 16 + Redis 7 + Celery
-- **Frontend:** React 18 + TypeScript + Vite + TailwindCSS 3 + Zustand + TanStack Query
+- **Frontend:** React 18 + TypeScript + Vite + TailwindCSS 3 + Zustand + TanStack Query + Framer Motion + Sonner + cmdk
+- **Design System:** Semantic CSS-переменные (tokens.css), 70+ design tokens, dark/light через `:root` / `.dark` — zero hardcoded colors
 - **Auth:** JWT (simplejwt) — access 30 min, refresh 7 days with rotation + Google OAuth 2.0 (lifepilot.uz domain)
 - **i18n:** react-i18next (EN, RU, UZ Latin, UZ Cyrillic) — full coverage, zero hardcoded strings, all UI text via `t()` calls
-- **Infra:** Docker Compose (db, redis, backend, frontend, celery)
-- **Deploy:** Google Cloud VM (34.122.146.176), Docker Compose, Nginx reverse proxy, SSL pending
+- **Infra:** Docker Compose (db, redis, backend, frontend, celery, bot)
+- **Deploy:** Google Cloud VM, Docker Compose, Nginx reverse proxy, SSL (Let's Encrypt)
 
 ## Setup
 
@@ -68,8 +69,10 @@ PM/
 │   │   ├── store/           # Zustand stores (auth, ui)
 │   │   ├── hooks/           # React Query hooks
 │   │   ├── i18n/            # i18next config + locales (en.json, ru.json, uz.json, uz-cyr.json)
-│   │   ├── components/ui/   # Button, Input, Modal, Card, Badge, Select, PasswordStrength, StatCard, BulletGraph, WaterfallChart...
-│   │   ├── components/layout/ # AppLayout, Sidebar, TopBar
+│   │   ├── styles/          # tokens.css (design tokens — CSS variables, light/dark themes)
+│   │   ├── components/ui/   # Button, Input, Modal, Card, Badge, Select, PasswordStrength, StatCard, BulletGraph, WaterfallChart, Skeleton, PageTransition...
+│   │   ├── components/      # CommandPalette (cmdk, ⌘K)
+│   │   ├── components/layout/ # AppLayout (with AnimatePresence page transitions), Sidebar (collapsible + keyboard [), TopBar (⌘K search trigger)
 │   │   ├── pages/           # 22 user pages + 11 admin pages + landing/legal pages
 │   │   │   ├── auth/        # LoginPage, RegisterPage (password strength indicator)
 │   │   │   ├── dashboard/   # DashboardPage (BI-optimized, StatCard with sparklines/trends/alerts)
@@ -141,17 +144,25 @@ Common admin features:
 - Deletion with confirmation
 - "Back to app" button
 
-## UI/UX Design
+## UI/UX Design (2026 Redesign)
 
-- **Dashboard:** BI-optimized with StatCard component (sparklines, trend indicators, color-coded alerts)
-- **Charts:** WCAG-compliant blue/orange palette for data visualization (avoids green/red for accessibility)
+- **Design System:** 70+ semantic CSS variables in `src/styles/tokens.css` — all colors, shadows, radius, spacing, transitions, typography
+- **Theme:** Light/Dark via CSS variables (`:root` / `.dark`), zero hardcoded Tailwind colors, no theme flash (inline script in `<head>`)
+- **Typography:** Inter (sans) + JetBrains Mono (mono), loaded via Google Fonts with `display=swap`
+- **Dashboard:** Bento Grid layout, StatCard with sparklines, trend indicators, alert border-l color-coding
+- **Charts:** WCAG-compliant palette, all Recharts colors via `var()` CSS variables for theme awareness
 - **Finance charts:** Waterfall chart for cashflow, bullet graphs for budget progress
 - **Analytics:** GitHub-style contribution heatmap, compact peak hours chart, habit progress report
-- **Alert system:** Color-coded alerts across modules — budget overspend, focus session reminders, task deadline warnings
-- **Landing page:** Animated intro screen with cursor particle effects, 3D tilt cards, gradient mesh backgrounds, fully responsive
-- **Themes:** Light and dark mode
-- **Mobile:** Responsive sidebar with hamburger menu, overlay, auto-close on navigation (lg: breakpoint = 1024px)
-- **i18n:** Zero hardcoded strings — every UI element uses react-i18next `t()` calls across all 4 languages, language synced with user profile on login
+- **Alert system:** Color-coded alerts (border-l-3 + semantic colors) across all modules
+- **Command Palette:** `⌘K` / `Ctrl+K` — search pages, actions (cmdk library), 4-language support
+- **Sidebar:** Collapsible (240→48px), keyboard shortcut `[`, mobile sheet overlay with `X` close + Escape + backdrop click
+- **Animations:** Framer Motion page transitions (fade+slide 200ms), modal scale+fade, prefers-reduced-motion respected
+- **Toast:** Sonner (replaced react-hot-toast) — `toast.success()`, `toast.error()`, `toast.promise()`
+- **Skeleton:** `Skeleton` + `DashboardSkeleton` components for loading states
+- **Landing page:** Animated intro screen with cursor particle effects, 3D tilt cards, gradient mesh, fixed light theme
+- **Mobile:** Responsive sidebar with hamburger, overlay, auto-close on navigation (lg: breakpoint = 1024px)
+- **Accessibility:** focus-visible ring via `--border-focus`, prefers-reduced-motion, tabular-nums for financial data
+- **i18n:** Zero hardcoded strings — all UI text via react-i18next `t()` calls across all 4 languages
 
 ## API
 
@@ -215,6 +226,12 @@ Pagination: 20 items/page. Throttling: 100/day anon, 1000/day auth.
 - **transaction.atomic + select_for_update** for balances and race conditions
 - **Ownership validation** in serializers (parent_task, project, account)
 - **IsAdminUser** permission for admin panel (is_staff=True)
+- **Design tokens:** All colors via CSS variables in `src/styles/tokens.css` — NEVER use hardcoded Tailwind color classes (bg-gray-*, text-blue-*, dark:bg-*, etc.)
+- **Color classes:** Use semantic tokens: `bg-background`, `bg-surface`, `bg-elevated`, `text-foreground`, `text-foreground-secondary`, `border-border`, `bg-accent`, `text-success`, `text-danger`, etc.
+- **Dark mode:** Via CSS variables only — adding `dark:` prefix classes is PROHIBITED. Theme switches automatically via `:root` / `.dark` in tokens.css
+- **Animations:** Framer Motion for page/modal transitions, CSS `active:scale-[0.97]` for buttons, `duration-fast/normal/slow` tokens
+- **Toast notifications:** `import { toast } from 'sonner'` — NOT react-hot-toast, NOT custom ToastStore
+- **Command Palette:** `src/components/CommandPalette.tsx` (cmdk) — add new pages/actions there when adding routes
 - **Frontend path alias:** `@` -> `src/`
 - **API proxy:** in dev Vite proxies `/api` -> `127.0.0.1:8000`
 - **i18n:** react-i18next, JSON locale files, `useTranslation()` hook — full coverage, zero hardcoded strings
@@ -222,13 +239,12 @@ Pagination: 20 items/page. Throttling: 100/day anon, 1000/day auth.
 - **Currency:** USD by default, 50+ currencies configurable per-user
 - **Timezones:** all IANA timezones available in settings
 - **Comments:** JSDoc (frontend), docstrings (backend)
-- **Error handling:** `showApiError()` / `showSuccess()`, try/catch on all API calls
-- **Alert system:** color-coded alerts (blue/orange WCAG palette) for budgets, focus, tasks
+- **Error handling:** `toast.error()` / `toast.success()` (Sonner), try/catch on all API calls
+- **Alert system:** semantic color alerts (`text-success`, `text-warning`, `text-danger`) — WCAG-compliant
 - **Form validation:** frontend + backend (serializers)
-- **Admin panel:** universal AdminResourcePage with configurable columns
+- **Admin panel:** universal AdminResourcePage with configurable columns (intentionally dark sidebar)
 - **Free platform:** no subscriptions, no paid plans, no billing — completely free to use
-- **Data collection:** anonymous usage data collected for platform improvement purposes only
-- **Landing page:** animated intro screen, cursor particle effects, 3D tilt cards, gradient mesh, 4-language responsive
+- **Landing page:** fixed light theme (intentionally not tokenized), animated intro, cursor effects, 3D tilt cards
 
 ## Environment Variables
 
@@ -299,8 +315,10 @@ VITE_GOOGLE_CLIENT_ID=<your-client-id>.apps.googleusercontent.com
 
 ## Deployment (Production)
 
-- **Hosting:** Google Cloud VM (Compute Engine) — 34.122.146.176
-- **Stack:** Docker Compose (PostgreSQL, Redis, Django, React, Celery)
-- **Web server:** Nginx as reverse proxy
-- **SSL:** Pending — Let's Encrypt (certbot) for https://lifepilot.uz
+- **Hosting:** Google Cloud VM (Compute Engine)
+- **Stack:** Docker Compose prod (PostgreSQL, Redis, Django/gunicorn, React/nginx, Celery, Telegram Bot)
+- **Web server:** Nginx (host-level) as reverse proxy with SSL
+- **SSL:** Let's Encrypt (certbot) — HTTPS enforced, HSTS enabled
+- **Security Headers:** X-Frame-Options, X-Content-Type-Options, XSS-Protection, Referrer-Policy, Permissions-Policy, HSTS
 - **Domain:** lifepilot.uz
+- **Deploy command:** `docker-compose -f docker-compose.prod.yml build frontend && docker-compose -f docker-compose.prod.yml up -d frontend`

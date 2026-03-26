@@ -1,7 +1,10 @@
 import logging
+import secrets
+import string
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.utils import timezone
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
@@ -232,3 +235,101 @@ class DeleteAccountView(APIView):
             return Response({'detail': 'Incorrect password.'}, status=status.HTTP_400_BAD_REQUEST)
         request.user.delete()
         return Response({'detail': 'Account deleted.'}, status=status.HTTP_200_OK)
+
+
+class TelegramGenerateCodeView(APIView):
+    """Генерация одноразового кода для привязки Telegram-бота."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        code = ''.join(secrets.choice(string.digits) for _ in range(6))
+        cache_key = f'telegram_link_code:{code}'
+        # Сохраняем на 5 минут
+        cache.set(cache_key, str(request.user.id), 300)
+        return Response({'code': code, 'expires_in': 300})
+
+
+class TelegramVerifyCodeView(APIView):
+    """Проверка кода привязки от Telegram-бота. Возвращает JWT-токены."""
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        code = request.data.get('code', '').strip()
+        telegram_id = request.data.get('telegram_id')
+
+        if not code or not telegram_id:
+            return Response(
+                {'detail': 'Code and telegram_id are required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        cache_key = f'telegram_link_code:{code}'
+        user_id = cache.get(cache_key)
+
+        if not user_id:
+            return Response(
+                {'detail': 'Invalid or expired code.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'detail': 'User not found.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Удаляем использованный код
+        cache.delete(cache_key)
+
+        # Генерируем JWT
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'user': UserSerializer(user).data,
+            'tokens': {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            },
+        })
+
+
+class TelegramStatusView(APIView):
+    """Статус привязки Telegram-бота."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Проверяем есть ли привязка в таблице бота
+        from django.db import connection
+        user_id = str(request.user.id)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT telegram_id, is_active, last_activity FROM bot_telegram_users WHERE lifepilot_user_id = %s",
+                    [user_id],
+                )
+                row = cursor.fetchone()
+            if row:
+                return Response({
+                    'linked': True,
+                    'telegram_id': row[0],
+                    'is_active': row[1],
+                    'last_activity': row[2],
+                })
+        except Exception:
+            pass
+        return Response({'linked': False})
+
+    def delete(self, request):
+        """Отвязать Telegram."""
+        from django.db import connection
+        user_id = str(request.user.id)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "DELETE FROM bot_telegram_users WHERE lifepilot_user_id = %s",
+                    [user_id],
+                )
+        except Exception:
+            pass
+        return Response({'detail': 'Telegram unlinked.'})

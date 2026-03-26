@@ -10,10 +10,10 @@ const iconMap: Record<ToastType, typeof CheckCircle> = {
 };
 
 const colorMap: Record<ToastType, string> = {
-  success: 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-700 dark:text-green-300',
-  error: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-700 dark:text-red-300',
-  warning: 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/30 dark:border-yellow-700 dark:text-yellow-300',
-  info: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/30 dark:border-blue-700 dark:text-blue-300',
+  success: 'bg-success-bg border-success/20 text-success',
+  error: 'bg-danger-bg border-danger/20 text-danger',
+  warning: 'bg-warning-bg border-warning/20 text-warning',
+  info: 'bg-info-bg border-info/20 text-info',
 };
 
 /** Контейнер всплывающих уведомлений с поддержкой типов success, error, warning и info. */
@@ -30,7 +30,7 @@ export function ToastContainer() {
           <div
             key={toast.id}
             className={clsx(
-              'flex items-start gap-3 p-3 rounded-lg border shadow-lg animate-in slide-in-from-right',
+              'flex items-start gap-3 p-3 rounded-lg border shadow-md animate-in slide-in-from-right',
               colorMap[toast.type]
             )}
           >
@@ -38,7 +38,7 @@ export function ToastContainer() {
             <p className="text-sm flex-1">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="flex-shrink-0 opacity-60 hover:opacity-100"
+              className="flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
             >
               <X className="w-4 h-4" />
             </button>

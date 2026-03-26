@@ -12,9 +12,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
+    mem_limit: 512m
+    command: >
+      postgres
+        -c shared_buffers=128MB
+        -c work_mem=4MB
+        -c maintenance_work_mem=64MB
+        -c effective_cache_size=256MB
+        -c max_connections=50
 
   redis:
     image: redis:7-alpine
@@ -23,9 +31,11 @@ services:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
+    mem_limit: 128m
+    command: redis-server --maxmemory 96mb --maxmemory-policy allkeys-lru --save 60 1000
 
   backend:
     build:
@@ -42,13 +52,24 @@ services:
       - backend_static:/app/staticfiles
       - backend_media:/app/media
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+    mem_limit: 512m
+    command: >
+      gunicorn config.wsgi:application
+        --bind 0.0.0.0:8000
+        --workers 2
+        --threads 4
+        --worker-class gthread
+        --timeout 120
+        --max-requests 1000
+        --max-requests-jitter 50
+        --graceful-timeout 30
+        --keep-alive 5
 
   frontend:
     build:
@@ -59,16 +80,22 @@ services:
         VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
     restart: unless-stopped
     ports:
-      - "3000:80"
+      - "127.0.0.1:3000:80"
     depends_on:
       - backend
+    mem_limit: 64m
 
   celery:
     build:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
-    command: celery -A config worker -l info
+    command: >
+      celery -A config worker
+        -l warning
+        --concurrency=2
+        --max-tasks-per-child=100
+        -Q default
     env_file:
       - .env
     environment:
@@ -82,6 +109,30 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    mem_limit: 384m
+
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${DB_USER:-postgres}:${DB_PASSWORD:-productflow_secret}@db:5432/${DB_NAME:-productflow}
+      - REDIS_URL=redis://redis:6379/1
+      - LIFEPILOT_API_URL=https://lifepilot.uz/api/v1
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
+    volumes:
+      - ./google-credentials.json:/app/credentials.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    mem_limit: 256m
 
 volumes:
   postgres_data:

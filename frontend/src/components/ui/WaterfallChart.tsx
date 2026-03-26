@@ -23,13 +23,13 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
 
     for (const item of items) {
       if (item.type === 'income') {
-        computed.push({ label: item.label, base: running, value: item.amount, type: 'income', color: item.color || '#3B82F6' });
+        computed.push({ label: item.label, base: running, value: item.amount, type: 'income', color: item.color || 'var(--color-income)' });
         running += item.amount;
       } else if (item.type === 'expense') {
         running -= item.amount;
-        computed.push({ label: item.label, base: running, value: item.amount, type: 'expense', color: item.color || '#F97316' });
+        computed.push({ label: item.label, base: running, value: item.amount, type: 'expense', color: item.color || 'var(--color-expense)' });
       } else {
-        computed.push({ label: item.label, base: 0, value: running, type: 'total', color: item.color || '#22C55E' });
+        computed.push({ label: item.label, base: 0, value: running, type: 'total', color: item.color || 'var(--color-success)' });
       }
     }
 
@@ -41,7 +41,6 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
   if (bars.length === 0) return null;
 
   const barWidth = Math.min(60, Math.floor((100 - bars.length * 2) / bars.length));
-  const gap = 2;
 
   return (
     <div className={clsx('w-full', className)} style={{ height }}>
@@ -53,7 +52,7 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
           return (
             <div key={i} className="flex flex-col items-center flex-1 min-w-0" style={{ maxWidth: `${barWidth}%` }}>
               {/* Value label */}
-              <span className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 mb-1 truncate w-full text-center">
+              <span className="text-[10px] font-semibold text-foreground-secondary mb-1 truncate w-full text-center">
                 {bar.type === 'expense' ? '-' : ''}{formatValue(bar.value)}
               </span>
 
@@ -69,7 +68,7 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
 
                   {/* Colored bar */}
                   <div
-                    className="w-full rounded-t-md transition-all duration-500 relative group"
+                    className="w-full rounded-t-md transition-all duration-[500ms] relative group"
                     style={{
                       height: Math.max(barH, 2),
                       backgroundColor: bar.color,
@@ -79,7 +78,7 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
                     {/* Connector line to next bar */}
                     {i < bars.length - 1 && bar.type !== 'total' && (
                       <div
-                        className="absolute right-0 border-t-2 border-dashed border-gray-300 dark:border-gray-600"
+                        className="absolute right-0 border-t-2 border-dashed border-border"
                         style={{
                           top: bar.type === 'income' ? 0 : barH,
                           width: '120%',
@@ -92,7 +91,7 @@ export function WaterfallChart({ items, height = 220, className, formatValue = (
               </div>
 
               {/* Label */}
-              <span className="text-[9px] text-gray-500 dark:text-gray-400 mt-1.5 truncate w-full text-center leading-tight">
+              <span className="text-[9px] text-foreground-tertiary mt-1.5 truncate w-full text-center leading-tight">
                 {bar.label}
               </span>
             </div>

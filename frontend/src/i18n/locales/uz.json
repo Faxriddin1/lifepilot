@@ -353,6 +353,15 @@
       "/settings": "Sozlamalar"
     }
   },
+  "commandPalette": {
+    "label": "Buyruqlar palitrasi",
+    "placeholder": "Sahifalar, amallarni qidirish...",
+    "noResults": "Hech narsa topilmadi.",
+    "pages": "Sahifalar",
+    "actions": "Amallar",
+    "createTask": "Vazifa yaratish",
+    "toggleTheme": "Mavzuni almashtirish"
+  },
   "register": {
     "title": "Hisob yarating",
     "subtitle": "Bepul boshlang. Kredit karta kerak emas.",

@@ -19,14 +19,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            className="block text-sm font-medium text-foreground mb-1"
           >
             {label}
           </label>
         )}
         <div className="relative">
           {icon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-foreground-tertiary">
               {icon}
             </div>
           )}
@@ -34,13 +34,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={clsx(
-              'block w-full rounded-input border bg-white px-3 py-2 text-sm transition-colors duration-150',
-              'placeholder:text-gray-400',
-              'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500',
-              'dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500',
+              'block w-full h-9 rounded-md border bg-background px-3 py-1 text-sm text-foreground transition-colors duration-normal',
+              'placeholder:text-foreground-tertiary',
+              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-focus',
+              'shadow-sm',
               error
-                ? 'border-danger-300 focus:ring-danger-500 focus:border-danger-500'
-                : 'border-gray-300 dark:border-gray-600',
+                ? 'border-danger focus-visible:ring-danger'
+                : 'border-border',
               icon && 'pl-10',
               rightIcon && 'pr-10',
               className
@@ -48,13 +48,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-foreground-tertiary">
               {rightIcon}
             </div>
           )}
         </div>
-        {error && <p className="mt-1 text-xs text-danger-600">{error}</p>}
-        {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
+        {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+        {hint && !error && <p className="mt-1 text-xs text-foreground-secondary">{hint}</p>}
       </div>
     );
   }

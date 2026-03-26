@@ -186,7 +186,7 @@ export function ProjectsPage() {
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-foreground-secondary">
           {projects?.length ?? 0} {t('projectsList.projects')}
         </p>
         <Button icon={<Plus className="w-4 h-4" />} onClick={openModal}>
@@ -217,19 +217,19 @@ export function ProjectsPage() {
                 <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={(e) => { e.stopPropagation(); setContextMenu(contextMenu === project.id ? null : project.id); }}
-                    className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="p-1 rounded-md hover:bg-surface"
                   >
-                    <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                    <MoreHorizontal className="w-4 h-4 text-foreground-secondary" />
                   </button>
                   {contextMenu === project.id && (
                     <>
                       <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setContextMenu(null); }} />
-                      <div className="absolute right-0 top-7 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 w-40">
-                        <button onClick={(e) => openEdit(project, e)} className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700">
-                          <PenTool className="w-4 h-4 text-blue-500" />
+                      <div className="absolute right-0 top-7 z-20 bg-background rounded-lg shadow-lg border border-border py-1 w-40">
+                        <button onClick={(e) => openEdit(project, e)} className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-surface">
+                          <PenTool className="w-4 h-4 text-accent" />
                           {t('projectsNew.edit')}
                         </button>
-                        <button onClick={(e) => handleDeleteProject(project.id, e)} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                        <button onClick={(e) => handleDeleteProject(project.id, e)} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-danger-bg">
                           <Trash2 className="w-4 h-4" />
                           {t('projectsNew.delete')}
                         </button>
@@ -246,18 +246,18 @@ export function ProjectsPage() {
                     <IconComp className="w-5 h-5" style={{ color: project.color }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+                    <h3 className="text-base font-semibold text-foreground truncate">
                       {project.name}
                     </h3>
                     {project.description && (
-                      <p className="text-sm text-gray-500 truncate mt-0.5">
+                      <p className="text-sm text-foreground-secondary truncate mt-0.5">
                         {project.description}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                <div className="flex items-center justify-between text-sm text-foreground-secondary mb-2">
                   <span>
                     {project.completed_task_count} / {project.task_count} {t('projectsList.tasks')}
                   </span>
@@ -294,7 +294,7 @@ export function ProjectsPage() {
         {mode === 'templates' ? (
           <div className="space-y-4">
             {/* Quick templates */}
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-foreground-secondary">
               {t('projectsNew.chooseTemplate')}
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -304,7 +304,7 @@ export function ProjectsPage() {
                   <button
                     key={tmpl.name_en}
                     onClick={() => handleCreateFromTemplate(tmpl)}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
+                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border hover:border-accent/40 hover:bg-accent/5 transition-all group"
                   >
                     <div
                       className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110"
@@ -312,7 +312,7 @@ export function ProjectsPage() {
                     >
                       <Icon className="w-5 h-5" style={{ color: tmpl.color }} />
                     </div>
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
+                    <span className="text-xs font-medium text-foreground text-center leading-tight">
                       {getTemplateName(tmpl)}
                     </span>
                   </button>
@@ -323,7 +323,7 @@ export function ProjectsPage() {
             {/* Custom button */}
             <button
               onClick={() => setMode('custom')}
-              className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-xl text-sm font-medium text-foreground-secondary hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all"
             >
               <PenTool className="w-4 h-4" />
               {t('projectsNew.createCustom')}
@@ -348,7 +348,7 @@ export function ProjectsPage() {
 
             {/* Icon selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 {t('projectsNew.icon')}
               </label>
               <div className="grid grid-cols-10 gap-1.5">
@@ -361,13 +361,13 @@ export function ProjectsPage() {
                       className={clsx(
                         'w-9 h-9 rounded-lg flex items-center justify-center transition-all',
                         selectedIcon === item.name
-                          ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500 scale-110'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-800',
+                          ? 'bg-accent/10 ring-2 ring-accent scale-110'
+                          : 'hover:bg-surface',
                       )}
                     >
                       <Icon className={clsx(
                         'w-4.5 h-4.5',
-                        selectedIcon === item.name ? 'text-blue-600' : 'text-gray-500',
+                        selectedIcon === item.name ? 'text-accent' : 'text-foreground-secondary',
                       )} />
                     </button>
                   );
@@ -377,7 +377,7 @@ export function ProjectsPage() {
 
             {/* Color selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 {t('projectsList.color')}
               </label>
               <div className="flex flex-wrap gap-2">
@@ -387,7 +387,7 @@ export function ProjectsPage() {
                     onClick={() => setColor(c)}
                     className={clsx(
                       'w-8 h-8 rounded-full border-2 transition-all',
-                      color === c ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-105',
+                      color === c ? 'border-foreground scale-110' : 'border-transparent hover:scale-105',
                     )}
                     style={{ backgroundColor: c }}
                   />
@@ -427,7 +427,7 @@ export function ProjectsPage() {
             onChange={(e) => setDescription(e.target.value)}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               {t('projectsNew.icon')}
             </label>
             <div className="grid grid-cols-10 gap-1.5">
@@ -440,13 +440,13 @@ export function ProjectsPage() {
                     className={clsx(
                       'w-9 h-9 rounded-lg flex items-center justify-center transition-all',
                       selectedIcon === item.name
-                        ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500 scale-110'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800',
+                        ? 'bg-accent/10 ring-2 ring-accent scale-110'
+                        : 'hover:bg-surface',
                     )}
                   >
                     <Icon className={clsx(
                       'w-4.5 h-4.5',
-                      selectedIcon === item.name ? 'text-blue-600' : 'text-gray-500',
+                      selectedIcon === item.name ? 'text-accent' : 'text-foreground-secondary',
                     )} />
                   </button>
                 );
@@ -454,7 +454,7 @@ export function ProjectsPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               {t('projectsList.color')}
             </label>
             <div className="flex flex-wrap gap-2">
@@ -464,7 +464,7 @@ export function ProjectsPage() {
                   onClick={() => setColor(c)}
                   className={clsx(
                     'w-8 h-8 rounded-full border-2 transition-all',
-                    color === c ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-105',
+                    color === c ? 'border-foreground scale-110' : 'border-transparent hover:scale-105',
                   )}
                   style={{ backgroundColor: c }}
                 />

@@ -243,7 +243,7 @@ export function HabitsPage() {
   return (
     <div className="max-w-3xl mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <p className="text-sm text-gray-500">{habits?.length ?? 0} {t('habitsPage.habitsTracked')}</p>
+        <p className="text-sm text-foreground-secondary">{habits?.length ?? 0} {t('habitsPage.habitsTracked')}</p>
         <Button icon={<Plus className="w-4 h-4" />} onClick={openModal}>
           {t('habitsPage.addHabit')}
         </Button>
@@ -266,8 +266,8 @@ export function HabitsPage() {
             <div className="flex gap-1.5">
               {last7Days.map((day) => (
                 <div key={day.date} className="w-9 text-center">
-                  <p className={clsx('text-[10px] font-medium', day.isToday ? 'text-blue-600' : 'text-gray-400')}>{day.label}</p>
-                  <p className={clsx('text-xs', day.isToday ? 'text-blue-600 font-bold' : 'text-gray-500')}>{day.short}</p>
+                  <p className={clsx('text-[10px] font-medium', day.isToday ? 'text-accent' : 'text-foreground-tertiary')}>{day.label}</p>
+                  <p className={clsx('text-xs', day.isToday ? 'text-accent font-bold' : 'text-foreground-secondary')}>{day.short}</p>
                 </div>
               ))}
             </div>
@@ -295,17 +295,17 @@ export function HabitsPage() {
 
                 {/* Name + progress */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {habit.name}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-elevated rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-300"
                         style={{ width: `${Math.max(progressPct, progressPct > 0 ? 2 : 0)}%`, backgroundColor: habit.color }}
                       />
                     </div>
-                    <span className="text-[10px] text-gray-500 whitespace-nowrap">
+                    <span className="text-[10px] text-foreground-secondary whitespace-nowrap">
                       {completedDaysCount}/{habit.target_days || 30} · {progressPct}%
                     </span>
                   </div>
@@ -321,10 +321,10 @@ export function HabitsPage() {
                         onClick={() => handleToggle(habit.id, day.date)}
                         className={clsx(
                           'w-9 h-9 rounded-lg flex items-center justify-center transition-all',
-                          day.isToday && 'ring-2 ring-blue-200 dark:ring-blue-800',
+                          day.isToday && 'ring-2 ring-border-focus',
                           done
                             ? 'text-white shadow-sm'
-                            : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-300 dark:text-gray-600',
+                            : 'bg-surface hover:bg-elevated text-foreground-tertiary',
                         )}
                         style={done ? { backgroundColor: habit.color } : {}}
                       >
@@ -336,8 +336,8 @@ export function HabitsPage() {
 
                 {/* Streak */}
                 <div className="w-16 flex items-center justify-end gap-1">
-                  <Flame className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <Flame className="w-4 h-4 text-warning" />
+                  <span className="text-sm font-semibold text-foreground">
                     {streakMap[habit.id] ?? habit.current_streak ?? 0}
                   </span>
                 </div>
@@ -346,14 +346,14 @@ export function HabitsPage() {
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => setContextMenu(contextMenu === habit.id ? null : habit.id)}
-                    className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="p-1 rounded-md hover:bg-surface"
                   >
-                    <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                    <MoreHorizontal className="w-4 h-4 text-foreground-tertiary" />
                   </button>
                   {contextMenu === habit.id && (
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setContextMenu(null)} />
-                      <div className="absolute right-0 top-7 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 w-36">
+                      <div className="absolute right-0 top-7 z-20 bg-background rounded-lg shadow-lg border border-border py-1 w-36">
                         <button
                           onClick={() => {
                             setEditingHabit({ id: habit.id, name: habit.name, description: habit.description || '', color: habit.color, icon: habit.icon || 'repeat' });
@@ -366,9 +366,9 @@ export function HabitsPage() {
                             setShowModal(true);
                             setContextMenu(null);
                           }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-surface"
                         >
-                          <PenTool className="w-4 h-4 text-blue-500" />
+                          <PenTool className="w-4 h-4 text-accent" />
                           {t('habitsNew.edit')}
                         </button>
                         <button
@@ -376,7 +376,7 @@ export function HabitsPage() {
                             deleteHabit.mutate(habit.id);
                             setContextMenu(null);
                           }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-danger-bg"
                         >
                           <Trash2 className="w-4 h-4" />
                           {t('habitsNew.delete')}
@@ -428,12 +428,12 @@ export function HabitsPage() {
       >
         {mode === 'target' ? (
           <div className="space-y-5">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-surface">
               {(() => { const Icon = getIconComponent(selectedIcon); return <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}20` }}><Icon className="w-5 h-5" style={{ color }} /></div>; })()}
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{name}</p>
+              <p className="text-sm font-semibold text-foreground">{name}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              <label className="block text-sm font-medium text-foreground mb-3">
                 {t('habitsNew.howManyDays')}
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -444,8 +444,8 @@ export function HabitsPage() {
                     className={clsx(
                       'py-3 rounded-xl text-sm font-semibold transition-all',
                       targetDays === d
-                        ? 'bg-blue-600 text-white shadow-md scale-105'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200',
+                        ? 'bg-accent text-white shadow-md scale-105'
+                        : 'bg-elevated text-foreground-secondary hover:bg-border',
                     )}
                   >
                     {d} {t('habitsNew.daysShort')}
@@ -453,22 +453,22 @@ export function HabitsPage() {
                 ))}
               </div>
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-gray-500">{t('habitsNew.orCustom')}:</span>
+                <span className="text-xs text-foreground-secondary">{t('habitsNew.orCustom')}:</span>
                 <input
                   type="number"
                   min={1}
                   max={365}
                   value={targetDays}
                   onChange={(e) => setTargetDays(Math.max(1, Number(e.target.value)))}
-                  className="w-20 px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-center"
+                  className="w-20 px-2 py-1.5 rounded-lg border border-border bg-background text-sm text-center"
                 />
-                <span className="text-xs text-gray-500">{t('habitsNew.days')}</span>
+                <span className="text-xs text-foreground-secondary">{t('habitsNew.days')}</span>
               </div>
             </div>
           </div>
         ) : mode === 'templates' ? (
           <div className="space-y-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-foreground-secondary">
               {t('habitsNew.choosePreset')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -478,7 +478,7 @@ export function HabitsPage() {
                   <button
                     key={tmpl.name_en}
                     onClick={() => handleCreateFromTemplate(tmpl)}
-                    className="flex items-center gap-2.5 p-3 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all text-left group"
+                    className="flex items-center gap-2.5 p-3 rounded-xl border border-border hover:border-accent hover:bg-accent/10 transition-all text-left group"
                   >
                     <div
                       className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
@@ -486,7 +486,7 @@ export function HabitsPage() {
                     >
                       <Icon className="w-4.5 h-4.5" style={{ color: tmpl.color }} />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                    <span className="text-sm font-medium text-foreground truncate">
                       {getTemplateName(tmpl)}
                     </span>
                   </button>
@@ -496,7 +496,7 @@ export function HabitsPage() {
 
             <button
               onClick={() => setMode('custom')}
-              className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-border rounded-xl text-sm font-medium text-foreground-secondary hover:border-accent hover:text-accent hover:bg-accent/10 transition-all"
             >
               <PenTool className="w-4 h-4" />
               {t('habitsNew.createCustom')}
@@ -520,7 +520,7 @@ export function HabitsPage() {
 
             {/* Target days */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 {t('habitsNew.goalDays')}
               </label>
               <div className="flex gap-2">
@@ -531,8 +531,8 @@ export function HabitsPage() {
                     className={clsx(
                       'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                       targetDays === d
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 ring-1 ring-blue-300'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200',
+                        ? 'bg-accent/10 text-accent ring-1 ring-border-focus'
+                        : 'bg-elevated text-foreground-secondary hover:bg-border',
                     )}
                   >
                     {d}
@@ -544,14 +544,14 @@ export function HabitsPage() {
                   max={365}
                   value={targetDays}
                   onChange={(e) => setTargetDays(Math.max(1, Number(e.target.value)))}
-                  className="w-16 px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-center"
+                  className="w-16 px-2 py-1.5 rounded-lg border border-border bg-background text-sm text-center"
                 />
               </div>
             </div>
 
             {/* Icon selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 {t('habitsNew.icon')}
               </label>
               <div className="grid grid-cols-8 gap-1.5">
@@ -564,11 +564,11 @@ export function HabitsPage() {
                       className={clsx(
                         'w-9 h-9 rounded-lg flex items-center justify-center transition-all',
                         selectedIcon === item.name
-                          ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500 scale-110'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-800',
+                          ? 'bg-accent/10 ring-2 ring-border-focus scale-110'
+                          : 'hover:bg-surface',
                       )}
                     >
-                      <Icon className={clsx('w-4 h-4', selectedIcon === item.name ? 'text-blue-600' : 'text-gray-500')} />
+                      <Icon className={clsx('w-4 h-4', selectedIcon === item.name ? 'text-accent' : 'text-foreground-secondary')} />
                     </button>
                   );
                 })}
@@ -577,7 +577,7 @@ export function HabitsPage() {
 
             {/* Color selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 {t('habitsPage.color')}
               </label>
               <div className="flex flex-wrap gap-2">
@@ -587,7 +587,7 @@ export function HabitsPage() {
                     onClick={() => setColor(c)}
                     className={clsx(
                       'w-8 h-8 rounded-full border-2 transition-all',
-                      color === c ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-105',
+                      color === c ? 'border-foreground scale-110' : 'border-transparent hover:scale-105',
                     )}
                     style={{ backgroundColor: c }}
                   />

@@ -44,18 +44,18 @@ export const PRIORITY_LABELS: Record<Priority, string> = {
 
 /** CSS-классы цветов для приоритетов задач (TailwindCSS). */
 export const PRIORITY_COLORS: Record<Priority, string> = {
-  [Priority.P1]: 'text-danger-600 bg-danger-50 border-danger-200',
-  [Priority.P2]: 'text-warning-600 bg-warning-50 border-warning-200',
-  [Priority.P3]: 'text-primary-600 bg-primary-50 border-primary-200',
-  [Priority.P4]: 'text-gray-500 bg-gray-50 border-gray-200',
+  [Priority.P1]: 'text-danger bg-danger-bg border-danger/20',
+  [Priority.P2]: 'text-warning bg-warning-bg border-warning/20',
+  [Priority.P3]: 'text-accent bg-info-bg border-accent/20',
+  [Priority.P4]: 'text-foreground-secondary bg-surface border-border',
 };
 
 /** CSS-классы цветов точек-индикаторов приоритета. */
 export const PRIORITY_DOT_COLORS: Record<Priority, string> = {
-  [Priority.P1]: 'bg-danger-500',
-  [Priority.P2]: 'bg-warning-500',
-  [Priority.P3]: 'bg-primary-500',
-  [Priority.P4]: 'bg-gray-400',
+  [Priority.P1]: 'bg-danger',
+  [Priority.P2]: 'bg-warning',
+  [Priority.P3]: 'bg-accent',
+  [Priority.P4]: 'bg-foreground-tertiary',
 };
 
 /** Статические метки статусов задач (английские). */
@@ -69,11 +69,11 @@ export const STATUS_LABELS: Record<TaskStatus, string> = {
 
 /** CSS-классы цветов для статусов задач (TailwindCSS). */
 export const STATUS_COLORS: Record<TaskStatus, string> = {
-  [TaskStatus.INBOX]: 'text-gray-600 bg-gray-100',
-  [TaskStatus.IN_PROGRESS]: 'text-warning-600 bg-warning-50',
-  [TaskStatus.REVIEW]: 'text-accent-600 bg-accent-50',
-  [TaskStatus.DONE]: 'text-success-600 bg-success-50',
-  [TaskStatus.ARCHIVED]: 'text-gray-400 bg-gray-50',
+  [TaskStatus.INBOX]: 'text-foreground-secondary bg-surface',
+  [TaskStatus.IN_PROGRESS]: 'text-warning bg-warning-bg',
+  [TaskStatus.REVIEW]: 'text-brand bg-[var(--accent-brand)]/10',
+  [TaskStatus.DONE]: 'text-success bg-success-bg',
+  [TaskStatus.ARCHIVED]: 'text-foreground-tertiary bg-surface',
 };
 
 /** Маппинг категорий транзакций к именам иконок Lucide. */

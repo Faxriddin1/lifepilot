@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { FullPageSpinner } from '@/components/ui/Spinner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from 'sonner';
 
 import { AppLayout } from '@/components/layout/AppLayout';
 import { LoginPage } from '@/pages/auth/LoginPage';
@@ -126,25 +126,12 @@ export default function App() {
       <AppContent />
       <Toaster
         position="bottom-right"
+        richColors
+        duration={3000}
         toastOptions={{
-          duration: 3000,
           style: {
-            borderRadius: '8px',
-            background: '#1f2937',
-            color: '#f9fafb',
+            borderRadius: 'var(--radius-lg)',
             fontSize: '14px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#22c55e',
-              secondary: '#f9fafb',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#f9fafb',
-            },
           },
         }}
       />

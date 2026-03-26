@@ -176,8 +176,8 @@ export function TaskListPage() {
 
       {/* Bulk actions bar */}
       {selectedIds.size > 0 && (
-        <div className="flex items-center gap-3 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-card px-4 py-2">
-          <span className="text-sm font-medium text-primary-700 dark:text-primary-400">
+        <div className="flex items-center gap-3 bg-accent/10 border border-accent/20 rounded-card px-4 py-2">
+          <span className="text-sm font-medium text-accent">
             {selectedIds.size} {t('taskList.selected')}
           </span>
           <Button size="sm" variant="ghost" onClick={() => setSelectedIds(new Set())}>
@@ -212,15 +212,15 @@ export function TaskListPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-800">
-                  <th className="w-10 px-4 py-3">
+                <tr className="border-b border-border">
+                  <th className="w-8 px-3 py-2">
                     <button onClick={toggleSelectAll}>
                       <div
                         className={clsx(
                           'w-4 h-4 rounded border-2 flex items-center justify-center transition-colors',
                           selectedIds.size === tasks.length && tasks.length > 0
-                            ? 'bg-primary-600 border-primary-600'
-                            : 'border-gray-300 dark:border-gray-600'
+                            ? 'bg-accent border-accent'
+                            : 'border-border'
                         )}
                       >
                         {selectedIds.size === tasks.length && tasks.length > 0 && (
@@ -229,23 +229,23 @@ export function TaskListPage() {
                       </div>
                     </button>
                   </th>
-                  <th className="w-10 px-2 py-3" />
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="w-8 px-1 py-2" />
+                  <th className="text-left text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider px-3 py-2">
                     {t('taskList.task')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider px-3 py-2">
                     {t('taskList.status')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider px-3 py-2">
                     {t('taskList.priority')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider px-3 py-2 hidden md:table-cell">
                     {t('taskList.project')}
                   </th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 py-3">
+                  <th className="text-left text-[11px] font-semibold text-foreground-tertiary uppercase tracking-wider px-3 py-2 hidden sm:table-cell">
                     {t('taskList.dueDate')}
                   </th>
-                  <th className="w-10 px-4 py-3" />
+                  <th className="w-8 px-3 py-2" />
                 </tr>
               </thead>
               <tbody>
@@ -253,54 +253,55 @@ export function TaskListPage() {
                   <tr
                     key={task.id}
                     className={clsx(
-                      'border-b border-gray-100 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors',
-                      selectedIds.has(task.id) && 'bg-primary-50/50 dark:bg-primary-900/10'
+                      'border-b border-border hover:bg-surface transition-colors duration-fast group h-8',
+                      selectedIds.has(task.id) && 'bg-accent/5'
                     )}
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-1">
                       <button onClick={() => toggleSelect(task.id)}>
                         <div
                           className={clsx(
                             'w-4 h-4 rounded border-2 flex items-center justify-center transition-colors',
                             selectedIds.has(task.id)
-                              ? 'bg-primary-600 border-primary-600'
-                              : 'border-gray-300 dark:border-gray-600'
+                              ? 'bg-accent border-accent'
+                              : 'border-border'
                           )}
                         >
                           {selectedIds.has(task.id) && <Check className="w-3 h-3 text-white" />}
                         </div>
                       </button>
                     </td>
-                    <td className="px-2 py-3">
+                    <td className="px-1 py-1">
                       <button
                         onClick={() => handleStatusToggle(task.id, task.status)}
                         className={clsx(
-                          'w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors',
+                          'w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors',
                           task.status === TaskStatus.DONE
-                            ? 'bg-success-500 border-success-500'
-                            : 'border-gray-300 dark:border-gray-600 hover:border-success-400'
+                            ? 'bg-success border-success'
+                            : 'border-border hover:border-success'
                         )}
                       >
                         {task.status === TaskStatus.DONE && (
-                          <Check className="w-3 h-3 text-white" />
+                          <Check className="w-2.5 h-2.5 text-white" />
                         )}
                       </button>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-1">
                       <span
                         onClick={() => setSelectedTask(task)}
                         className={clsx(
-                          'text-sm font-medium cursor-pointer hover:text-primary-600 transition-colors',
+                          'text-sm cursor-pointer hover:text-accent transition-colors truncate block max-w-[300px]',
                           task.status === TaskStatus.DONE
-                            ? 'text-gray-400 line-through'
-                            : 'text-gray-900 dark:text-gray-100'
+                            ? 'text-foreground-tertiary line-through'
+                            : 'text-foreground'
                         )}
                       >
                         {task.title}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-1">
                       <Badge
+                        size="sm"
                         variant={
                           task.status === TaskStatus.DONE
                             ? 'success'
@@ -312,42 +313,38 @@ export function TaskListPage() {
                         {getStatusLabel(task.status)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-1">
                       <Badge className={PRIORITY_COLORS[task.priority]} size="sm" dot>
                         {getPriorityLabel(task.priority)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      {task.project_name ? (
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {task.project_name}
-                        </span>
-                      ) : (
-                        <span className="text-sm text-gray-400">--</span>
-                      )}
+                    <td className="px-3 py-1 hidden md:table-cell">
+                      <span className="text-xs text-foreground-tertiary truncate block max-w-[120px]">
+                        {task.project_name || '--'}
+                      </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-1 hidden sm:table-cell">
                       {task.deadline ? (
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
-                          <Calendar className="w-3.5 h-3.5" />
+                        <span className="text-xs text-foreground-tertiary flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
                           {formatDate(task.deadline, 'MMM d')}
                         </span>
                       ) : (
-                        <span className="text-sm text-gray-400">--</span>
+                        <span className="text-xs text-foreground-tertiary">--</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 relative">
+                    <td className="px-3 py-1 relative">
                       <button
                         onClick={() => setContextMenuTaskId(contextMenuTaskId === task.id ? null : task.id)}
-                        className="p-1 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="p-1 rounded text-foreground-tertiary opacity-0 group-hover:opacity-100 hover:text-foreground hover:bg-surface transition-all"
                       >
                         <MoreHorizontal className="w-4 h-4" />
                       </button>
                       {contextMenuTaskId === task.id && (
-                        <div className="absolute right-4 top-10 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 w-40">
+                        <div className="absolute right-4 top-8 z-20 bg-background rounded-lg shadow-lg border border-border py-1 w-40 animate-fade-in">
                           <button
                             onClick={() => { setSelectedTask(task); setContextMenuTaskId(null); }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-surface"
                           >
                             {t('common.edit')}
                           </button>
@@ -356,7 +353,7 @@ export function TaskListPage() {
                               deleteTask.mutate(task.id);
                               setContextMenuTaskId(null);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-danger hover:bg-danger-bg"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                             {t('common.delete')}
@@ -372,8 +369,8 @@ export function TaskListPage() {
 
           {/* Pagination */}
           {data && data.count > (filters.page_size ?? 20) && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800">
-              <p className="text-sm text-gray-500">{data.count} {t('taskList.totalTasks')}</p>
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+              <p className="text-sm text-foreground-secondary">{data.count} {t('taskList.totalTasks')}</p>
               <div className="flex gap-2">
                 <Button
                   size="sm"
