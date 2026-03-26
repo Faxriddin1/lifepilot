@@ -1,0 +1,12 @@
+[SYSTEM]
+{{system_instruction}}
+
+[USER]
+USER_CONTEXT_JSON:
+{{user_context}}
+
+PERIOD_DAYS:
+{{period_days}}
+
+AGGREGATES_JSON:
+{{aggregates}}

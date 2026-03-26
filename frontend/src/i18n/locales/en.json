@@ -16,7 +16,8 @@
     "all": "All",
     "active": "Active",
     "completed": "Completed",
-    "archived": "Archived"
+    "archived": "Archived",
+    "deleted": "Deleted"
   },
   "errors": {
     "network": "Network error. Check your internet connection.",
@@ -126,7 +127,9 @@
     "storage": "Storage",
     "collapse": "Collapse",
     "expand": "Expand",
-    "upgradeDesc": "Unlock unlimited projects and advanced analytics"
+    "upgradeDesc": "Unlock unlimited projects and advanced analytics",
+    "learning": "Learning",
+    "myGoals": "My Goals"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -350,7 +353,8 @@
       "/budgets": "Budgets",
       "/goals": "Goals",
       "/reports": "Reports",
-      "/settings": "Settings"
+      "/settings": "Settings",
+      "/learning": "Learning"
     }
   },
   "commandPalette": {
@@ -465,7 +469,13 @@
     "sessionLog": "Session Log",
     "today": "Today",
     "freeFocus": "Free focus",
-    "noSessions": "No sessions yet today"
+    "noSessions": "No sessions yet today",
+    "onBreak": "On break",
+    "breakDone": "Break is over!",
+    "readyForFocus": "Ready for the next focus session?",
+    "focusDone": "Focus session complete!",
+    "breakStarting": "Break starting automatically...",
+    "endSession": "I'm done"
   },
   "habitsPage": {
     "habitsTracked": "habits tracked",
@@ -514,18 +524,18 @@
     "expense": "Expense",
     "transfer": "Transfer",
     "accountsCount": "account(s)",
-    "incomeUp": "\u2191 Income",
-    "expensesDown": "\u2193 Expenses",
+    "incomeUp": "↑ Income",
+    "expensesDown": "↓ Expenses",
     "savings": "Savings",
     "ofIncome": "of income",
     "cashFlow": "Cash Flow",
     "last30DaysSubtitle": "Last 30 days",
-    "tooltipIncome": "\u2191 Income",
-    "tooltipExpense": "\u2193 Expense",
+    "tooltipIncome": "↑ Income",
+    "tooltipExpense": "↓ Expense",
     "accounts": "Accounts",
     "accountsLabel": "accounts",
     "whereMoneyGoes": "Where Money Goes",
-    "incomeExpensesSavings": "Income \u2192 Expenses \u2192 Savings",
+    "incomeExpensesSavings": "Income → Expenses → Savings",
     "noData": "No data",
     "budgets": "Budgets",
     "all": "All",
@@ -535,8 +545,8 @@
     "noGoals": "No goals",
     "monthly": "Monthly",
     "last6Months": "Last 6 months",
-    "monthlyIncome": "\u2191 Income",
-    "monthlyExpense": "\u2193 Expense"
+    "monthlyIncome": "↑ Income",
+    "monthlyExpense": "↓ Expense"
   },
   "transactionsPage": {
     "searchTransactions": "Search transactions...",
@@ -596,25 +606,30 @@
     "totalBudget": "Total Budget",
     "spent": "Spent",
     "remaining": "Remaining",
-    "used": "Used",
+    "used": "used",
     "uncategorized": "Uncategorized",
-    "over": "Over",
-    "almost": "Almost",
+    "over": "over",
+    "almost": "almost",
     "delete": "Delete",
-    "remainingAmount": "remaining",
-    "overAmount": "over",
+    "remaining2": "remaining",
+    "exceeded": "exceeded",
     "chooseCategory": "Choose category",
-    "whichCategory": "Which spending category to budget?",
-    "setLimit": "Set limit",
-    "howMuchPlan": "how much do you plan to spend?",
+    "whichCategory": "Which category?",
+    "howMuch": "How much?",
     "change": "Change",
     "budgetLimit": "Budget limit",
     "period": "Period",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
     "week": "Week",
     "month": "Month",
     "quarter": "Quarter",
     "year": "Year",
-    "back": "\u2190 Back",
+    "setLimit": "Set limit",
+    "whichCategoryBudget": "Which spending category to budget?",
+    "howMuchPlan": "how much do you plan to spend?",
+    "back": "Back",
     "createBudget": "Create Budget"
   },
   "goalsNew": {
@@ -623,22 +638,23 @@
     "completed": "Completed",
     "saved": "Saved",
     "target": "Target",
-    "left": "Left",
-    "perMonth": "mo",
-    "addFunds": "Add",
-    "done": "Done",
+    "left": "left",
+    "months": "months",
+    "addFunds": "Add Funds",
     "newGoal": "New Goal",
     "configureGoal": "Configure Goal",
-    "pickTemplate": "Pick a template or create your own",
+    "pickTemplate": "Pick a template",
     "change": "Change",
     "goalName": "Goal name",
     "targetAmount": "Target amount",
-    "deadline": "Deadline (optional)",
-    "back": "\u2190 Back",
+    "deadlineOptional": "Deadline (optional)",
+    "back": "Back",
     "createGoal": "Create Goal",
     "contributeToGoal": "Contribute to Goal",
-    "addFundsBtn": "Add funds",
-    "currentProgress": "Current progress"
+    "addFundsBig": "Add funds",
+    "currentProgress": "Current progress",
+    "done": "Done",
+    "perMonth": "mo"
   },
   "goalTemplates": {
     "vacation": "Vacation",
@@ -762,64 +778,10 @@
     "recentTransactions": "Recent Transactions",
     "uncategorized": "Uncategorized",
     "noTransactions": "No transactions yet",
-    "tooltipIncome": "\u2191 Income",
-    "tooltipExpense": "\u2193 Expense",
+    "tooltipIncome": "↑ Income",
+    "tooltipExpense": "↓ Expense",
     "accountsLabel": "accounts",
-    "incomeExpensesSavings": "Income \u2192 Expenses \u2192 Savings"
-  },
-  "budgetsNew": {
-    "totalBudget": "Total Budget",
-    "spent": "Spent",
-    "remaining": "Remaining",
-    "used": "used",
-    "uncategorized": "Uncategorized",
-    "over": "over",
-    "almost": "almost",
-    "delete": "Delete",
-    "remaining2": "remaining",
-    "exceeded": "exceeded",
-    "chooseCategory": "Choose category",
-    "whichCategory": "Which category?",
-    "howMuch": "How much?",
-    "change": "Change",
-    "budgetLimit": "Budget limit",
-    "period": "Period",
-    "weekly": "Weekly",
-    "monthly": "Monthly",
-    "yearly": "Yearly",
-    "week": "Week",
-    "month": "Month",
-    "quarter": "Quarter",
-    "year": "Year",
-    "setLimit": "Set limit",
-    "whichCategoryBudget": "Which spending category to budget?",
-    "howMuchPlan": "how much do you plan to spend?",
-    "back": "Back",
-    "createBudget": "Create Budget"
-  },
-  "goalsNew": {
-    "totalProgress": "Total Progress",
-    "progress": "Progress",
-    "completed": "Completed",
-    "saved": "Saved",
-    "target": "Target",
-    "left": "left",
-    "months": "months",
-    "addFunds": "Add Funds",
-    "newGoal": "New Goal",
-    "configureGoal": "Configure Goal",
-    "pickTemplate": "Pick a template",
-    "change": "Change",
-    "goalName": "Goal name",
-    "targetAmount": "Target amount",
-    "deadlineOptional": "Deadline (optional)",
-    "back": "Back",
-    "createGoal": "Create Goal",
-    "contributeToGoal": "Contribute to Goal",
-    "addFundsBig": "Add funds",
-    "currentProgress": "Current progress",
-    "done": "Done",
-    "perMonth": "mo"
+    "incomeExpensesSavings": "Income → Expenses → Savings"
   },
   "settingsNew": {
     "security": "Security",
@@ -890,7 +852,15 @@
     "habits": "Habits",
     "thisWeek": "This Week",
     "daysShort": "d",
-    "weekDays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    "weekDays": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
   },
   "alertsSection": {
     "overBudget": "You've exceeded your budget",
@@ -953,7 +923,15 @@
     "noTasksForDay": "No tasks for this day",
     "total": "Total",
     "withDeadline": "With deadline",
-    "weekdaysShort": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
   },
   "about": {
     "title": "About LifePilot",
@@ -966,5 +944,189 @@
     "languagesLabel": "Languages",
     "languagesValue": "English, Russian, Uzbek (Latin & Cyrillic)",
     "contactTitle": "Contact Us"
+  },
+  "tutor": {
+    "title": "AI Tutor",
+    "placeholder": "Ask a question...",
+    "thinking": "Thinking...",
+    "needHelp": "Need Help",
+    "rateLimited": "Question limit reached for today",
+    "unavailable": "Tutor temporarily unavailable",
+    "clearHistory": "Clear History"
+  },
+  "learning": {
+    "title": "Learning",
+    "goals": "Learning Goals",
+    "newGoal": "New Goal",
+    "createGoal": {
+      "daysPerWeekLabel": "Days per Week",
+      "difficultyLabel": "Level",
+      "errorToast": "Failed to create goal",
+      "minutesPerDayLabel": "Minutes per Day",
+      "submit": "Create & Generate Plan",
+      "successToast": "Goal created",
+      "targetDateLabel": "Target Date",
+      "title": "New Learning Goal",
+      "titleLabel": "What do you want to learn?",
+      "titlePlaceholder": "e.g. Python for data analysis",
+      "titleRequired": "Title is required"
+    },
+    "generatePlan": "Generate Plan",
+    "confirmPlan": "Confirm Plan",
+    "regeneratePlan": "Regenerate",
+    "generating": {
+      "subtitle": "This will take 15-30 seconds",
+      "step1": "Analyzing your goal...",
+      "step2": "Building curriculum...",
+      "step3": "Finding resources...",
+      "step4": "Finalizing your plan...",
+      "progress": "Generating plan"
+    },
+    "previewTitle": "Review Your Plan",
+    "previewHint": "AI generated a plan. Review and confirm.",
+    "module": {
+      "noTasks": "No tasks",
+      "tasks": "tasks"
+    },
+    "task": {
+      "complete": "Complete",
+      "help": "Need Help",
+      "openResource": "Open Resource",
+      "skip": "Skip"
+    },
+    "today": {
+      "minutes": "min",
+      "noTasks": "All done for today! 🎉",
+      "summary": "completed today"
+    },
+    "todayTasks": "Today's Tasks",
+    "streak": {
+      "label": "day streak"
+    },
+    "streakDays": "{{count}} days",
+    "progress": "Progress",
+    "completed": "Completed",
+    "openResource": "Open Resource",
+    "searchResource": "Search in Google",
+    "needHelp": "Need Help",
+    "skip": "Skip",
+    "complete": "Complete",
+    "tooEasy": "Too Easy",
+    "tooHard": "Too Hard",
+    "pause": "Pause",
+    "resume": "Resume",
+    "continue": "Continue",
+    "viewPlan": "View Plan",
+    "totalHours": "Total: ~{{hours}} hours",
+    "modules_count": "{{count}} modules",
+    "tasksToday": "{{done}}/{{total}} tasks today",
+    "minutesToday": "{{minutes}} min",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "taskTypes": {
+      "video": "Video",
+      "article": "Article",
+      "practice": "Practice",
+      "quiz": "Quiz",
+      "project": "Project"
+    },
+    "tutor": {
+      "title": "AI Tutor",
+      "askPlaceholder": "Ask a question...",
+      "thinking": "Thinking...",
+      "unavailable": "Tutor is temporarily unavailable",
+      "clearHistory": "Clear History"
+    },
+    "emptyState": {
+      "title": "Start Learning",
+      "description": "AI will create a personalized learning plan on any topic",
+      "cta": "Create First Goal"
+    },
+    "rate": {
+      "title": "Rate usefulness",
+      "placeholder": "Notes (optional)"
+    },
+    "adapt": {
+      "requesting": "AI is analyzing your progress...",
+      "tooEasyHint": "AI will speed up the plan",
+      "tooHardHint": "AI will simplify the plan"
+    },
+    "form": {
+      "titleLabel": "What do you want to learn?",
+      "titlePlaceholder": "e.g. Python for data analysis",
+      "levelLabel": "Difficulty Level",
+      "targetDateLabel": "Target Date",
+      "minutesLabel": "Minutes per Day",
+      "daysLabel": "Days per Week"
+    },
+    "adaptError": "Failed to request adaptation",
+    "adaptRequested": "AI is analyzing your progress...",
+    "adaptation": {
+      "prefix": "AI adapted your plan"
+    },
+    "backToGoals": "Back to goals",
+    "emptyDescription": "AI will create a personalized learning plan on any topic",
+    "emptyTitle": "Start Learning",
+    "goalCard": {
+      "completed": "Completed",
+      "continue": "Continue",
+      "generating": "Generating...",
+      "modulesCount": "{{count}} modules",
+      "open": "Open",
+      "resume": "Resume",
+      "viewPlan": "View Plan"
+    },
+    "goalPaused": "Goal paused",
+    "goalResumed": "Goal resumed",
+    "pauseError": "Failed to pause",
+    "planConfirmError": "Failed to confirm plan",
+    "planConfirmed": "Plan confirmed!",
+    "planPreview": {
+      "confirm": "Confirm Plan",
+      "min": "min",
+      "modulesCount": "modules",
+      "regenerate": "Regenerate",
+      "tasks": "tasks",
+      "totalHours": "Total hours"
+    },
+    "rating": {
+      "notesPlaceholder": "Notes (optional)",
+      "save": "Save",
+      "starLabel": "Rate usefulness"
+    },
+    "regenerateError": "Failed to regenerate",
+    "regenerating": "Regenerating plan...",
+    "resumeError": "Failed to resume",
+    "startLearning": "Start Learning",
+    "status": {
+      "abandoned": "Abandoned",
+      "active": "Active",
+      "completed": "Completed",
+      "draft": "Draft",
+      "generating": "Generating...",
+      "paused": "Paused",
+      "preview": "Preview"
+    },
+    "taskCompleteError": "Failed to complete task",
+    "taskCompleted": "Task completed! 🎉",
+    "taskSkipError": "Failed to skip task",
+    "widget": {
+      "complete": "Complete",
+      "continue": "Continue Learning",
+      "emptySubtitle": "AI will create a plan for you",
+      "emptyTitle": "Start Learning",
+      "label": "Learning",
+      "startLearning": "Start Learning",
+      "todayTasks": "tasks today"
+    },
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure? All learning data will be deleted.",
+    "plan": {
+      "modules": "modules",
+      "tasks": "tasks"
+    }
   }
 }

@@ -12,6 +12,9 @@ All-in-one platform for task management, productivity and personal finance. Free
 - **Design System:** Semantic CSS-переменные (tokens.css), 70+ design tokens, dark/light через `:root` / `.dark` — zero hardcoded colors
 - **Auth:** JWT (simplejwt) — access 30 min, refresh 7 days with rotation + Google OAuth 2.0 (lifepilot.uz domain)
 - **i18n:** react-i18next (EN, RU, UZ Latin, UZ Cyrillic) — full coverage, zero hardcoded strings, all UI text via `t()` calls
+- **AI:** Gemini 2.5 Flash / 2.5 Flash-Lite (google-genai SDK)
+- **Currency conversion:** CBU.uz API (Central Bank of Uzbekistan)
+- **Eval:** Promptfoo + Langfuse
 - **Infra:** Docker Compose (db, redis, backend, frontend, celery, bot)
 - **Deploy:** Google Cloud VM, Docker Compose, Nginx reverse proxy, SSL (Let's Encrypt)
 
@@ -54,12 +57,18 @@ PM/
 ├── backend/
 │   ├── config/              # Settings, URLs, WSGI/ASGI
 │   ├── apps/
-│   │   ├── users/           # Custom User model (UUID, email auth, Google OAuth, date/number format, week start)
+│   │   ├── users/           # Custom User model (UUID, email auth, Google OAuth, telegram_id, date/number format, week start)
 │   │   ├── tasks/           # Task, Project (subtasks up to 3 levels, templates with icons/colors)
 │   │   ├── productivity/    # FocusSession, Habit (target_days, templates, icons), HabitLog, DailyLog
 │   │   ├── finance/         # Account, Category, Transaction, Budget, Goal (contribute, templates)
 │   │   ├── analytics/       # Dashboard, Productivity/Finance aggregation
-│   │   └── admin_panel/     # Admin panel API (dashboard, CRUD for all models)
+│   │   ├── admin_panel/     # Admin panel API (dashboard, CRUD for all models)
+│   │   ├── ai_core/         # AI Service Layer (Gemini 2.5 Flash, 7 methods, Pydantic v2 schemas, cost tracking, Redis cache)
+│   │   │   └── eval/        # Golden dataset (60 cases), Promptfoo YAML configs, prompt wrappers, eval scripts
+│   │   ├── learning/        # Adaptive learning (goals, modules, tasks, streaks, AI tutor)
+│   │   ├── bot/             # Telegram bot (Django app, thin client, webhook mode, 8 handlers including settings)
+│   │   └── notifications/   # Notification service (Telegram, web, Celery Beat)
+│   ├── scripts/             # eval_prompts.py, check_eval_results.py
 │   ├── manage.py
 │   └── requirements.txt
 ├── frontend/
@@ -73,12 +82,13 @@ PM/
 │   │   ├── components/ui/   # Button, Input, Modal, Card, Badge, Select, PasswordStrength, StatCard, BulletGraph, WaterfallChart, Skeleton, PageTransition...
 │   │   ├── components/      # CommandPalette (cmdk, ⌘K)
 │   │   ├── components/layout/ # AppLayout (with AnimatePresence page transitions), Sidebar (collapsible + keyboard [), TopBar (⌘K search trigger)
-│   │   ├── pages/           # 22 user pages + 11 admin pages + landing/legal pages
+│   │   ├── pages/           # 26 user pages + 11 admin pages + landing/legal pages
 │   │   │   ├── auth/        # LoginPage, RegisterPage (password strength indicator)
 │   │   │   ├── dashboard/   # DashboardPage (BI-optimized, StatCard with sparklines/trends/alerts)
 │   │   │   ├── tasks/       # TaskListPage, KanbanPage, CalendarPage (full calendar + side panel), ProjectsPage (templates), InboxPage (quick add + move menu)
 │   │   │   ├── productivity/ # FocusTimerPage, HabitsPage (templates, icons, target_days, weekly streak), AnalyticsPage (GitHub heatmap, peak hours), DailyLogPage (mood/energy journal)
 │   │   │   ├── finance/     # FinanceOverviewPage (waterfall chart), TransactionsPage, BudgetsPage (bullet graphs), GoalsPage (contribute + templates)
+│   │   │   ├── learning/    # LearningPage (goal list + create modal), LearningDetailPage (generating → preview → active plan)
 │   │   │   ├── reports/     # ReportsPage
 │   │   │   ├── settings/    # SettingsPage (change password, export data, delete account, 50+ currencies, all timezones)
 │   │   │   ├── landing/     # LandingPage (animated intro, cursor effects, 3D tilt cards, gradient mesh), AboutPage, LegalPage (Privacy/Terms)
@@ -91,7 +101,7 @@ PM/
 └── .env.example
 ```
 
-## User Pages (22+)
+## User Pages (26+)
 
 | Route | Page | Description |
 |-------|------|-------------|
@@ -109,6 +119,8 @@ PM/
 | `/transactions` | TransactionsPage | Transactions: CRUD, filters (type, category, period), pagination |
 | `/budgets` | BudgetsPage | Budgets: CRUD, bullet graphs (not progress bars), over/almost-reached color-coded alerts |
 | `/goals` | GoalsPage | Financial goals: CRUD with templates, circular progress ring, contribute action |
+| `/learning` | LearningPage | Learning goals list with create modal, progress cards |
+| `/learning/:id` | LearningDetailPage | Goal detail: generating → preview → active plan with modules/tasks |
 | `/reports` | ReportsPage | Financial reports page |
 | `/settings` | SettingsPage | Profile, change password, theme (light/dark), language (EN/RU/UZ/UZ-Cyr), 50+ currencies, all timezones, date format, number format, week start (Mon/Sun), export data, delete account |
 | `/login` | LoginPage | Login: email/password + Google OAuth |
@@ -162,7 +174,7 @@ Common admin features:
 - **Landing page:** Animated intro screen with cursor particle effects, 3D tilt cards, gradient mesh, fixed light theme
 - **Mobile:** Responsive sidebar with hamburger, overlay, auto-close on navigation (lg: breakpoint = 1024px)
 - **Accessibility:** focus-visible ring via `--border-focus`, prefers-reduced-motion, tabular-nums for financial data
-- **i18n:** Zero hardcoded strings — all UI text via react-i18next `t()` calls across all 4 languages
+- **i18n:** Zero hardcoded strings — all UI text via react-i18next `t()` calls across all 4 languages (~1000 keys × 4 languages)
 
 ## API
 
@@ -214,6 +226,36 @@ All endpoints under `/api/v1/`. JWT Bearer token authentication.
 - `/api/v1/admin-panel/habits/` — all habits
 - `/api/v1/admin-panel/daily-logs/` — all journals
 
+### Learning
+- `GET/POST /api/v1/learning/goals/` — learning goals CRUD
+- `GET/PATCH/DELETE /api/v1/learning/goals/{id}/` — goal detail
+- `POST /api/v1/learning/goals/{id}/generate-plan/` — trigger AI plan generation (async, returns 202)
+- `GET /api/v1/learning/goals/{id}/status/` — poll generation status
+- `POST /api/v1/learning/goals/{id}/confirm-plan/` — confirm preview and activate goal
+- `GET /api/v1/learning/goals/{id}/today/` — today's tasks for a goal
+- `GET /api/v1/learning/goals/{id}/progress/` — 30-day progress + streak stats
+- `POST /api/v1/learning/goals/{id}/pause/` — pause active goal
+- `POST /api/v1/learning/goals/{id}/resume/` — resume paused goal
+- `POST /api/v1/learning/goals/{id}/adapt/` — trigger AI plan adaptation
+- `POST /api/v1/learning/goals/{id}/ask/` — ask AI tutor a question
+- `GET/DELETE /api/v1/learning/goals/{id}/tutor-history/` — tutor conversation history
+- `GET /api/v1/learning/tasks/{id}/` — task detail
+- `POST /api/v1/learning/tasks/{id}/complete/` — mark task completed (idempotent)
+- `POST /api/v1/learning/tasks/{id}/skip/` — skip task (idempotent)
+- `POST /api/v1/learning/tasks/{id}/rate/` — rate task (1-5) with notes
+
+### Notifications
+- `GET /api/v1/notifications/` — list notifications (paginated)
+- `POST /api/v1/notifications/{id}/read/` — mark notification as read
+- `POST /api/v1/notifications/read-all/` — mark all as read
+- `GET/PATCH /api/v1/notifications/preferences/` — notification preferences
+
+### AI
+- `POST /api/v1/ai/feedback/` — submit feedback on AI response quality
+
+### Bot (Telegram Webhook)
+- `POST /api/v1/bot/webhook/` — Telegram webhook receiver (internal)
+
 Pagination: 20 items/page. Throttling: 100/day anon, 1000/day auth.
 
 ## Conventions
@@ -245,6 +287,10 @@ Pagination: 20 items/page. Throttling: 100/day anon, 1000/day auth.
 - **Admin panel:** universal AdminResourcePage with configurable columns (intentionally dark sidebar)
 - **Free platform:** no subscriptions, no paid plans, no billing — completely free to use
 - **Landing page:** fixed light theme (intentionally not tokenized), animated intro, cursor effects, 3D tilt cards
+- **AI methods:** All AI calls go through `apps/ai_core/services.AIService` — NEVER call Gemini directly
+- **Learning flow:** create goal → generate plan (Celery) → preview → confirm → active
+- **Notifications:** All through `NotificationService.send()` — respects preferences and quiet hours
+- **Telegram bot:** Thin client in `apps/bot/` (Django app, webhook mode) — no own AI, no own DB, everything via Django ORM + AIService. Auth via JWT stored in Redis. Management commands: `run_bot` (polling), `set_webhook`.
 
 ## Environment Variables
 
@@ -264,6 +310,21 @@ CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://lifepil
 # Google OAuth
 GOOGLE_CLIENT_ID=<your-client-id>.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=<your-client-secret>
+
+# AI
+GEMINI_API_KEY=<your-gemini-api-key>
+
+# Telegram Bot
+BOT_TOKEN=<your-telegram-bot-token>
+
+# Resource Resolver
+YOUTUBE_API_KEY=<your-youtube-data-api-key>
+SERPER_API_KEY=<your-serper-api-key>
+
+# Eval / Observability (optional)
+LANGFUSE_PUBLIC_KEY=<your-langfuse-public-key>
+LANGFUSE_SECRET_KEY=<your-langfuse-secret-key>
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 # Frontend (VITE_ prefix required)
 VITE_API_URL=http://localhost:8000
@@ -290,6 +351,7 @@ VITE_GOOGLE_CLIENT_ID=<your-client-id>.apps.googleusercontent.com
 - Admin panel protection via IsAdminUser permission (is_staff=True)
 - Account deletion with confirmation
 - Data export capability
+- Telegram bot auth via JWT stored in Redis (no Fernet, no raw SQL)
 
 ## Admin
 
@@ -316,9 +378,92 @@ VITE_GOOGLE_CLIENT_ID=<your-client-id>.apps.googleusercontent.com
 ## Deployment (Production)
 
 - **Hosting:** Google Cloud VM (Compute Engine)
-- **Stack:** Docker Compose prod (PostgreSQL, Redis, Django/gunicorn, React/nginx, Celery, Telegram Bot)
+- **Stack:** Docker Compose prod (PostgreSQL, Redis, Django/gunicorn, React/nginx, Celery, Celery Beat, Telegram Bot)
 - **Web server:** Nginx (host-level) as reverse proxy with SSL
 - **SSL:** Let's Encrypt (certbot) — HTTPS enforced, HSTS enabled
 - **Security Headers:** X-Frame-Options, X-Content-Type-Options, XSS-Protection, Referrer-Policy, Permissions-Policy, HSTS
 - **Domain:** lifepilot.uz
 - **Deploy command:** `docker-compose -f docker-compose.prod.yml build frontend && docker-compose -f docker-compose.prod.yml up -d frontend`
+
+## Changelog — March 26, 2026
+
+### AI Platform (Этапы 1-9)
+- Created `apps/ai_core/` — 7 AI methods (parse_user_intent, generate_learning_plan, adapt_learning_plan, answer_learning_question, generate_daily_tasks, generate_insights, parse_receipt)
+- Pydantic v2 schemas for structured AI output
+- AICallLog model for cost tracking ($0.10-$2.50 per 1M tokens)
+- 7 versioned system prompts in `prompts/*.v1.txt`
+- Redis caching for AI responses (SHA-256 keys)
+- GeminiClient singleton with retry logic (429, 500/503)
+
+### Learning Module
+- Created `apps/learning/` — 5 models (LearningGoal, LearningModule, LearningTask, LearningProgress, AdaptationLog) + TutorMessage
+- AI plan generation via Celery async task
+- Resource resolver (YouTube Data API + Serper fallback)
+- Duolingo-style streaks with freeze protection
+- AI adaptation: 4 triggers (user_stuck, ahead_of_schedule, weekly_review, explicit_request)
+- Socratic AI tutor (answer_learning_question)
+- Frontend: LearningPage, LearningDetailPage with generating overlay (4-step progress)
+
+### Telegram Bot (rewritten from scratch)
+- Created `apps/bot/` as Django app (was standalone `bot/` directory)
+- Thin client architecture: no own AI, no own DB
+- Webhook mode via Django view
+- 8 handlers: start, messages, callbacks, executor, learning, voice, photo, settings
+- Registration flow directly in bot (name → email → password)
+- AI intent parsing: natural language → structured action
+- Voice messages via Gemini 2.5 Flash-Lite STT
+- Photo receipts via Gemini Vision OCR
+- Currency conversion via CBU.uz API (auto UZS↔USD)
+- Bot settings: language switch, notification toggles, quiet hours
+- Main menu with ⚙️ Settings button
+
+### Notification System
+- Created `apps/notifications/` — Notification + NotificationPreference models
+- Morning digest (tasks + learning + habits)
+- Streak risk alerts (evening reminder)
+- Deadline reminders (24h before)
+- Plan ready notification (after AI generation)
+- Weekly review with AI adaptation summary
+- Quiet hours support (per-user timezone)
+- Celery Beat: 6 scheduled tasks
+
+### Eval Pipeline
+- Golden dataset: 60 test cases across 7 methods
+- 7 Promptfoo YAML configs (74+ tests)
+- GitHub Actions CI: 7-parallel matrix jobs
+- Langfuse integration (@observe decorators)
+- AI feedback endpoint (POST /api/v1/ai/feedback/)
+- eval_prompts.py standalone script
+- check_eval_results.py CI quality gate
+
+### UI/UX Redesign
+- Design tokens: 70+ CSS variables in tokens.css
+- Zero hardcoded Tailwind colors across entire codebase
+- Dark/Light theme via CSS variables
+- Command Palette (⌘K) with cmdk
+- Framer Motion page transitions
+- Sonner toast notifications
+- Sidebar: collapsible + keyboard shortcut [
+- Learning pages with generating overlay (4-step progress indicator)
+- Dashboard learning widget
+- Task detail: date/time split inputs, Save/Done/Delete buttons
+
+### Infrastructure
+- Celery autodiscovery fix (explicit task packages)
+- Nginx: /bot/ location added to host config
+- Telegram webhook: set to lifepilot.uz/bot/webhook/
+- ffmpeg installed for voice processing
+- Gemini model updated: 2.0-flash-lite → 2.5-flash-lite
+- Frontend nginx: /api/ and /bot/ proxy with X-Forwarded-Proto
+
+### Bug Fixes
+- Task dropdown menu overflow (z-index portal fix)
+- i18n: 95+ missing learning.* keys added to all 4 languages
+- Celery tasks not registered (autodiscovery fix)
+- Webhook 502 (added /bot/ to host nginx)
+- Bot auth middleware: skip callbacks for registration flow
+- Task detail: deadline date/time editable inputs
+- Duplicate notification prevention (dedup check)
+- Idempotent task completion
+- N+1 queries (prefetch_related on goal detail)
+- Currency normalization (SO'M → UZS)

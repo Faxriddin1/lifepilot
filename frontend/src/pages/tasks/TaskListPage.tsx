@@ -208,8 +208,8 @@ export function TaskListPage() {
           onAction={() => setShowAddModal(true)}
         />
       ) : (
-        <Card padding={false}>
-          <div className="overflow-x-auto">
+        <Card padding={false} className="overflow-visible">
+          <div>
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
@@ -336,12 +336,14 @@ export function TaskListPage() {
                     <td className="px-3 py-1 relative">
                       <button
                         onClick={() => setContextMenuTaskId(contextMenuTaskId === task.id ? null : task.id)}
-                        className="p-1 rounded text-foreground-tertiary opacity-0 group-hover:opacity-100 hover:text-foreground hover:bg-surface transition-all"
+                        className="p-1.5 rounded text-foreground-tertiary hover:text-foreground hover:bg-surface transition-all"
                       >
                         <MoreHorizontal className="w-4 h-4" />
                       </button>
                       {contextMenuTaskId === task.id && (
-                        <div className="absolute right-4 top-8 z-20 bg-background rounded-lg shadow-lg border border-border py-1 w-40 animate-fade-in">
+                        <>
+                        <div className="fixed inset-0 z-40" onClick={() => setContextMenuTaskId(null)} />
+                        <div className="absolute right-4 top-8 z-50 bg-background rounded-lg shadow-lg border border-border py-1 w-40 animate-fade-in">
                           <button
                             onClick={() => { setSelectedTask(task); setContextMenuTaskId(null); }}
                             className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-surface"
@@ -359,6 +361,7 @@ export function TaskListPage() {
                             {t('common.delete')}
                           </button>
                         </div>
+                        </>
                       )}
                     </td>
                   </tr>

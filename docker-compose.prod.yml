@@ -111,29 +111,6 @@ services:
         condition: service_healthy
     mem_limit: 384m
 
-  bot:
-    build:
-      context: ./bot
-      dockerfile: Dockerfile
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://${DB_USER:-postgres}:${DB_PASSWORD:-productflow_secret}@db:5432/${DB_NAME:-productflow}
-      - REDIS_URL=redis://redis:6379/1
-      - LIFEPILOT_API_URL=https://lifepilot.uz/api/v1
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
-    volumes:
-      - ./google-credentials.json:/app/credentials.json:ro
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      backend:
-        condition: service_started
-    mem_limit: 256m
-
 volumes:
   postgres_data:
   redis_data:

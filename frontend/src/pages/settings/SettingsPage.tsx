@@ -20,6 +20,9 @@ import { authApi } from '@/api/auth';
 import { PasswordStrength } from '@/components/ui/PasswordStrength';
 import { showApiError, showSuccess } from '@/utils/errorHandler';
 import { validatePassword, validatePasswordMatch } from '@/utils/validation';
+import { TelegramLoginButton } from '@/components/TelegramLoginButton';
+import apiClient from '@/api/client';
+import { toast } from 'sonner';
 
 type Tab = 'profile' | 'preferences' | 'security';
 
@@ -454,36 +457,66 @@ export function SettingsPage() {
                   Подключите Telegram-бота для управления задачами, финансами и привычками через чат. Поддерживает текст, голос и фото чеков.
                 </p>
 
-                {telegramCode ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-4 bg-info-bg rounded-lg">
-                      <div className="flex-1">
-                        <p className="text-xs text-foreground-secondary mb-1">Ваш код привязки:</p>
-                        <p className="text-3xl font-mono font-bold tracking-[0.3em] text-accent">
-                          {telegramCode}
-                        </p>
-                      </div>
-                      <button
-                        onClick={handleCopyCode}
-                        className="p-2 rounded-lg hover:bg-surface transition-colors"
-                      >
-                        {codeCopied ? <Check className="w-5 h-5 text-success" /> : <Copy className="w-5 h-5 text-foreground-tertiary" />}
-                      </button>
-                    </div>
-                    <p className="text-xs text-foreground-tertiary">
-                      Код действителен {Math.floor(codeExpiry / 60)}:{(codeExpiry % 60).toString().padStart(2, '0')} мин.
-                      Отправьте его боту <a href="https://t.me/lifepilot_uzbot" target="_blank" className="text-accent hover:underline">@lifepilot_uzbot</a>
+                <div className="space-y-3">
+                  {/* Telegram Login Widget — one-click connect */}
+                  <div className="flex flex-col items-center gap-3 p-4 bg-info-bg rounded-lg">
+                    <p className="text-sm text-foreground-secondary text-center">
+                      Нажмите кнопку ниже чтобы привязать Telegram аккаунт:
                     </p>
+                    <TelegramLoginButton
+                      botName="lifepilot_uzbot"
+                      onAuth={async (telegramUser) => {
+                        try {
+                          // Send ONLY non-empty Telegram auth fields (empty fields break hash)
+                          const tgData: Record<string, any> = {
+                            id: telegramUser.id,
+                            first_name: telegramUser.first_name,
+                            auth_date: telegramUser.auth_date,
+                            hash: telegramUser.hash,
+                          };
+                          if (telegramUser.last_name) tgData.last_name = telegramUser.last_name;
+                          if (telegramUser.username) tgData.username = telegramUser.username;
+                          if (telegramUser.photo_url) tgData.photo_url = telegramUser.photo_url;
+                          await apiClient.post('/auth/telegram/status/', tgData);
+                          setTelegramLinked(true);
+                          setTelegramId(telegramUser.id);
+                          showSuccess('Telegram подключён!');
+                        } catch (err: any) {
+                          const resp = err?.response;
+                          if (resp?.status === 409 && resp?.data?.conflict) {
+                            // Account conflict — ask to merge
+                            const existingName = resp.data.existing_name || resp.data.existing_email;
+                            const tgId = resp.data.telegram_id;
+                            if (window.confirm(
+                              `Этот Telegram уже привязан к аккаунту "${existingName}".\n\n` +
+                              `Объединить аккаунты? Все данные (задачи, финансы, обучение) будут перенесены в ваш текущий аккаунт, а старый будет удалён.`
+                            )) {
+                              try {
+                                await apiClient.post('/auth/telegram/merge-accounts/', { telegram_id: tgId });
+                                setTelegramLinked(true);
+                                setTelegramId(tgId);
+                                toast.success('✅ Аккаунты объединены! Telegram подключён.');
+                              } catch (mergeErr: any) {
+                                toast.error('Не удалось объединить: ' + (mergeErr?.response?.data?.detail || 'Ошибка'));
+                              }
+                            }
+                          } else {
+                            const detail = resp?.data?.detail || err?.message || 'Unknown error';
+                            toast.error(`Telegram: ${resp?.status || '?'} — ${detail}`);
+                          }
+                        }
+                      }}
+                      buttonSize="large"
+                      cornerRadius={8}
+                    />
                   </div>
-                ) : (
-                  <div className="flex gap-3">
-                    <Button
-                      icon={<Link2 className="w-4 h-4" />}
-                      onClick={handleGenerateCode}
-                      loading={generatingCode}
-                    >
-                      Получить код привязки
-                    </Button>
+
+                  <p className="text-xs text-foreground-tertiary text-center">
+                    После привязки откройте бота <a href="https://t.me/lifepilot_uzbot" target="_blank" className="text-accent hover:underline">@lifepilot_uzbot</a> — он подключится автоматически.
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
                     <Button
                       variant="secondary"
                       icon={<MessageCircle className="w-4 h-4" />}
@@ -492,7 +525,6 @@ export function SettingsPage() {
                       Открыть бота
                     </Button>
                   </div>
-                )}
               </div>
             )}
           </Card>

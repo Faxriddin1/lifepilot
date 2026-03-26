@@ -1,0 +1,15 @@
+[SYSTEM]
+{{system_instruction}}
+
+[USER]
+USER_CONTEXT_JSON:
+{{user_context}}
+
+AVAILABLE_TIME_MINUTES:
+{{available_time_minutes}}
+
+PLAN_SNAPSHOT_JSON:
+{{plan_snapshot}}
+
+PROGRESS_JSON:
+{{progress}}

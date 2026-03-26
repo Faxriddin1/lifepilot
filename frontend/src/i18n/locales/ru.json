@@ -16,7 +16,8 @@
     "all": "Все",
     "active": "Активные",
     "completed": "Завершённые",
-    "archived": "Архив"
+    "archived": "Архив",
+    "deleted": "Удалено"
   },
   "errors": {
     "network": "Ошибка сети. Проверьте подключение к интернету.",
@@ -126,7 +127,9 @@
     "storage": "Хранилище",
     "collapse": "Свернуть",
     "expand": "Развернуть",
-    "upgradeDesc": "Безлимитные проекты и расширенная аналитика"
+    "upgradeDesc": "Безлимитные проекты и расширенная аналитика",
+    "learning": "Обучение",
+    "myGoals": "Мои цели"
   },
   "dashboard": {
     "title": "Главная",
@@ -350,7 +353,8 @@
       "/budgets": "Бюджеты",
       "/goals": "Цели",
       "/reports": "Отчёты",
-      "/settings": "Настройки"
+      "/settings": "Настройки",
+      "/learning": "Обучение"
     }
   },
   "commandPalette": {
@@ -465,7 +469,13 @@
     "sessionLog": "Журнал сессий",
     "today": "Сегодня",
     "freeFocus": "Свободный фокус",
-    "noSessions": "Сессий сегодня ещё нет"
+    "noSessions": "Сессий сегодня ещё нет",
+    "onBreak": "Перерыв",
+    "breakDone": "Перерыв окончен!",
+    "readyForFocus": "Готовы к следующему фокусу?",
+    "focusDone": "Фокус завершён!",
+    "breakStarting": "Перерыв начинается автоматически...",
+    "endSession": "Закончить"
   },
   "habitsPage": {
     "habitsTracked": "привычек отслеживается",
@@ -514,18 +524,18 @@
     "expense": "Расход",
     "transfer": "Перевод",
     "accountsCount": "счёт(а)",
-    "incomeUp": "\u2191 Доход",
-    "expensesDown": "\u2193 Расходы",
+    "incomeUp": "↑ Доход",
+    "expensesDown": "↓ Расходы",
     "savings": "Экономия",
     "ofIncome": "от дохода",
     "cashFlow": "Денежный поток",
     "last30DaysSubtitle": "Последние 30 дней",
-    "tooltipIncome": "\u2191 Доход",
-    "tooltipExpense": "\u2193 Расход",
+    "tooltipIncome": "↑ Доход",
+    "tooltipExpense": "↓ Расход",
     "accounts": "Счета",
     "accountsLabel": "счетов",
     "whereMoneyGoes": "Куда уходят деньги",
-    "incomeExpensesSavings": "Доход \u2192 Расходы \u2192 Экономия",
+    "incomeExpensesSavings": "Доход → Расходы → Экономия",
     "noData": "Нет данных",
     "budgets": "Бюджеты",
     "all": "Все",
@@ -535,8 +545,8 @@
     "noGoals": "Нет целей",
     "monthly": "Помесячно",
     "last6Months": "Последние 6 месяцев",
-    "monthlyIncome": "\u2191 Доход",
-    "monthlyExpense": "\u2193 Расход"
+    "monthlyIncome": "↑ Доход",
+    "monthlyExpense": "↓ Расход"
   },
   "transactionsPage": {
     "searchTransactions": "Поиск транзакций...",
@@ -595,50 +605,56 @@
   "budgetsNew": {
     "totalBudget": "Общий бюджет",
     "spent": "Потрачено",
-    "remaining": "Осталось",
-    "used": "Использовано",
+    "remaining": "Остаток",
+    "used": "использовано",
     "uncategorized": "Без категории",
-    "over": "Превышен",
-    "almost": "Почти",
+    "over": "превышение",
+    "almost": "почти",
     "delete": "Удалить",
-    "remainingAmount": "осталось",
-    "overAmount": "превышено",
+    "remaining2": "осталось",
+    "exceeded": "превышен",
     "chooseCategory": "Выберите категорию",
-    "whichCategory": "Для какой категории расходов установить бюджет?",
-    "setLimit": "Установите лимит",
-    "howMuchPlan": "сколько планируете тратить?",
+    "whichCategory": "Какая категория?",
+    "howMuch": "Сколько?",
     "change": "Изменить",
     "budgetLimit": "Лимит бюджета",
     "period": "Период",
+    "weekly": "Еженедельно",
+    "monthly": "Ежемесячно",
+    "yearly": "Ежегодно",
     "week": "Неделя",
     "month": "Месяц",
     "quarter": "Квартал",
     "year": "Год",
-    "back": "\u2190 Назад",
+    "setLimit": "Установите лимит",
+    "whichCategoryBudget": "Для какой категории расходов установить бюджет?",
+    "howMuchPlan": "сколько планируете тратить?",
+    "back": "Назад",
     "createBudget": "Создать бюджет"
   },
   "goalsNew": {
     "totalProgress": "Общий прогресс",
     "progress": "Прогресс",
-    "completed": "Достигнуто",
+    "completed": "Выполнено",
     "saved": "Накоплено",
     "target": "Цель",
-    "left": "Осталось",
-    "perMonth": "мес",
+    "left": "осталось",
+    "months": "месяцев",
     "addFunds": "Пополнить",
-    "done": "Достигнуто",
     "newGoal": "Новая цель",
-    "configureGoal": "Настройте цель",
-    "pickTemplate": "Выберите шаблон или создайте свою",
+    "configureGoal": "Настроить цель",
+    "pickTemplate": "Выберите шаблон",
     "change": "Изменить",
     "goalName": "Название цели",
     "targetAmount": "Целевая сумма",
-    "deadline": "Дедлайн (опционально)",
-    "back": "\u2190 Назад",
+    "deadlineOptional": "Срок (необязательно)",
+    "back": "Назад",
     "createGoal": "Создать цель",
     "contributeToGoal": "Пополнить цель",
-    "addFundsBtn": "Пополнить",
-    "currentProgress": "Текущий прогресс"
+    "addFundsBig": "Пополнить",
+    "currentProgress": "Текущий прогресс",
+    "done": "Достигнуто",
+    "perMonth": "мес"
   },
   "goalTemplates": {
     "vacation": "Отпуск",
@@ -767,60 +783,6 @@
     "accountsLabel": "счетов",
     "incomeExpensesSavings": "Доход → Расходы → Экономия"
   },
-  "budgetsNew": {
-    "totalBudget": "Общий бюджет",
-    "spent": "Потрачено",
-    "remaining": "Остаток",
-    "used": "использовано",
-    "uncategorized": "Без категории",
-    "over": "превышение",
-    "almost": "почти",
-    "delete": "Удалить",
-    "remaining2": "осталось",
-    "exceeded": "превышен",
-    "chooseCategory": "Выберите категорию",
-    "whichCategory": "Какая категория?",
-    "howMuch": "Сколько?",
-    "change": "Изменить",
-    "budgetLimit": "Лимит бюджета",
-    "period": "Период",
-    "weekly": "Еженедельно",
-    "monthly": "Ежемесячно",
-    "yearly": "Ежегодно",
-    "week": "Неделя",
-    "month": "Месяц",
-    "quarter": "Квартал",
-    "year": "Год",
-    "setLimit": "Установите лимит",
-    "whichCategoryBudget": "Для какой категории расходов установить бюджет?",
-    "howMuchPlan": "сколько планируете тратить?",
-    "back": "Назад",
-    "createBudget": "Создать бюджет"
-  },
-  "goalsNew": {
-    "totalProgress": "Общий прогресс",
-    "progress": "Прогресс",
-    "completed": "Выполнено",
-    "saved": "Накоплено",
-    "target": "Цель",
-    "left": "осталось",
-    "months": "месяцев",
-    "addFunds": "Пополнить",
-    "newGoal": "Новая цель",
-    "configureGoal": "Настроить цель",
-    "pickTemplate": "Выберите шаблон",
-    "change": "Изменить",
-    "goalName": "Название цели",
-    "targetAmount": "Целевая сумма",
-    "deadlineOptional": "Срок (необязательно)",
-    "back": "Назад",
-    "createGoal": "Создать цель",
-    "contributeToGoal": "Пополнить цель",
-    "addFundsBig": "Пополнить",
-    "currentProgress": "Текущий прогресс",
-    "done": "Достигнуто",
-    "perMonth": "мес"
-  },
   "settingsNew": {
     "security": "Безопасность",
     "passwordChanged": "Пароль изменён",
@@ -890,7 +852,15 @@
     "habits": "Привычки",
     "thisWeek": "Эта неделя",
     "daysShort": "д",
-    "weekDays": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    "weekDays": [
+      "Пн",
+      "Вт",
+      "Ср",
+      "Чт",
+      "Пт",
+      "Сб",
+      "Вс"
+    ]
   },
   "alertsSection": {
     "overBudget": "Вы превысили бюджет",
@@ -953,7 +923,15 @@
     "noTasksForDay": "Нет задач на этот день",
     "total": "Всего",
     "withDeadline": "С дедлайном",
-    "weekdaysShort": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    "weekdaysShort": [
+      "Пн",
+      "Вт",
+      "Ср",
+      "Чт",
+      "Пт",
+      "Сб",
+      "Вс"
+    ]
   },
   "about": {
     "title": "О проекте",
@@ -966,5 +944,189 @@
     "languagesLabel": "Языки",
     "languagesValue": "Русский, English, Oʻzbekcha, Ўзбекча",
     "contactTitle": "Контакты"
+  },
+  "tutor": {
+    "title": "AI-тьютор",
+    "placeholder": "Задайте вопрос...",
+    "thinking": "Думаю...",
+    "needHelp": "Не понимаю",
+    "rateLimited": "Лимит вопросов на сегодня исчерпан",
+    "unavailable": "Тьютор временно недоступен",
+    "clearHistory": "Очистить историю"
+  },
+  "learning": {
+    "title": "Обучение",
+    "goals": "Цели обучения",
+    "newGoal": "Новая цель",
+    "createGoal": {
+      "daysPerWeekLabel": "Дней в неделю",
+      "difficultyLabel": "Уровень",
+      "errorToast": "Не удалось создать цель",
+      "minutesPerDayLabel": "Минут в день",
+      "submit": "Создать и сгенерировать план",
+      "successToast": "Цель создана",
+      "targetDateLabel": "Целевая дата",
+      "title": "Новая цель обучения",
+      "titleLabel": "Чему хотите научиться?",
+      "titlePlaceholder": "Например: Python для анализа данных",
+      "titleRequired": "Введите название"
+    },
+    "generatePlan": "Сгенерировать план",
+    "confirmPlan": "Подтвердить план",
+    "regeneratePlan": "Перегенерировать",
+    "generating": {
+      "subtitle": "Это займёт 15-30 секунд",
+      "step1": "Анализирую вашу цель...",
+      "step2": "Формирую структуру программы...",
+      "step3": "Подбираю учебные ресурсы...",
+      "step4": "Финализирую ваш план...",
+      "progress": "Генерация плана"
+    },
+    "previewTitle": "Проверьте план",
+    "previewHint": "AI сгенерировал план. Проверьте и подтвердите.",
+    "module": {
+      "noTasks": "Нет заданий",
+      "tasks": "заданий"
+    },
+    "task": {
+      "complete": "Завершить",
+      "help": "Не понимаю",
+      "openResource": "Открыть ресурс",
+      "skip": "Пропустить"
+    },
+    "today": {
+      "minutes": "мин",
+      "noTasks": "Всё выполнено на сегодня! 🎉",
+      "summary": "выполнено сегодня"
+    },
+    "todayTasks": "Задания на сегодня",
+    "streak": {
+      "label": "дней серия"
+    },
+    "streakDays": "{{count}} дней",
+    "progress": "Прогресс",
+    "completed": "Завершено",
+    "openResource": "Открыть ресурс",
+    "searchResource": "Искать в Google",
+    "needHelp": "Не понимаю",
+    "skip": "Пропустить",
+    "complete": "Завершить",
+    "tooEasy": "Слишком легко",
+    "tooHard": "Слишком сложно",
+    "pause": "Пауза",
+    "resume": "Возобновить",
+    "continue": "Продолжить",
+    "viewPlan": "Посмотреть план",
+    "totalHours": "Всего: ~{{hours}} часов",
+    "modules_count": "{{count}} модулей",
+    "tasksToday": "{{done}}/{{total}} задач сегодня",
+    "minutesToday": "{{minutes}} мин",
+    "difficulty": {
+      "beginner": "Начальный",
+      "intermediate": "Средний",
+      "advanced": "Продвинутый"
+    },
+    "taskTypes": {
+      "video": "Видео",
+      "article": "Статья",
+      "practice": "Практика",
+      "quiz": "Квиз",
+      "project": "Проект"
+    },
+    "tutor": {
+      "title": "AI-тьютор",
+      "askPlaceholder": "Задайте вопрос...",
+      "thinking": "Думаю...",
+      "unavailable": "Тьютор временно недоступен",
+      "clearHistory": "Очистить историю"
+    },
+    "emptyState": {
+      "title": "Начните обучение",
+      "description": "AI составит персональный план обучения по любой теме",
+      "cta": "Создать первую цель"
+    },
+    "rate": {
+      "title": "Оцените полезность",
+      "placeholder": "Заметки (необязательно)"
+    },
+    "adapt": {
+      "requesting": "AI анализирует прогресс...",
+      "tooEasyHint": "AI ускорит план",
+      "tooHardHint": "AI упростит план"
+    },
+    "form": {
+      "titleLabel": "Чему хотите научиться?",
+      "titlePlaceholder": "напр. Python для анализа данных",
+      "levelLabel": "Уровень сложности",
+      "targetDateLabel": "Целевая дата",
+      "minutesLabel": "Минут в день",
+      "daysLabel": "Дней в неделю"
+    },
+    "adaptError": "Не удалось запросить адаптацию",
+    "adaptRequested": "AI анализирует ваш прогресс...",
+    "adaptation": {
+      "prefix": "AI адаптировал ваш план"
+    },
+    "backToGoals": "К целям",
+    "emptyDescription": "AI составит персональный план обучения по любой теме",
+    "emptyTitle": "Начните обучение",
+    "goalCard": {
+      "completed": "Завершено",
+      "continue": "Продолжить",
+      "generating": "Генерируется...",
+      "modulesCount": "{{count}} модулей",
+      "open": "Открыть",
+      "resume": "Возобновить",
+      "viewPlan": "Посмотреть план"
+    },
+    "goalPaused": "Цель приостановлена",
+    "goalResumed": "Цель возобновлена",
+    "pauseError": "Не удалось приостановить",
+    "planConfirmError": "Не удалось подтвердить план",
+    "planConfirmed": "План подтверждён!",
+    "planPreview": {
+      "confirm": "Подтвердить план",
+      "min": "мин",
+      "modulesCount": "модулей",
+      "regenerate": "Перегенерировать",
+      "tasks": "заданий",
+      "totalHours": "Всего часов"
+    },
+    "rating": {
+      "notesPlaceholder": "Заметки (необязательно)",
+      "save": "Сохранить",
+      "starLabel": "Оцените полезность"
+    },
+    "regenerateError": "Не удалось перегенерировать",
+    "regenerating": "Перегенерация плана...",
+    "resumeError": "Не удалось возобновить",
+    "startLearning": "Начать обучение",
+    "status": {
+      "abandoned": "Заброшена",
+      "active": "Активна",
+      "completed": "Завершена",
+      "draft": "Черновик",
+      "generating": "Генерируется...",
+      "paused": "На паузе",
+      "preview": "Превью"
+    },
+    "taskCompleteError": "Не удалось завершить задание",
+    "taskCompleted": "Задание выполнено! 🎉",
+    "taskSkipError": "Не удалось пропустить задание",
+    "widget": {
+      "complete": "Завершить",
+      "continue": "Продолжить обучение",
+      "emptySubtitle": "AI составит план за вас",
+      "emptyTitle": "Начните обучение",
+      "label": "Обучение",
+      "startLearning": "Начать обучение",
+      "todayTasks": "заданий сегодня"
+    },
+    "delete": "Удалить",
+    "deleteConfirm": "Вы уверены? Все данные обучения будут удалены.",
+    "plan": {
+      "modules": "модулей",
+      "tasks": "заданий"
+    }
   }
 }

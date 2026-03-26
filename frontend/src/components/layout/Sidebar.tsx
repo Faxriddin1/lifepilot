@@ -21,6 +21,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
+  GraduationCap,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '@/store/uiStore';
@@ -61,6 +62,12 @@ const navSections: NavSection[] = [
       { to: '/daily-log', icon: <BookOpen className="w-5 h-5" />, labelKey: 'sidebar.dailyLog' },
       { to: '/habits', icon: <Repeat className="w-5 h-5" />, labelKey: 'sidebar.habits' },
       { to: '/analytics', icon: <BarChart3 className="w-5 h-5" />, labelKey: 'sidebar.analytics' },
+    ],
+  },
+  {
+    titleKey: 'sidebar.learning',
+    items: [
+      { to: '/learning', icon: <GraduationCap className="w-5 h-5" />, labelKey: 'sidebar.myGoals' },
     ],
   },
   {

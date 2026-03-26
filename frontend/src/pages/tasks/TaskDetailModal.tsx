@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Clock, Tag, Trash2, Plus, Check } from 'lucide-react';
+import { toast } from 'sonner';
 import clsx from 'clsx';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -26,8 +27,22 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
   const [editingTitle, setEditingTitle] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [deadlineDate, setDeadlineDate] = useState('');
+  const [deadlineTime, setDeadlineTime] = useState('');
+  const [timeEstimate, setTimeEstimate] = useState('');
   const [newSubtask, setNewSubtask] = useState('');
+  const [hasChanges, setHasChanges] = useState(false);
   const { t } = useTranslation();
+
+  // Sync local state when task changes
+  useState(() => {
+    if (task) {
+      setDeadlineDate(task.deadline ? new Date(task.deadline).toLocaleDateString('en-CA') : '');
+      setDeadlineTime(task.deadline ? `${String(new Date(task.deadline).getHours()).padStart(2,'0')}:${String(new Date(task.deadline).getMinutes()).padStart(2,'0')}` : '');
+      setTimeEstimate(task.time_estimate ? String(task.time_estimate) : '');
+      setHasChanges(false);
+    }
+  });
 
   if (!task) return null;
 
@@ -110,26 +125,42 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
-              {t('taskDetail.dueDate')}
-            </label>
-            <div className="flex items-center gap-2 text-sm text-foreground">
-              <Calendar className="w-4 h-4 text-foreground-secondary" />
-              {task.deadline ? formatDate(task.deadline) : t('taskDetail.noDueDate')}
-            </div>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
-              {t('taskDetail.timeTracked')}
-            </label>
-            <div className="flex items-center gap-2 text-sm text-foreground">
-              <Clock className="w-4 h-4 text-foreground-secondary" />
-              {task.time_logged ? formatDuration(task.time_logged) : '0m'}
-              {task.time_estimate && (
-                <span className="text-foreground-secondary">
-                  / {formatDuration(task.time_estimate)} {t('taskDetail.est')}
-                </span>
-              )}
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
+                  {t('taskDetail.dueDate', { defaultValue: 'Срок' })}
+                </label>
+                <input
+                  type="date"
+                  value={deadlineDate}
+                  onChange={(e) => { setDeadlineDate(e.target.value); setHasChanges(true); }}
+                  className="block w-full h-9 rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-focus"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
+                  {t('taskDetail.dueTime', { defaultValue: 'Время' })}
+                </label>
+                <input
+                  type="time"
+                  value={deadlineTime}
+                  onChange={(e) => { setDeadlineTime(e.target.value); setHasChanges(true); }}
+                  className="block w-full h-9 rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-focus"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-foreground-secondary uppercase tracking-wider mb-1 block">
+                  {t('taskDetail.timeEstimate', { defaultValue: 'Время (мин)' })}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  value={timeEstimate}
+                  onChange={(e) => { setTimeEstimate(e.target.value); setHasChanges(true); }}
+                  className="block w-full h-9 rounded-md border border-border bg-background px-3 py-1 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-focus"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -236,21 +267,77 @@ export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps)
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-border">
-          <p className="text-xs text-foreground-secondary">
+        <div className="flex flex-col gap-3 pt-4 border-t border-border">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                // Save description
+                handleDescriptionSave();
+
+                // Build deadline from date + time
+                const updates: Record<string, any> = {};
+                if (deadlineDate) {
+                  const d = new Date(deadlineDate);
+                  if (deadlineTime) {
+                    const [h, min] = deadlineTime.split(':').map(Number);
+                    d.setHours(h, min, 0, 0);
+                  } else {
+                    d.setHours(23, 59, 0, 0);
+                  }
+                  updates.deadline = d.toISOString();
+                } else if (!deadlineDate && task.deadline) {
+                  updates.deadline = null;
+                }
+
+                // Save time estimate
+                const est = timeEstimate ? parseInt(timeEstimate) : null;
+                if (est !== task.time_estimate) {
+                  updates.time_estimate = est;
+                }
+
+                if (Object.keys(updates).length > 0) {
+                  updateTask.mutate({ id: task.id, data: updates });
+                }
+
+                setHasChanges(false);
+                onClose();
+                toast.success(t('common.saved', { defaultValue: 'Сохранено' }));
+              }}
+            >
+              {t('common.save', { defaultValue: 'Сохранить' })}{hasChanges ? ' •' : ''}
+            </Button>
+            {task.status !== 'done' && (
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Check className="w-3.5 h-3.5" />}
+                onClick={() => {
+                  updateTask.mutate({ id: task.id, data: { status: TaskStatus.DONE } });
+                  onClose();
+                  toast.success(t('taskDetail.markedDone', { defaultValue: 'Задача выполнена ✅' }));
+                }}
+              >
+                {t('taskDetail.markDone', { defaultValue: 'Готово' })}
+              </Button>
+            )}
+            <div className="flex-1" />
+            <Button
+              variant="danger"
+              size="sm"
+              icon={<Trash2 className="w-3.5 h-3.5" />}
+              onClick={handleDelete}
+              loading={deleteTask.isPending}
+            >
+              {t('common.delete')}
+            </Button>
+          </div>
+          <p className="text-xs text-foreground-tertiary">
             {t('taskDetail.created')} {formatDate(task.created_at)}
             {task.updated_at !== task.created_at &&
               ` | ${t('taskDetail.updated')} ${formatDate(task.updated_at)}`}
           </p>
-          <Button
-            variant="danger"
-            size="sm"
-            icon={<Trash2 className="w-3.5 h-3.5" />}
-            onClick={handleDelete}
-            loading={deleteTask.isPending}
-          >
-            {t('common.delete')}
-          </Button>
         </div>
       </div>
     </Modal>

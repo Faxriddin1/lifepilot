@@ -16,7 +16,8 @@
     "all": "Барчаси",
     "active": "Фаол",
     "completed": "Тугалланган",
-    "archived": "Архив"
+    "archived": "Архив",
+    "deleted": "Ўчирилди"
   },
   "errors": {
     "network": "Тармоқ хатоси. Интернет уланишини текширинг.",
@@ -126,7 +127,9 @@
     "storage": "Хотира",
     "collapse": "Йиғиш",
     "expand": "Ёйиш",
-    "upgradeDesc": "Чексиз лойиҳалар ва кенгайтирилган таҳлилот"
+    "upgradeDesc": "Чексиз лойиҳалар ва кенгайтирилган таҳлилот",
+    "learning": "Ўқиш",
+    "myGoals": "Мақсадларим"
   },
   "dashboard": {
     "title": "Бош саҳифа",
@@ -350,7 +353,8 @@
       "/budgets": "Бюджетлар",
       "/goals": "Мақсадлар",
       "/reports": "Ҳисоботлар",
-      "/settings": "Созламалар"
+      "/settings": "Созламалар",
+      "/learning": "Ўқиш"
     }
   },
   "commandPalette": {
@@ -465,7 +469,13 @@
     "sessionLog": "Сессиялар журнали",
     "today": "Бугун",
     "freeFocus": "Эркин фокус",
-    "noSessions": "Бугун ҳали сессиялар йўқ"
+    "noSessions": "Бугун ҳали сессиялар йўқ",
+    "onBreak": "Дам олиш",
+    "breakDone": "Дам олиш тугади!",
+    "readyForFocus": "Кейинги фокусга тайёрмисиз?",
+    "focusDone": "Фокус тугади!",
+    "breakStarting": "Дам олиш автоматик бошланмоқда...",
+    "endSession": "Тугатиш"
   },
   "habitsPage": {
     "habitsTracked": "одат кузатилмоқда",
@@ -514,18 +524,18 @@
     "expense": "Харажат",
     "transfer": "Ўтказма",
     "accountsCount": "ҳисоб(лар)",
-    "incomeUp": "\u2191 Даромад",
-    "expensesDown": "\u2193 Харажатлар",
+    "incomeUp": "↑ Даромад",
+    "expensesDown": "↓ Харажатлар",
     "savings": "Тежам",
     "ofIncome": "даромаддан",
     "cashFlow": "Пул оқими",
     "last30DaysSubtitle": "Сўнгги 30 кун",
-    "tooltipIncome": "\u2191 Даромад",
-    "tooltipExpense": "\u2193 Харажат",
+    "tooltipIncome": "↑ Даромад",
+    "tooltipExpense": "↓ Харажат",
     "accounts": "Ҳисоблар",
     "accountsLabel": "ҳисоблар",
     "whereMoneyGoes": "Пул қаёрга кетади",
-    "incomeExpensesSavings": "Даромад \u2192 Харажатлар \u2192 Тежам",
+    "incomeExpensesSavings": "Даромад → Харажатлар → Тежам",
     "noData": "Маълумот йўқ",
     "budgets": "Бюджетлар",
     "all": "Барчаси",
@@ -535,8 +545,8 @@
     "noGoals": "Мақсадлар йўқ",
     "monthly": "Ойлик",
     "last6Months": "Сўнгги 6 ой",
-    "monthlyIncome": "\u2191 Даромад",
-    "monthlyExpense": "\u2193 Харажат"
+    "monthlyIncome": "↑ Даромад",
+    "monthlyExpense": "↓ Харажат"
   },
   "transactionsPage": {
     "searchTransactions": "Транзакцияларни қидириш...",
@@ -594,27 +604,32 @@
   },
   "budgetsNew": {
     "totalBudget": "Умумий бюджет",
-    "spent": "Сарфланди",
-    "remaining": "Қолди",
-    "used": "Ишлатилди",
+    "spent": "Сарфланган",
+    "remaining": "Қолдиқ",
+    "used": "ишлатилган",
     "uncategorized": "Тоифасиз",
-    "over": "Ошиб кетди",
-    "almost": "Деярли",
+    "over": "ошиш",
+    "almost": "деярли",
     "delete": "Ўчириш",
-    "remainingAmount": "қолди",
-    "overAmount": "ошиб кетди",
+    "remaining2": "қолди",
+    "exceeded": "ошиб кетди",
     "chooseCategory": "Тоифани танланг",
-    "whichCategory": "Қайси харажат тоифаси учун бюджет белгилаш керак?",
-    "setLimit": "Лимитни белгиланг",
-    "howMuchPlan": "қанча сарфлашни режалаштирмоқдасиз?",
+    "whichCategory": "Қайси тоифа?",
+    "howMuch": "Қанча?",
     "change": "Ўзгартириш",
-    "budgetLimit": "Бюджет лимити",
+    "budgetLimit": "Бюджет чегараси",
     "period": "Давр",
+    "weekly": "Ҳафталик",
+    "monthly": "Ойлик",
+    "yearly": "Йиллик",
     "week": "Ҳафта",
     "month": "Ой",
     "quarter": "Чорак",
     "year": "Йил",
-    "back": "\u2190 Орқага",
+    "setLimit": "Чегарани белгиланг",
+    "whichCategoryBudget": "Қайси харажат тоифаси учун бюджет белгилаш?",
+    "howMuchPlan": "қанча сарфлашни режалаштирмоқдасиз?",
+    "back": "Орқага",
     "createBudget": "Бюджет яратиш"
   },
   "goalsNew": {
@@ -623,22 +638,23 @@
     "completed": "Бажарилди",
     "saved": "Жамғарилди",
     "target": "Мақсад",
-    "left": "Қолди",
-    "perMonth": "ой",
-    "addFunds": "Қўшиш",
-    "done": "Бажарилди",
+    "left": "қолди",
+    "months": "ой",
+    "addFunds": "Маблағ қўшиш",
     "newGoal": "Янги мақсад",
     "configureGoal": "Мақсадни созлаш",
-    "pickTemplate": "Шаблон танланг ёки ўзингиз яратинг",
+    "pickTemplate": "Шаблон танланг",
     "change": "Ўзгартириш",
     "goalName": "Мақсад номи",
     "targetAmount": "Мақсад суммаси",
-    "deadline": "Муддат (ихтиёрий)",
-    "back": "\u2190 Орқага",
+    "deadlineOptional": "Муддат (ихтиёрий)",
+    "back": "Орқага",
     "createGoal": "Мақсад яратиш",
     "contributeToGoal": "Мақсадга киритиш",
-    "addFundsBtn": "Маблағ киритиш",
-    "currentProgress": "Жорий жараён"
+    "addFundsBig": "Маблағ қўшиш",
+    "currentProgress": "Жорий жараён",
+    "done": "Бажарилди",
+    "perMonth": "ой"
   },
   "goalTemplates": {
     "vacation": "Таътил",
@@ -752,7 +768,15 @@
     "habits": "Одатлар",
     "thisWeek": "Бу ҳафта",
     "daysShort": "к",
-    "weekDays": ["Ду", "Се", "Чо", "Па", "Жу", "Ша", "Як"]
+    "weekDays": [
+      "Ду",
+      "Се",
+      "Чо",
+      "Па",
+      "Жу",
+      "Ша",
+      "Як"
+    ]
   },
   "financeOverviewNew": {
     "expense": "Харажат",
@@ -784,60 +808,6 @@
     "tooltipExpense": "↓ Харажат",
     "accountsLabel": "ҳисоб",
     "incomeExpensesSavings": "Даромад → Харажатлар → Жамғармалар"
-  },
-  "budgetsNew": {
-    "totalBudget": "Умумий бюджет",
-    "spent": "Сарфланган",
-    "remaining": "Қолдиқ",
-    "used": "ишлатилган",
-    "uncategorized": "Тоифасиз",
-    "over": "ошиш",
-    "almost": "деярли",
-    "delete": "Ўчириш",
-    "remaining2": "қолди",
-    "exceeded": "ошиб кетди",
-    "chooseCategory": "Тоифани танланг",
-    "whichCategory": "Қайси тоифа?",
-    "howMuch": "Қанча?",
-    "change": "Ўзгартириш",
-    "budgetLimit": "Бюджет чегараси",
-    "period": "Давр",
-    "weekly": "Ҳафталик",
-    "monthly": "Ойлик",
-    "yearly": "Йиллик",
-    "week": "Ҳафта",
-    "month": "Ой",
-    "quarter": "Чорак",
-    "year": "Йил",
-    "setLimit": "Чегарани белгиланг",
-    "whichCategoryBudget": "Қайси харажат тоифаси учун бюджет белгилаш?",
-    "howMuchPlan": "қанча сарфлашни режалаштирмоқдасиз?",
-    "back": "Орқага",
-    "createBudget": "Бюджет яратиш"
-  },
-  "goalsNew": {
-    "totalProgress": "Умумий жараён",
-    "progress": "Жараён",
-    "completed": "Бажарилди",
-    "saved": "Жамғарилди",
-    "target": "Мақсад",
-    "left": "қолди",
-    "months": "ой",
-    "addFunds": "Маблағ қўшиш",
-    "newGoal": "Янги мақсад",
-    "configureGoal": "Мақсадни созлаш",
-    "pickTemplate": "Шаблон танланг",
-    "change": "Ўзгартириш",
-    "goalName": "Мақсад номи",
-    "targetAmount": "Мақсад суммаси",
-    "deadlineOptional": "Муддат (ихтиёрий)",
-    "back": "Орқага",
-    "createGoal": "Мақсад яратиш",
-    "contributeToGoal": "Мақсадга киритиш",
-    "addFundsBig": "Маблағ қўшиш",
-    "currentProgress": "Жорий жараён",
-    "done": "Бажарилди",
-    "perMonth": "ой"
   },
   "settingsNew": {
     "security": "Хавфсизлик",
@@ -953,7 +923,15 @@
     "noTasksForDay": "Бу кунга вазифалар йўқ",
     "total": "Жами",
     "withDeadline": "Муддатли",
-    "weekdaysShort": ["Ду", "Се", "Чо", "Па", "Жу", "Ша", "Як"]
+    "weekdaysShort": [
+      "Ду",
+      "Се",
+      "Чо",
+      "Па",
+      "Жу",
+      "Ша",
+      "Як"
+    ]
   },
   "about": {
     "title": "LifePilot ҳақида",
@@ -966,5 +944,189 @@
     "languagesLabel": "Тиллар",
     "languagesValue": "Русский, English, Ўзбекча, Oʻzbekcha",
     "contactTitle": "Биз билан боғланиш"
+  },
+  "tutor": {
+    "title": "AI-тьютор",
+    "placeholder": "Савол беринг...",
+    "thinking": "Ўйлаяпман...",
+    "needHelp": "Тушунмадим",
+    "rateLimited": "Бугунги саволлар лимити тугади",
+    "unavailable": "Тьютор вақтинча мавжуд эмас",
+    "clearHistory": "Тарихни тозалаш"
+  },
+  "learning": {
+    "title": "Ўқиш",
+    "goals": "Ўқув мақсадлари",
+    "newGoal": "Янги мақсад",
+    "createGoal": {
+      "daysPerWeekLabel": "Ҳафтада кун",
+      "difficultyLabel": "Даража",
+      "errorToast": "Мақсад яратишда хатолик",
+      "minutesPerDayLabel": "Кунига дақиқа",
+      "submit": "Яратиш ва режа тузиш",
+      "successToast": "Мақсад яратилди",
+      "targetDateLabel": "Мақсад санаси",
+      "title": "Янги таълим мақсади",
+      "titleLabel": "Нимани ўрганмоқчисиз?",
+      "titlePlaceholder": "Масалан: Python маълумотлар таҳлили учун",
+      "titleRequired": "Ном киритилиши шарт"
+    },
+    "generatePlan": "Режа яратиш",
+    "confirmPlan": "Режани тасдиқлаш",
+    "regeneratePlan": "Қайта яратиш",
+    "generating": {
+      "subtitle": "Бу 15-30 сония давом этади",
+      "step1": "Мақсадингизни таҳлил қилмоқда...",
+      "step2": "Дастур тузилмасини яратмоқда...",
+      "step3": "Ресурсларни қидирмоқда...",
+      "step4": "Режангизни якунламоқда...",
+      "progress": "Режа тузилмоқда"
+    },
+    "previewTitle": "Режани кўриб чиқинг",
+    "previewHint": "AI режа яратди. Кўриб чиқинг ва тасдиқланг.",
+    "module": {
+      "noTasks": "Вазифалар йўқ",
+      "tasks": "вазифа"
+    },
+    "task": {
+      "complete": "Бажариш",
+      "help": "Тушунмадим",
+      "openResource": "Ресурсни очиш",
+      "skip": "Ўтказиш"
+    },
+    "today": {
+      "minutes": "дақ",
+      "noTasks": "Бугун ҳаммаси бажарилди! 🎉",
+      "summary": "бугун бажарилди"
+    },
+    "todayTasks": "Бугунги вазифалар",
+    "streak": {
+      "label": "кун кетма-кет"
+    },
+    "streakDays": "{{count}} кун",
+    "progress": "Жараён",
+    "completed": "Бажарилди",
+    "openResource": "Ресурсни очиш",
+    "searchResource": "Google'да қидириш",
+    "needHelp": "Тушунмадим",
+    "skip": "Ўтказиб юбориш",
+    "complete": "Тугатиш",
+    "tooEasy": "Жуда осон",
+    "tooHard": "Жуда қийин",
+    "pause": "Пауза",
+    "resume": "Давом эттириш",
+    "continue": "Давом этиш",
+    "viewPlan": "Режани кўриш",
+    "totalHours": "Жами: ~{{hours}} соат",
+    "modules_count": "{{count}} модул",
+    "tasksToday": "Бугун {{done}}/{{total}} вазифа",
+    "minutesToday": "{{minutes}} дақ",
+    "difficulty": {
+      "beginner": "Бошланғич",
+      "intermediate": "Ўрта",
+      "advanced": "Юқори"
+    },
+    "taskTypes": {
+      "video": "Видео",
+      "article": "Мақола",
+      "practice": "Амалиёт",
+      "quiz": "Тест",
+      "project": "Лойиҳа"
+    },
+    "tutor": {
+      "title": "AI тьютор",
+      "askPlaceholder": "Савол беринг...",
+      "thinking": "Ўйлаяпман...",
+      "unavailable": "Тьютор вақтинча мавжуд эмас",
+      "clearHistory": "Тарихни тозалаш"
+    },
+    "emptyState": {
+      "title": "Ўқишни бошлаш",
+      "description": "AI исталган мавзу бўйича шахсий ўқув режасини тузади",
+      "cta": "Биринчи мақсадни яратиш"
+    },
+    "rate": {
+      "title": "Фойдалилигини баҳоланг",
+      "placeholder": "Изоҳлар (ихтиёрий)"
+    },
+    "adapt": {
+      "requesting": "AI жараённи таҳлил қилмоқда...",
+      "tooEasyHint": "AI режани тезлаштиради",
+      "tooHardHint": "AI режани соддалаштиради"
+    },
+    "form": {
+      "titleLabel": "Нимани ўрганмоқчисиз?",
+      "titlePlaceholder": "масалан, Маълумотлар таҳлили учун Python",
+      "levelLabel": "Қийинчилик даражаси",
+      "targetDateLabel": "Мақсад сана",
+      "minutesLabel": "Кунига дақиқа",
+      "daysLabel": "Ҳафтада кун"
+    },
+    "adaptError": "Адаптация хатолик",
+    "adaptRequested": "AI таҳлил қилмоқда...",
+    "adaptation": {
+      "prefix": "AI режангизни мослаштирди"
+    },
+    "backToGoals": "Мақсадларга қайтиш",
+    "emptyDescription": "AI ҳар қандай мавзу бўйича шахсий таълим режасини тузади",
+    "emptyTitle": "Таълимни бошланг",
+    "goalCard": {
+      "completed": "Тугалланди",
+      "continue": "Давом этиш",
+      "generating": "Тузилмоқда...",
+      "modulesCount": "{{count}} модул",
+      "open": "Очиш",
+      "resume": "Давом эттириш",
+      "viewPlan": "Режани кўриш"
+    },
+    "goalPaused": "Мақсад тўхтатилди",
+    "goalResumed": "Мақсад давом эттирилди",
+    "pauseError": "Тўхтатишда хатолик",
+    "planConfirmError": "Режани тасдиқлашда хатолик",
+    "planConfirmed": "Режа тасдиқланди!",
+    "planPreview": {
+      "confirm": "Режани тасдиқлаш",
+      "min": "дақ",
+      "modulesCount": "модул",
+      "regenerate": "Қайта тузиш",
+      "tasks": "вазифа",
+      "totalHours": "Жами соат"
+    },
+    "rating": {
+      "notesPlaceholder": "Изоҳлар (ихтиёрий)",
+      "save": "Сақлаш",
+      "starLabel": "Фойдалилигини баҳоланг"
+    },
+    "regenerateError": "Қайта тузишда хатолик",
+    "regenerating": "Режа қайта тузилмоқда...",
+    "resumeError": "Давом эттиришда хатолик",
+    "startLearning": "Таълимни бошлаш",
+    "status": {
+      "abandoned": "Ташлаб қўйилган",
+      "active": "Фаол",
+      "completed": "Тугалланган",
+      "draft": "Қоралама",
+      "generating": "Тузилмоқда...",
+      "paused": "Тўхтатилган",
+      "preview": "Кўриб чиқиш"
+    },
+    "taskCompleteError": "Вазифани бажаришда хатолик",
+    "taskCompleted": "Вазифа бажарилди! 🎉",
+    "taskSkipError": "Вазифани ўтказишда хатолик",
+    "widget": {
+      "complete": "Бажариш",
+      "continue": "Давом этиш",
+      "emptySubtitle": "AI режа тузади",
+      "emptyTitle": "Таълимни бошланг",
+      "label": "Таълим",
+      "startLearning": "Бошлаш",
+      "todayTasks": "бугунги вазифалар"
+    },
+    "delete": "Ўчириш",
+    "deleteConfirm": "Ишончингиз комилми? Барча маълумотлар ўчирилади.",
+    "plan": {
+      "modules": "модул",
+      "tasks": "вазифа"
+    }
   }
 }

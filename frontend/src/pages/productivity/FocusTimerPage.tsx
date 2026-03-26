@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Play, Pause, Square, SkipForward, Clock, Zap } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Play, Pause, Square, SkipForward, Clock, Zap, Coffee, Volume2 } from 'lucide-react';
 import clsx from 'clsx';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -8,10 +8,12 @@ import { Badge } from '@/components/ui/Badge';
 import { Spinner } from '@/components/ui/Spinner';
 import { useFocusSession, useFocusHistory } from '@/hooks/useFocus';
 import { useTasksQuery } from '@/hooks/useTasks';
+import { useGoals, useGoal } from '@/hooks/useLearning';
 import { formatSeconds, formatDuration, formatDate } from '@/utils/formatters';
 import { SessionType } from '@/types';
 import { getSessionPresets } from '@/utils/constants';
 import { useTranslation } from 'react-i18next';
+import { GraduationCap } from 'lucide-react';
 
 /** Страница таймера фокусировки с круговым прогрессом, пресетами и историей сессий. */
 export function FocusTimerPage() {
@@ -29,18 +31,120 @@ export function FocusTimerPage() {
 
   const { data: historyData, isLoading: historyLoading } = useFocusHistory();
   const { data: tasksData } = useTasksQuery({ status: undefined, page_size: 50 });
+  const { data: goalsData } = useGoals();
+
+  // Get active goal ID for fetching detail with modules/tasks
+  const activeGoalId = (() => {
+    const goals = goalsData?.results ?? goalsData ?? [];
+    const arr = Array.isArray(goals) ? goals : [];
+    const active = arr.find((g: any) => g.status === 'active');
+    return active?.id || '';
+  })();
+  const { data: activeGoalDetail } = useGoal(activeGoalId);
 
   const [selectedPreset, setSelectedPreset] = useState(0);
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
+  const [pomodoroCount, setPomodoroCount] = useState(0);
+  const [autoBreakMode, setAutoBreakMode] = useState(false); // true = currently in auto-break
+  const [showFocusPrompt, setShowFocusPrompt] = useState(false); // show "start next focus?" banner
+  const autoCompleteRef = useRef(false);
   const { t } = useTranslation();
 
-  const preset = getSessionPresets()[selectedPreset];
+  const presets = getSessionPresets();
+  const preset = presets[selectedPreset];
   const timerMinutes = preset.minutes;
 
+  // Request notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Send browser notification
+  const sendNotification = useCallback((title: string, body: string) => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(title, { body, icon: '/vite.svg' });
+    }
+    // Also play sound
+    try {
+      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW2MkZCBdHB8fYmRjYR4cHZ5hI2OiYB0cXd8hoyNiYF0cXh8');
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    } catch {}
+  }, []);
+
+  // Auto-complete when timer reaches 0
+  useEffect(() => {
+    if (!isActive || isPaused) return;
+    if (remainingSeconds > 0) {
+      autoCompleteRef.current = false;
+      return;
+    }
+    if (autoCompleteRef.current) return; // prevent double-fire
+    autoCompleteRef.current = true;
+
+    const isBreak = preset.type === 'short_break' || preset.type === 'long_break';
+
+    if (isBreak) {
+      // Break finished → stop + prompt for new focus
+      stop();
+      setAutoBreakMode(false);
+      setShowFocusPrompt(true);
+      sendNotification(
+        t('focusTimer.breakDone'),
+        t('focusTimer.readyForFocus')
+      );
+    } else {
+      // Focus finished → auto-stop + start break
+      stop();
+      setPomodoroCount(prev => prev + 1);
+      sendNotification(
+        t('focusTimer.focusDone'),
+        t('focusTimer.breakStarting')
+      );
+
+      // Auto-start break after 1.5 seconds
+      setTimeout(() => {
+        const newCount = pomodoroCount + 1;
+        // Every 4th pomodoro → long break, otherwise short break
+        const breakPresetIndex = newCount % 4 === 0 ? 3 : 2; // 3=long break, 2=short break
+        const breakPreset = presets[breakPresetIndex];
+
+        setSelectedPreset(breakPresetIndex);
+        setAutoBreakMode(true);
+        setShowFocusPrompt(false);
+
+        start({
+          session_type: breakPreset.type as SessionType,
+          duration: breakPreset.minutes,
+          start_time: new Date().toISOString(),
+          task: null,
+        });
+      }, 1500);
+    }
+  }, [isActive, isPaused, remainingSeconds, preset.type]);
+
   const handleStart = () => {
+    setShowFocusPrompt(false);
+    setAutoBreakMode(false);
     start({
       session_type: preset.type as SessionType,
       duration: timerMinutes,
+      start_time: new Date().toISOString(),
+      task: selectedTaskId || null,
+    });
+  };
+
+  const handleStartNextFocus = () => {
+    setShowFocusPrompt(false);
+    setAutoBreakMode(false);
+    // Return to pomodoro preset
+    setSelectedPreset(0);
+    const focusPreset = presets[0];
+    start({
+      session_type: focusPreset.type as SessionType,
+      duration: focusPreset.minutes,
       start_time: new Date().toISOString(),
       task: selectedTaskId || null,
     });
@@ -116,15 +220,61 @@ export function FocusTimerPage() {
                   {isActive
                     ? isPaused
                       ? t('focusTimer.paused')
-                      : t('focusTimer.focusing')
-                    : t('focusTimer.ready')}
+                      : autoBreakMode
+                        ? '☕ ' + t('focusTimer.onBreak')
+                        : t('focusTimer.focusing')
+                    : showFocusPrompt
+                      ? t('focusTimer.breakDone')
+                      : t('focusTimer.ready')}
                 </span>
+                {/* Pomodoro counter */}
+                {pomodoroCount > 0 && (
+                  <div className="flex items-center gap-1 mt-2">
+                    {[...Array(Math.min(pomodoroCount, 4))].map((_, i) => (
+                      <div key={i} className="w-2.5 h-2.5 rounded-full bg-accent" />
+                    ))}
+                    {[...Array(Math.max(0, 4 - pomodoroCount % 4))].map((_, i) => (
+                      <div key={i} className="w-2.5 h-2.5 rounded-full bg-elevated" />
+                    ))}
+                    <span className="text-xs text-foreground-tertiary ml-1">
+                      {pomodoroCount}/4
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* "Start next focus?" prompt after break */}
+            {showFocusPrompt && !isActive && (
+              <div className="mb-6 p-4 rounded-lg border border-accent/30 bg-accent/5 text-center">
+                <p className="text-sm font-medium text-foreground mb-1">
+                  ☕ {t('focusTimer.breakDone')}
+                </p>
+                <p className="text-xs text-foreground-secondary mb-3">
+                  {t('focusTimer.readyForFocus')}
+                </p>
+                <div className="flex items-center justify-center gap-3">
+                  <Button
+                    size="md"
+                    icon={<Play className="w-4 h-4" />}
+                    onClick={handleStartNextFocus}
+                  >
+                    {t('focusTimer.startFocus')}
+                  </Button>
+                  <Button
+                    size="md"
+                    variant="ghost"
+                    onClick={() => setShowFocusPrompt(false)}
+                  >
+                    {t('focusTimer.endSession')}
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Controls */}
             <div className="flex items-center justify-center gap-3 mb-6">
-              {!isActive ? (
+              {!isActive && !showFocusPrompt ? (
                 <Button
                   size="lg"
                   icon={<Play className="w-5 h-5" />}
@@ -174,21 +324,56 @@ export function FocusTimerPage() {
               )}
             </div>
 
-            {/* Task selector */}
+            {/* Task selector — regular tasks + learning tasks */}
             {!isActive && (
-              <div className="max-w-xs mx-auto">
-                <Select
-                  placeholder={t('focusTimer.linkTask')}
-                  options={[
-                    { value: '', label: t('focusTimer.noTask') },
-                    ...(tasksData?.results ?? []).map((t) => ({
-                      value: String(t.id),
-                      label: t.title,
-                    })),
-                  ]}
+              <div className="max-w-sm mx-auto">
+                <select
                   value={selectedTaskId}
                   onChange={(e) => setSelectedTaskId(e.target.value)}
-                />
+                  className="block w-full h-9 rounded-md border border-border bg-background px-3 py-1 pr-10 text-sm text-foreground appearance-none transition-colors duration-normal shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-focus"
+                >
+                  <option value="">{t('focusTimer.linkTask')}</option>
+                  <option value="" disabled>── {t('focusTimer.noTask')} ──</option>
+
+                  {/* Regular tasks (only open — not done/archived) */}
+                  {(() => {
+                    const openTasks = (tasksData?.results ?? []).filter(
+                      (task) => task.status !== 'done' && task.status !== 'archived'
+                    );
+                    if (openTasks.length === 0) return null;
+                    return (
+                      <optgroup label={`📋 ${t('sidebar.myTasks')}`}>
+                        {openTasks.map((task) => (
+                          <option key={task.id} value={String(task.id)}>
+                            {task.title}
+                          </option>
+                        ))}
+                      </optgroup>
+                    );
+                  })()}
+
+                  {/* Learning tasks from active goal */}
+                  {activeGoalDetail && activeGoalDetail.modules && (() => {
+                    const goal = activeGoalDetail;
+                    const availableModules = (goal.modules ?? []).filter(
+                      (m: any) => m.status === 'available' || m.status === 'in_progress'
+                    );
+                    const learningTasks = availableModules.flatMap((m: any) =>
+                      (m.tasks ?? []).filter((lt: any) => lt.status === 'todo' || lt.status === 'in_progress')
+                    );
+                    if (learningTasks.length === 0) return null;
+
+                    return (
+                      <optgroup label={`🎓 ${goal.title}`}>
+                        {learningTasks.map((lt: any) => (
+                          <option key={lt.id} value={`learning:${lt.id}`}>
+                            {lt.title} ({lt.estimated_minutes} {t('learning.today.minutes')})
+                          </option>
+                        ))}
+                      </optgroup>
+                    );
+                  })()}
+                </select>
               </div>
             )}
           </Card>

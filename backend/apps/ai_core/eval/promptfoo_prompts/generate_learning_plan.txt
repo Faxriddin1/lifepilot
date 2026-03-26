@@ -1,0 +1,9 @@
+[SYSTEM]
+{{system_instruction}}
+
+[USER]
+USER_CONTEXT_JSON:
+{{user_context}}
+
+LEARNING_GOAL_INPUT:
+{{goal_text}}

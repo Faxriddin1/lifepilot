@@ -1,0 +1,15 @@
+[SYSTEM]
+{{system_instruction}}
+
+[USER]
+USER_CONTEXT_JSON:
+{{user_context}}
+
+TRIGGER:
+{{trigger}}
+
+PLAN_SNAPSHOT_JSON:
+{{plan_snapshot}}
+
+PROGRESS_SUMMARY_JSON:
+{{progress_summary}}

@@ -87,4 +87,27 @@ export const authApi = {
   deleteAccount: async (password: string): Promise<void> => {
     await apiClient.post('/auth/delete-account/', { password });
   },
+
+  /** Генерация кода для привязки Telegram. */
+  telegramGenerateCode: async (): Promise<{ code: string; expires_in: number }> => {
+    const { data } = await apiClient.post('/auth/telegram/generate-code/');
+    return data;
+  },
+
+  /** Статус привязки Telegram. */
+  telegramStatus: async (): Promise<{ linked: boolean; telegram_id?: number; last_activity?: string }> => {
+    const { data } = await apiClient.get('/auth/telegram/status/');
+    return data;
+  },
+
+  /** Отвязать Telegram. */
+  telegramUnlink: async (): Promise<void> => {
+    await apiClient.delete('/auth/telegram/status/');
+  },
+
+  /** Авторизация через Telegram Login Widget. */
+  telegramWidgetAuth: async (telegramData: Record<string, any>): Promise<{ user: any; tokens: AuthTokens; created: boolean }> => {
+    const { data } = await apiClient.post('/auth/telegram/widget-auth/', telegramData);
+    return data;
+  },
 };

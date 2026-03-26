@@ -1,6 +1,6 @@
 # LifePilot
 
-**All-in-one platform for task management, productivity tracking, and personal finance.** Free to use, no subscriptions.
+**All-in-one platform for task management, productivity tracking, personal finance, and adaptive learning.** Free to use, no subscriptions.
 
 [![Django](https://img.shields.io/badge/Django-5.0-green?logo=django)](https://www.djangoproject.com/)
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev/)
@@ -14,10 +14,44 @@
 
 ## About
 
-LifePilot combines task management, productivity tools, and personal finance into a single application. It supports 4 languages with full localization, dark/light themes, and a comprehensive admin panel.
+LifePilot combines task management, productivity tools, personal finance, and AI-powered adaptive learning into a single application. It supports 4 languages with full localization, dark/light themes, a comprehensive admin panel, and a Telegram bot for natural language interactions.
 
 - Completely free -- no subscriptions, no paid plans, no billing
 - Anonymous usage data collected for platform improvement only
+- ~28,000+ lines of code: 130+ Python files + 100+ TS/TSX files (updated March 2026)
+
+---
+
+## Recent Updates (March 2026)
+
+### AI-Powered Learning
+- AI generates personalized learning plans (Gemini 2.5 Flash)
+- Adaptive plans that adjust based on your progress
+- Socratic AI tutor — guides you with questions, not answers
+- Duolingo-style streaks with freeze protection
+
+### Telegram Bot
+- Register and use LifePilot directly from Telegram
+- Natural language: "bought coffee 25k" → expense recorded
+- Voice messages and receipt photo recognition
+- Learning commands: /plan, /today, /ask
+- New: bot settings menu (language, notifications, quiet hours)
+
+### Smart Notifications
+- Morning digest with your daily plan
+- Streak risk alerts before you lose progress
+- Deadline reminders 24h before due
+- Quiet hours respect your sleep schedule
+
+### Currency Conversion
+- Automatic UZS↔USD conversion using CBU.uz rates
+- Works with 50+ currencies
+
+### UI/UX Redesign
+- New design system with 70+ CSS tokens
+- Dark/Light theme
+- Command Palette (⌘K)
+- Learning pages with step-by-step plan generation
 
 ---
 
@@ -45,6 +79,15 @@ LifePilot combines task management, productivity tools, and personal finance int
 - Financial goals with circular progress ring, contribute action, and goal templates
 - Waterfall cashflow chart, category pie chart
 - Financial reports page
+
+### Adaptive Learning
+- AI-generated study plans via Gemini 2.5 Flash
+- Learning goals with modules, daily tasks, and deadlines
+- Duolingo-style streak tracking with freeze mechanic
+- AI plan adaptation with 4 triggers: stuck, ahead of schedule, weekly review, explicit request
+- AI tutor chat scoped to each goal with Socratic method (no direct answers, guided questions)
+- Resource resolver: real YouTube and web links attached to each module
+- Async plan generation via Celery with status polling
 
 ### Dashboard
 - Bento Grid layout with StatCard component (sparklines, trend indicators, alert border-l color-coding)
@@ -76,11 +119,24 @@ LifePilot combines task management, productivity tools, and personal finance int
 - Fully responsive, 4-language support
 
 ### Telegram Bot
-- Natural language AI (Gemini 2.5 Flash) -- create tasks, log expenses, check balance via chat
-- Voice messages (Google Speech-to-Text) and receipt photos (Google Vision OCR)
+- Thin client architecture — no standalone AI logic, no separate database
+- Natural language AI (Gemini 2.5 Flash via AIService) -- create tasks, log expenses, check balance, ask tutor questions
+- Voice message transcription (Gemini 2.5 Flash-Lite STT) and receipt photo parsing (Gemini Vision OCR)
+- Currency conversion via CBU.uz API (auto UZS↔USD, 50+ currencies)
+- Registration flow directly in bot (name → email → password)
+- Bot settings: language switch, notification toggles, quiet hours, main menu with Settings button
 - 28 supported intents with confirmation flow
-- Multi-language (EN, RU, UZ, UZ-Cyr)
-- Rate limiting, encrypted JWT storage (Fernet)
+- Multi-language (EN, RU, UZ, UZ-Cyr) with per-user locale
+- Rate limiting; auth via JWT stored in Redis
+- Django app `apps/bot/` with webhook integration; 8 handlers: start, messages, callbacks, executor, learning, voice, photo, settings
+- Management commands: `run_bot` (polling), `set_webhook`
+
+### Notifications
+- In-app (web) and Telegram channel delivery
+- Per-user preferences with quiet hours support
+- 5 notification types: morning digest, streak risk, weekly review, deadline reminder, plan ready
+- Auto-created preferences on user registration (signal)
+- Celery Beat tasks: morning digests, streak alerts, deadline reminders
 
 ### Admin Panel (11 pages at `/admin`)
 - Dashboard with system metrics, registration growth chart
@@ -91,7 +147,7 @@ LifePilot combines task management, productivity tools, and personal finance int
 
 ### Internationalization
 - 4 languages: English (en), Russian (ru), Uzbek Latin (uz), Uzbek Cyrillic (uz-cyr)
-- Full coverage -- zero hardcoded strings, all UI text via react-i18next `t()` calls
+- Full coverage -- ~1000 keys × 4 languages, zero hardcoded strings, all UI text via react-i18next `t()` calls
 - Language switching in Settings
 
 ---
@@ -104,9 +160,11 @@ LifePilot combines task management, productivity tools, and personal finance int
 | **Frontend** | React 18, TypeScript 5, Vite, TailwindCSS 3, Zustand, TanStack Query, Framer Motion, Sonner, cmdk |
 | **Design System** | 70+ semantic CSS variables (tokens.css), dark/light themes, zero hardcoded colors |
 | **Auth** | JWT (SimpleJWT) with refresh token rotation + blacklist, Google OAuth 2.0 |
+| **AI** | Gemini 2.5 Flash / Flash-Lite (google-genai SDK), 7 AIService methods, Pydantic v2 schemas |
 | **i18n** | react-i18next (EN, RU, UZ Latin, UZ Cyrillic) |
-| **Infra** | Docker Compose (db, redis, backend, frontend, celery, telegram bot) |
+| **Infra** | Docker Compose (db, redis, backend, frontend, celery, bot), Celery Beat (6 scheduled tasks) |
 | **Deploy** | Google Cloud VM, Nginx reverse proxy, SSL (Let's Encrypt) |
+| **Eval** | Promptfoo + Langfuse, 60-case golden dataset, GitHub Actions matrix (7 parallel jobs) |
 
 ---
 
@@ -184,6 +242,21 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,https://lifepilot.uz
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-client-secret
 
+# AI
+GEMINI_API_KEY=your-gemini-api-key
+
+# Telegram Bot
+BOT_TOKEN=your-telegram-bot-token
+
+# Resource Resolver
+YOUTUBE_API_KEY=your-youtube-data-api-key
+SERPER_API_KEY=your-serper-api-key
+
+# Eval / Observability (optional)
+LANGFUSE_PUBLIC_KEY=your-langfuse-public-key
+LANGFUSE_SECRET_KEY=your-langfuse-secret-key
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+
 # Frontend (VITE_ prefix required)
 VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
@@ -198,41 +271,43 @@ PM/
 ├── backend/
 │   ├── config/                # Settings, URLs, WSGI/ASGI
 │   ├── apps/
-│   │   ├── users/             # User model (UUID, email auth, Google OAuth, preferences)
+│   │   ├── users/             # User model (UUID, email auth, Google OAuth, telegram_id, preferences)
 │   │   ├── tasks/             # Task, Project (subtasks up to 3 levels, templates)
 │   │   ├── productivity/      # FocusSession, Habit (target_days, templates), HabitLog, DailyLog
 │   │   ├── finance/           # Account, Category, Transaction, Budget, Goal (contribute, templates)
 │   │   ├── analytics/         # Dashboard, Productivity/Finance aggregation
-│   │   └── admin_panel/       # Admin API (dashboard, CRUD for all models)
+│   │   ├── admin_panel/       # Admin API (dashboard, CRUD for all models)
+│   │   ├── ai_core/           # AI Service Layer (Gemini 2.5 Flash, 7 methods, Pydantic v2 schemas, cost tracking, Redis cache)
+│   │   │   └── eval/          # Golden dataset (60 cases), Promptfoo YAML configs, prompt wrappers
+│   │   ├── learning/          # Adaptive learning (LearningGoal, LearningModule, LearningTask, streaks, AI tutor)
+│   │   ├── bot/               # Telegram bot (Django app, thin client, webhook mode, 8 handlers including settings)
+│   │   └── notifications/     # Notification + NotificationPreference models, Celery Beat tasks
+│   ├── scripts/               # eval_prompts.py, check_eval_results.py
 │   ├── manage.py
 │   └── requirements.txt
-├── bot/                         # Telegram Bot (aiogram 3.x + Gemini AI)
-│   ├── handlers/              # Message handlers (text, voice, photo, callbacks)
-│   ├── services/              # AI parser, speech, vision, LifePilot API client
-│   ├── middleware/             # Auth, rate limit, locale, logging
-│   └── bot.py                 # Entry point
 ├── frontend/
 │   ├── src/
 │   │   ├── styles/            # tokens.css (70+ design tokens, light/dark themes)
-│   │   ├── api/               # Axios client + API modules
+│   │   ├── api/               # Axios client + API modules (tasks.ts, finance.ts, learning.ts, ...)
 │   │   ├── components/
 │   │   │   ├── ui/            # Button, Input, Modal, Card, Badge, Select, StatCard, Skeleton, PageTransition, BulletGraph, WaterfallChart...
 │   │   │   └── layout/        # AppLayout (AnimatePresence), Sidebar (collapsible + [), TopBar (⌘K)
 │   │   │   └── CommandPalette.tsx  # ⌘K command palette (cmdk)
-│   │   ├── hooks/             # React Query hooks (useTasks, useFinance, useFocus, useDashboard)
-│   │   ├── i18n/              # Localization config + locales (en, ru, uz, uz-cyr)
+│   │   ├── hooks/             # React Query hooks (useTasks, useFinance, useFocus, useDashboard, useLearning, ...)
+│   │   ├── i18n/              # Localization config + locales (en, ru, uz, uz-cyr) — ~1000 keys each
 │   │   ├── pages/
 │   │   │   ├── auth/          # LoginPage, RegisterPage
 │   │   │   ├── dashboard/     # DashboardPage (BI-optimized)
 │   │   │   ├── tasks/         # TaskListPage, KanbanPage, CalendarPage, ProjectsPage, InboxPage
 │   │   │   ├── productivity/  # FocusTimerPage, HabitsPage, AnalyticsPage, DailyLogPage
 │   │   │   ├── finance/       # FinanceOverviewPage, TransactionsPage, BudgetsPage, GoalsPage
+│   │   │   ├── learning/      # LearningPage, LearningDetailPage + 13 components
 │   │   │   ├── reports/       # ReportsPage
 │   │   │   ├── settings/      # SettingsPage
 │   │   │   ├── landing/       # LandingPage, IntroScreen, AboutPage, LegalPage
 │   │   │   └── admin/         # AdminLayout, AdminDashboard, AdminResourcePage + 10 resource pages
 │   │   ├── store/             # Zustand stores (auth, ui)
-│   │   ├── types/             # TypeScript interfaces and enums
+│   │   ├── types/             # TypeScript interfaces and enums (learning.ts, ...)
 │   │   └── utils/             # Formatters, constants, validation, errorHandler, alerts
 │   ├── vite.config.ts
 │   └── package.json
@@ -245,7 +320,7 @@ PM/
 
 ## Pages
 
-### User Pages (22+)
+### User Pages (26+)
 
 | Route | Page | Description |
 |-------|------|-------------|
@@ -263,6 +338,8 @@ PM/
 | `/transactions` | TransactionsPage | Transaction CRUD with filters and pagination |
 | `/budgets` | BudgetsPage | Budgets with bullet graphs and alert badges |
 | `/goals` | GoalsPage | Financial goals with progress ring and contribute |
+| `/learning` | LearningPage | Learning goals list with create modal, progress cards |
+| `/learning/:id` | LearningDetailPage | Goal detail: generating → preview → active plan with modules/tasks |
 | `/reports` | ReportsPage | Financial reports |
 | `/settings` | SettingsPage | Profile, password, theme, language, currency, timezone |
 | `/login` | LoginPage | Email/password + Google OAuth |
@@ -357,6 +434,51 @@ All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination:
 </details>
 
 <details>
+<summary><b>Learning</b></summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET/POST | `/learning/goals/` | Learning goals CRUD |
+| GET/PATCH/DELETE | `/learning/goals/{id}/` | Goal detail |
+| POST | `/learning/goals/{id}/generate-plan/` | Trigger AI plan generation (async, 202) |
+| GET | `/learning/goals/{id}/status/` | Poll generation status |
+| POST | `/learning/goals/{id}/confirm-plan/` | Confirm preview and activate goal |
+| GET | `/learning/goals/{id}/today/` | Today's tasks for a goal |
+| GET | `/learning/goals/{id}/progress/` | 30-day progress + streak stats |
+| POST | `/learning/goals/{id}/pause/` | Pause active goal |
+| POST | `/learning/goals/{id}/resume/` | Resume paused goal |
+| POST | `/learning/goals/{id}/adapt/` | Trigger AI plan adaptation |
+| POST | `/learning/goals/{id}/ask/` | Ask AI tutor a question |
+| GET/DELETE | `/learning/goals/{id}/tutor-history/` | Tutor conversation history |
+| GET | `/learning/tasks/{id}/` | Task detail |
+| POST | `/learning/tasks/{id}/complete/` | Mark task completed (idempotent) |
+| POST | `/learning/tasks/{id}/skip/` | Skip task (idempotent) |
+| POST | `/learning/tasks/{id}/rate/` | Rate task (1-5) with notes |
+
+</details>
+
+<details>
+<summary><b>Notifications</b></summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/notifications/` | List notifications (paginated) |
+| POST | `/notifications/{id}/read/` | Mark notification as read |
+| POST | `/notifications/read-all/` | Mark all as read |
+| GET/PATCH | `/notifications/preferences/` | Notification preferences |
+
+</details>
+
+<details>
+<summary><b>AI</b></summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/ai/feedback/` | Submit feedback on AI response quality |
+
+</details>
+
+<details>
 <summary><b>Admin Panel (is_staff only)</b></summary>
 
 | Method | Endpoint | Description |
@@ -394,6 +516,7 @@ All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination:
 - Circular reference prevention (subtasks max depth 3)
 - Admin panel restricted to `is_staff=True`
 - Change password, account deletion, data export in settings
+- Telegram bot auth via JWT stored in Redis
 
 ---
 
@@ -411,12 +534,92 @@ All endpoints under `/api/v1/`. Authentication via JWT Bearer token. Pagination:
 ## Deployment
 
 - **Hosting:** Google Cloud VM (Compute Engine)
-- **Stack:** Docker Compose prod (PostgreSQL 16, Redis 7, Django/gunicorn, React/nginx, Celery, Telegram Bot)
-- **Web server:** Nginx (host-level) as reverse proxy
+- **Stack:** Docker Compose prod (PostgreSQL 16, Redis 7, Django/gunicorn, React/nginx, Celery, Celery Beat, Telegram Bot)
+- **Web server:** Nginx (host-level) as reverse proxy with X-Forwarded-Proto fix for /api/
 - **SSL:** Let's Encrypt (certbot) -- HTTPS enforced, HSTS enabled
 - **Security Headers:** X-Frame-Options, X-Content-Type-Options, XSS-Protection, Referrer-Policy, Permissions-Policy
 - **Domain:** lifepilot.uz
-- **CI/CD:** GitHub Actions (lint + build on PR, deploy on push to main)
+- **CI/CD:** GitHub Actions (lint + build on PR, deploy on push to main, 7-parallel eval matrix)
+
+---
+
+## AI Core
+
+All AI functionality is routed through `apps/ai_core/services.AIService` — a unified service layer wrapping Google Gemini 2.5 Flash / Flash-Lite via the google-genai SDK. It exposes 7 structured methods:
+
+1. `parse_user_intent` — classify natural language input
+2. `generate_learning_plan` — create a full module/task study plan
+3. `adapt_learning_plan` — adjust an existing plan (4 triggers, 7 change types)
+4. `answer_learning_question` — AI tutor with Socratic method
+5. `generate_daily_tasks` — pick tasks for today
+6. `generate_insights` — weekly review and streak motivation
+7. `parse_receipt` — extract line items from a photo
+
+All methods use Pydantic v2 schemas for structured I/O, SHA-256 Redis caching, per-request cost calculation, and optional Langfuse tracing (`@observe` decorators). No other module calls Gemini directly.
+
+---
+
+## Learning Module
+
+The adaptive learning system lets users set learning goals, get AI-generated study plans, and track progress with streaks.
+
+**Flow:** create goal → trigger plan generation (async Celery task) → poll status → preview AI plan → confirm → goal becomes active → complete/skip daily tasks.
+
+**Key features:**
+- 5 models: LearningGoal, LearningModule, LearningTask, LearningProgress, AdaptationLog
+- Daily task queue (`/today/` endpoint)
+- Duolingo-style streak system: current_streak, longest_streak, streak_freezes
+- AI plan adaptation with 4 triggers: user_stuck, ahead_of_schedule, weekly_review, explicit_request
+- 7 adaptation change types: extend_deadline, replace_resource, add_task, remove_task, simplify_module, skip_module, add_module
+- AI tutor chat with sliding window context (last 10 messages), rate-limited to 20 questions/day
+- Resource resolver: YouTube Data API + Serper API fallback for real learning resources
+- Timeout protection: tasks stuck >5 min are reset to draft
+- Celery Beat: check_streaks_daily, detect_stuck_users, weekly_learning_review
+
+**Frontend (13 learning components):** GoalCard, CreateGoalModal, PlanPreview, ModuleAccordion, TaskItem, TaskRating, StreakBadge, ProgressBar, GeneratingOverlay (4-step progress indicator), TutorChat, TodayChecklist, LearningDashboardWidget, AdaptationBanner
+
+---
+
+## Telegram Bot
+
+The bot is a thin client — no standalone AI logic, no separate database. All processing goes through the Django ORM and AIService.
+
+**Architecture:** `apps/bot/` (Django app, webhook mode) → Django ORM + `AIService`
+
+**Capabilities:**
+- Natural language commands: create tasks, log expenses, check balance, ask tutor questions
+- Voice message transcription (Google Speech-to-Text)
+- Receipt photo parsing (Google Vision OCR)
+- 28 supported intents with confirmation flow
+- Multi-language (EN, RU, UZ, UZ-Cyr) with per-user locale
+- Rate limiting; auth via JWT stored in Redis
+- 8 handlers: start, messages, callbacks, executor, learning, voice, photo, settings
+- Management commands: `run_bot` (polling), `set_webhook`
+
+---
+
+## Eval Pipeline
+
+AI response quality is measured across all 7 AIService methods using a curated golden dataset and Promptfoo assertion framework.
+
+**Components:**
+- 60 golden test cases across 7 methods
+- 7 Promptfoo YAML configs with 74+ tests and structured assertions
+- 7 versioned prompt wrapper templates
+- `scripts/eval_prompts.py` — standalone Python evaluation runner
+- `scripts/check_eval_results.py` — CI quality gate (fails build below threshold)
+- GitHub Actions workflow: 7 parallel jobs (one per AI method)
+- Langfuse integration: `@observe` decorators on all AIService methods (optional, enabled via env vars)
+- Feedback endpoint: `POST /api/v1/ai/feedback/` for human ratings
+
+```bash
+# Run evals locally
+cd backend
+python scripts/eval_prompts.py
+
+# Check results against quality gate
+python scripts/check_eval_results.py
+```
 
 ---
 

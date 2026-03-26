@@ -30,6 +30,10 @@ urlpatterns = [
     path('api/v1/finance/', include('apps.finance.urls')),
     path('api/v1/analytics/', include('apps.analytics.urls')),
     path('api/v1/admin-panel/', include('apps.admin_panel.urls')),
+    path('api/v1/learning/', include('apps.learning.urls')),
+    path('api/v1/ai/', include('apps.ai_core.urls')),
+    path('bot/', include('apps.bot.urls')),
+    path('api/v1/notifications/', include('apps.notifications.urls')),
 
     # OpenAPI schema & docs
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),

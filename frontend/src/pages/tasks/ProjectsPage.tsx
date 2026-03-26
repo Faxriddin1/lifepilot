@@ -223,8 +223,8 @@ export function ProjectsPage() {
                   </button>
                   {contextMenu === project.id && (
                     <>
-                      <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setContextMenu(null); }} />
-                      <div className="absolute right-0 top-7 z-20 bg-background rounded-lg shadow-lg border border-border py-1 w-40">
+                      <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setContextMenu(null); }} />
+                      <div className="absolute right-0 top-7 z-50 bg-background rounded-lg shadow-lg border border-border py-1 w-40">
                         <button onClick={(e) => openEdit(project, e)} className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-surface">
                           <PenTool className="w-4 h-4 text-accent" />
                           {t('projectsNew.edit')}

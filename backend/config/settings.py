@@ -34,6 +34,10 @@ INSTALLED_APPS = [
     'apps.finance',
     'apps.analytics',
     'apps.admin_panel',
+    'apps.ai_core',
+    'apps.learning',
+    'apps.bot',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [
@@ -187,6 +191,9 @@ CORS_ALLOW_CREDENTIALS = True
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
 GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
 
+# Telegram Bot
+BOT_TOKEN = config('BOT_TOKEN', default='')
+
 # ---------------------------------------------------------------------------
 # Redis cache
 # ---------------------------------------------------------------------------
@@ -212,6 +219,37 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+# Celery Beat schedule
+from celery.schedules import crontab  # noqa: E402
+
+CELERY_BEAT_SCHEDULE = {
+    "check-streaks-daily": {
+        "task": "apps.learning.tasks.check_streaks_daily",
+        "schedule": crontab(hour=0, minute=5),
+    },
+    "detect-stuck-users": {
+        "task": "apps.learning.tasks.detect_stuck_users",
+        "schedule": crontab(hour=6, minute=0),
+    },
+    "weekly-learning-review": {
+        "task": "apps.learning.tasks.weekly_learning_review",
+        "schedule": crontab(hour=20, minute=0, day_of_week="sunday"),
+    },
+    # Notification tasks
+    "send-morning-digests": {
+        "task": "apps.notifications.tasks.send_morning_digests",
+        "schedule": crontab(minute="0,30"),  # Every 30 minutes
+    },
+    "send-streak-risk-alerts": {
+        "task": "apps.notifications.tasks.send_streak_risk_alerts",
+        "schedule": crontab(minute="0,30"),  # Every 30 minutes
+    },
+    "send-deadline-reminders": {
+        "task": "apps.notifications.tasks.send_deadline_reminders",
+        "schedule": crontab(hour=7, minute=0),  # Daily at 07:00 UTC
+    },
+}
 
 # ---------------------------------------------------------------------------
 # drf-spectacular (OpenAPI / Swagger)

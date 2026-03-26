@@ -24,6 +24,7 @@ import { PRIORITY_DOT_COLORS } from '@/utils/constants';
 import { getTasksAlert, getFocusAlert, getBudgetAlert } from '@/utils/alerts';
 import type { Priority } from '@/types';
 import clsx from 'clsx';
+import { LearningDashboardWidget } from '@/components/learning/LearningDashboardWidget';
 
 /** Dashboard Skeleton — matches Bento Grid layout */
 function DashboardSkeleton() {
@@ -345,6 +346,9 @@ export function DashboardPage() {
             <p className="text-sm text-foreground-secondary text-center py-8">{t('dashboard.noTransactions', { defaultValue: 'No transactions this week' })}</p>
           )}
         </Card>
+
+        {/* Learning widget */}
+        <LearningDashboardWidget />
 
         {/* Budget bullet graphs */}
         <Card>

@@ -1,0 +1,9 @@
+[SYSTEM]
+{{system_instruction}}
+
+[USER]
+LEARNING_CONTEXT_JSON:
+{{context}}
+
+LEARNER_QUESTION:
+{{question}}

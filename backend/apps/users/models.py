@@ -46,6 +46,7 @@ class User(AbstractUser):
     week_start = models.CharField(max_length=3, default='mon')  # mon, sun
     number_format = models.CharField(max_length=10, default='1 000,00')  # 1,000.00, 1.000,00, 1 000,00
     last_seen_at = models.DateTimeField(null=True, blank=True)  # Время последней активности
+    telegram_id = models.BigIntegerField(null=True, blank=True, unique=True, db_index=True)
 
     objects = UserManager()
 

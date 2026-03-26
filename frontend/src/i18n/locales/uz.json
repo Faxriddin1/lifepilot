@@ -16,7 +16,8 @@
     "all": "Barchasi",
     "active": "Faol",
     "completed": "Yakunlangan",
-    "archived": "Arxiv"
+    "archived": "Arxiv",
+    "deleted": "O'chirildi"
   },
   "errors": {
     "network": "Tarmoq xatosi. Internet ulanishini tekshiring.",
@@ -126,7 +127,9 @@
     "storage": "Xotira",
     "collapse": "Yig'ish",
     "expand": "Yoyish",
-    "upgradeDesc": "Cheksiz loyihalar va kengaytirilgan tahlil"
+    "upgradeDesc": "Cheksiz loyihalar va kengaytirilgan tahlil",
+    "learning": "O'qish",
+    "myGoals": "Maqsadlarim"
   },
   "dashboard": {
     "title": "Bosh sahifa",
@@ -350,7 +353,8 @@
       "/budgets": "Byudjetlar",
       "/goals": "Maqsadlar",
       "/reports": "Hisobotlar",
-      "/settings": "Sozlamalar"
+      "/settings": "Sozlamalar",
+      "/learning": "O'qish"
     }
   },
   "commandPalette": {
@@ -465,7 +469,13 @@
     "sessionLog": "Sessiyalar jurnali",
     "today": "Bugun",
     "freeFocus": "Erkin fokus",
-    "noSessions": "Bugun hali sessiyalar yo'q"
+    "noSessions": "Bugun hali sessiyalar yo'q",
+    "onBreak": "Dam olish",
+    "breakDone": "Dam olish tugadi!",
+    "readyForFocus": "Keyingi fokusga tayyormisiz?",
+    "focusDone": "Fokus tugadi!",
+    "breakStarting": "Dam olish avtomatik boshlanmoqda...",
+    "endSession": "Tugatish"
   },
   "habitsPage": {
     "habitsTracked": "odat kuzatilmoqda",
@@ -514,18 +524,18 @@
     "expense": "Xarajat",
     "transfer": "O'tkazma",
     "accountsCount": "hisob(lar)",
-    "incomeUp": "\u2191 Daromad",
-    "expensesDown": "\u2193 Xarajatlar",
+    "incomeUp": "↑ Daromad",
+    "expensesDown": "↓ Xarajatlar",
     "savings": "Tejam",
     "ofIncome": "daromaddan",
     "cashFlow": "Pul oqimi",
     "last30DaysSubtitle": "So'nggi 30 kun",
-    "tooltipIncome": "\u2191 Daromad",
-    "tooltipExpense": "\u2193 Xarajat",
+    "tooltipIncome": "↑ Daromad",
+    "tooltipExpense": "↓ Xarajat",
     "accounts": "Hisoblar",
     "accountsLabel": "hisoblar",
     "whereMoneyGoes": "Pul qayerga ketadi",
-    "incomeExpensesSavings": "Daromad \u2192 Xarajatlar \u2192 Tejam",
+    "incomeExpensesSavings": "Daromad → Xarajatlar → Tejam",
     "noData": "Ma'lumot yo'q",
     "budgets": "Byudjetlar",
     "all": "Barchasi",
@@ -535,8 +545,8 @@
     "noGoals": "Maqsadlar yo'q",
     "monthly": "Oylik",
     "last6Months": "So'nggi 6 oy",
-    "monthlyIncome": "\u2191 Daromad",
-    "monthlyExpense": "\u2193 Xarajat"
+    "monthlyIncome": "↑ Daromad",
+    "monthlyExpense": "↓ Xarajat"
   },
   "transactionsPage": {
     "searchTransactions": "Tranzaksiyalarni qidirish...",
@@ -594,27 +604,32 @@
   },
   "budgetsNew": {
     "totalBudget": "Umumiy byudjet",
-    "spent": "Sarflandi",
-    "remaining": "Qoldi",
-    "used": "Ishlatildi",
+    "spent": "Sarflangan",
+    "remaining": "Qoldiq",
+    "used": "ishlatilgan",
     "uncategorized": "Turkumsiz",
-    "over": "Oshib ketdi",
-    "almost": "Deyarli",
+    "over": "oshib ketish",
+    "almost": "deyarli",
     "delete": "O'chirish",
-    "remainingAmount": "qoldi",
-    "overAmount": "oshib ketdi",
+    "remaining2": "qoldi",
+    "exceeded": "oshib ketdi",
     "chooseCategory": "Turkumni tanlang",
-    "whichCategory": "Qaysi xarajat turkumi uchun byudjet belgilash kerak?",
-    "setLimit": "Limitni belgilang",
-    "howMuchPlan": "qancha sarflashni rejalashtirmoqdasiz?",
+    "whichCategory": "Qaysi turkum?",
+    "howMuch": "Qancha?",
     "change": "O'zgartirish",
-    "budgetLimit": "Byudjet limiti",
+    "budgetLimit": "Byudjet chegarasi",
     "period": "Davr",
+    "weekly": "Haftalik",
+    "monthly": "Oylik",
+    "yearly": "Yillik",
     "week": "Hafta",
     "month": "Oy",
     "quarter": "Chorak",
     "year": "Yil",
-    "back": "\u2190 Orqaga",
+    "setLimit": "Chegarani belgilang",
+    "whichCategoryBudget": "Qaysi xarajat turkumi uchun byudjet belgilash?",
+    "howMuchPlan": "qancha sarflashni rejalashtirmoqdasiz?",
+    "back": "Orqaga",
     "createBudget": "Byudjet yaratish"
   },
   "goalsNew": {
@@ -623,22 +638,23 @@
     "completed": "Bajarildi",
     "saved": "Jamg'arildi",
     "target": "Maqsad",
-    "left": "Qoldi",
-    "perMonth": "oy",
-    "addFunds": "Qo'shish",
-    "done": "Bajarildi",
+    "left": "qoldi",
+    "months": "oy",
+    "addFunds": "Mablag' qo'shish",
     "newGoal": "Yangi maqsad",
     "configureGoal": "Maqsadni sozlash",
-    "pickTemplate": "Shablon tanlang yoki o'zingiz yarating",
+    "pickTemplate": "Shablon tanlang",
     "change": "O'zgartirish",
     "goalName": "Maqsad nomi",
     "targetAmount": "Maqsad summasi",
-    "deadline": "Muddat (ixtiyoriy)",
-    "back": "\u2190 Orqaga",
+    "deadlineOptional": "Muddat (ixtiyoriy)",
+    "back": "Orqaga",
     "createGoal": "Maqsad yaratish",
     "contributeToGoal": "Maqsadga kiritish",
-    "addFundsBtn": "Mablag' kiritish",
-    "currentProgress": "Joriy jarayon"
+    "addFundsBig": "Mablag' qo'shish",
+    "currentProgress": "Joriy jarayon",
+    "done": "Bajarildi",
+    "perMonth": "oy"
   },
   "goalTemplates": {
     "vacation": "Ta'til",
@@ -767,60 +783,6 @@
     "accountsLabel": "hisob",
     "incomeExpensesSavings": "Daromad → Xarajatlar → Jamg'armalar"
   },
-  "budgetsNew": {
-    "totalBudget": "Umumiy byudjet",
-    "spent": "Sarflangan",
-    "remaining": "Qoldiq",
-    "used": "ishlatilgan",
-    "uncategorized": "Turkumsiz",
-    "over": "oshib ketish",
-    "almost": "deyarli",
-    "delete": "O'chirish",
-    "remaining2": "qoldi",
-    "exceeded": "oshib ketdi",
-    "chooseCategory": "Turkumni tanlang",
-    "whichCategory": "Qaysi turkum?",
-    "howMuch": "Qancha?",
-    "change": "O'zgartirish",
-    "budgetLimit": "Byudjet chegarasi",
-    "period": "Davr",
-    "weekly": "Haftalik",
-    "monthly": "Oylik",
-    "yearly": "Yillik",
-    "week": "Hafta",
-    "month": "Oy",
-    "quarter": "Chorak",
-    "year": "Yil",
-    "setLimit": "Chegarani belgilang",
-    "whichCategoryBudget": "Qaysi xarajat turkumi uchun byudjet belgilash?",
-    "howMuchPlan": "qancha sarflashni rejalashtirmoqdasiz?",
-    "back": "Orqaga",
-    "createBudget": "Byudjet yaratish"
-  },
-  "goalsNew": {
-    "totalProgress": "Umumiy jarayon",
-    "progress": "Jarayon",
-    "completed": "Bajarildi",
-    "saved": "Jamg'arildi",
-    "target": "Maqsad",
-    "left": "qoldi",
-    "months": "oy",
-    "addFunds": "Mablag' qo'shish",
-    "newGoal": "Yangi maqsad",
-    "configureGoal": "Maqsadni sozlash",
-    "pickTemplate": "Shablon tanlang",
-    "change": "O'zgartirish",
-    "goalName": "Maqsad nomi",
-    "targetAmount": "Maqsad summasi",
-    "deadlineOptional": "Muddat (ixtiyoriy)",
-    "back": "Orqaga",
-    "createGoal": "Maqsad yaratish",
-    "contributeToGoal": "Maqsadga kiritish",
-    "addFundsBig": "Mablag' qo'shish",
-    "currentProgress": "Joriy jarayon",
-    "done": "Bajarildi",
-    "perMonth": "oy"
-  },
   "settingsNew": {
     "security": "Xavfsizlik",
     "passwordChanged": "Parol o'zgartirildi",
@@ -890,7 +852,15 @@
     "habits": "Odatlar",
     "thisWeek": "Shu hafta",
     "daysShort": "k",
-    "weekDays": ["Du", "Se", "Cho", "Pa", "Ju", "Sha", "Ya"]
+    "weekDays": [
+      "Du",
+      "Se",
+      "Cho",
+      "Pa",
+      "Ju",
+      "Sha",
+      "Ya"
+    ]
   },
   "alertsSection": {
     "overBudget": "Byudjetdan oshib ketdingiz",
@@ -953,7 +923,15 @@
     "noTasksForDay": "Bu kunga vazifalar yo'q",
     "total": "Jami",
     "withDeadline": "Muddatli",
-    "weekdaysShort": ["Du", "Se", "Cho", "Pa", "Ju", "Sha", "Ya"]
+    "weekdaysShort": [
+      "Du",
+      "Se",
+      "Cho",
+      "Pa",
+      "Ju",
+      "Sha",
+      "Ya"
+    ]
   },
   "about": {
     "title": "LifePilot haqida",
@@ -966,5 +944,189 @@
     "languagesLabel": "Tillar",
     "languagesValue": "English, Russian, O'zbekcha (Lotin va Kirill)",
     "contactTitle": "Biz bilan bog'lanish"
+  },
+  "tutor": {
+    "title": "AI-tyutor",
+    "placeholder": "Savol bering...",
+    "thinking": "O'ylayapman...",
+    "needHelp": "Tushunmadim",
+    "rateLimited": "Bugungi savollar limiti tugadi",
+    "unavailable": "Tyutor vaqtincha mavjud emas",
+    "clearHistory": "Tarixni tozalash"
+  },
+  "learning": {
+    "title": "O'qish",
+    "goals": "O'quv maqsadlari",
+    "newGoal": "Yangi maqsad",
+    "createGoal": {
+      "daysPerWeekLabel": "Haftada kun",
+      "difficultyLabel": "Daraja",
+      "errorToast": "Maqsad yaratishda xatolik",
+      "minutesPerDayLabel": "Kuniga daqiqa",
+      "submit": "Yaratish va reja tuzish",
+      "successToast": "Maqsad yaratildi",
+      "targetDateLabel": "Maqsad sanasi",
+      "title": "Yangi ta'lim maqsadi",
+      "titleLabel": "Nimani o'rganmoqchisiz?",
+      "titlePlaceholder": "Masalan: Python ma'lumotlar tahlili uchun",
+      "titleRequired": "Nom kiritilishi shart"
+    },
+    "generatePlan": "Reja yaratish",
+    "confirmPlan": "Rejani tasdiqlash",
+    "regeneratePlan": "Qayta yaratish",
+    "generating": {
+      "subtitle": "Bu 15-30 soniya davom etadi",
+      "step1": "Maqsadingizni tahlil qilmoqda...",
+      "step2": "Dastur tuzilmasini yaratmoqda...",
+      "step3": "Resurslarni qidirmoqda...",
+      "step4": "Rejangizni yakunlamoqda...",
+      "progress": "Reja tuzilmoqda"
+    },
+    "previewTitle": "Rejani ko'rib chiqing",
+    "previewHint": "AI reja yaratdi. Ko'rib chiqing va tasdiqlang.",
+    "module": {
+      "noTasks": "Vazifalar yo'q",
+      "tasks": "vazifa"
+    },
+    "task": {
+      "complete": "Bajarish",
+      "help": "Tushunmadim",
+      "openResource": "Resursni ochish",
+      "skip": "O'tkazish"
+    },
+    "today": {
+      "minutes": "daq",
+      "noTasks": "Bugun hammasi bajarildi! 🎉",
+      "summary": "bugun bajarildi"
+    },
+    "todayTasks": "Bugungi vazifalar",
+    "streak": {
+      "label": "kun ketma-ket"
+    },
+    "streakDays": "{{count}} kun",
+    "progress": "Jarayon",
+    "completed": "Bajarildi",
+    "openResource": "Resursni ochish",
+    "searchResource": "Google'da qidirish",
+    "needHelp": "Tushunmadim",
+    "skip": "O'tkazib yuborish",
+    "complete": "Tugatish",
+    "tooEasy": "Juda oson",
+    "tooHard": "Juda qiyin",
+    "pause": "Pauza",
+    "resume": "Davom ettirish",
+    "continue": "Davom etish",
+    "viewPlan": "Rejani ko'rish",
+    "totalHours": "Jami: ~{{hours}} soat",
+    "modules_count": "{{count}} modul",
+    "tasksToday": "Bugun {{done}}/{{total}} vazifa",
+    "minutesToday": "{{minutes}} daq",
+    "difficulty": {
+      "beginner": "Boshlang'ich",
+      "intermediate": "O'rta",
+      "advanced": "Yuqori"
+    },
+    "taskTypes": {
+      "video": "Video",
+      "article": "Maqola",
+      "practice": "Amaliyot",
+      "quiz": "Test",
+      "project": "Loyiha"
+    },
+    "tutor": {
+      "title": "AI tyutor",
+      "askPlaceholder": "Savol bering...",
+      "thinking": "O'ylayapman...",
+      "unavailable": "Tyutor vaqtincha mavjud emas",
+      "clearHistory": "Tarixni tozalash"
+    },
+    "emptyState": {
+      "title": "O'qishni boshlash",
+      "description": "AI istalgan mavzu bo'yicha shaxsiy o'quv rejasini tuzadi",
+      "cta": "Birinchi maqsadni yaratish"
+    },
+    "rate": {
+      "title": "Foydaliligini baholang",
+      "placeholder": "Izohlar (ixtiyoriy)"
+    },
+    "adapt": {
+      "requesting": "AI jarayonni tahlil qilmoqda...",
+      "tooEasyHint": "AI rejani tezlashtiradi",
+      "tooHardHint": "AI rejani soddalashtiradi"
+    },
+    "form": {
+      "titleLabel": "Nimani o'rganmoqchisiz?",
+      "titlePlaceholder": "masalan, Ma'lumotlar tahlili uchun Python",
+      "levelLabel": "Qiyinchilik darajasi",
+      "targetDateLabel": "Maqsad sana",
+      "minutesLabel": "Kuniga daqiqa",
+      "daysLabel": "Haftada kun"
+    },
+    "adaptError": "Adaptatsiya xatolik",
+    "adaptRequested": "AI tahlil qilmoqda...",
+    "adaptation": {
+      "prefix": "AI rejangizni moslashtirdi"
+    },
+    "backToGoals": "Maqsadlarga qaytish",
+    "emptyDescription": "AI har qanday mavzu bo'yicha shaxsiy ta'lim rejasini tuzadi",
+    "emptyTitle": "Ta'limni boshlang",
+    "goalCard": {
+      "completed": "Tugallandi",
+      "continue": "Davom etish",
+      "generating": "Tuzilmoqda...",
+      "modulesCount": "{{count}} modul",
+      "open": "Ochish",
+      "resume": "Davom ettirish",
+      "viewPlan": "Rejani ko'rish"
+    },
+    "goalPaused": "Maqsad to'xtatildi",
+    "goalResumed": "Maqsad davom ettirildi",
+    "pauseError": "To'xtatishda xatolik",
+    "planConfirmError": "Rejani tasdiqlashda xatolik",
+    "planConfirmed": "Reja tasdiqlandi!",
+    "planPreview": {
+      "confirm": "Rejani tasdiqlash",
+      "min": "daq",
+      "modulesCount": "modul",
+      "regenerate": "Qayta tuzish",
+      "tasks": "vazifa",
+      "totalHours": "Jami soat"
+    },
+    "rating": {
+      "notesPlaceholder": "Izohlar (ixtiyoriy)",
+      "save": "Saqlash",
+      "starLabel": "Foydaliligini baholang"
+    },
+    "regenerateError": "Qayta tuzishda xatolik",
+    "regenerating": "Reja qayta tuzilmoqda...",
+    "resumeError": "Davom ettirishda xatolik",
+    "startLearning": "Ta'limni boshlash",
+    "status": {
+      "abandoned": "Tashlab qo'yilgan",
+      "active": "Faol",
+      "completed": "Tugallangan",
+      "draft": "Qoralama",
+      "generating": "Tuzilmoqda...",
+      "paused": "To'xtatilgan",
+      "preview": "Ko'rib chiqish"
+    },
+    "taskCompleteError": "Vazifani bajarishda xatolik",
+    "taskCompleted": "Vazifa bajarildi! 🎉",
+    "taskSkipError": "Vazifani o'tkazishda xatolik",
+    "widget": {
+      "complete": "Bajarish",
+      "continue": "Davom etish",
+      "emptySubtitle": "AI reja tuzadi",
+      "emptyTitle": "Ta'limni boshlang",
+      "label": "Ta'lim",
+      "startLearning": "Boshlash",
+      "todayTasks": "bugungi vazifalar"
+    },
+    "delete": "O'chirish",
+    "deleteConfirm": "Ishonchingiz komilmi? Barcha ma'lumotlar o'chiriladi.",
+    "plan": {
+      "modules": "modul",
+      "tasks": "vazifa"
+    }
   }
 }

@@ -23,6 +23,8 @@ import { BudgetsPage } from '@/pages/finance/BudgetsPage';
 import { GoalsPage } from '@/pages/finance/GoalsPage';
 import { SettingsPage } from '@/pages/settings/SettingsPage';
 import { ReportsPage } from '@/pages/reports/ReportsPage';
+import { LearningPage } from '@/pages/learning/LearningPage';
+import { LearningDetailPage } from '@/pages/learning/LearningDetailPage';
 import {
   AdminLayout, AdminDashboard,
   AdminUsersPage, AdminTasksPage, AdminProjectsPage,
@@ -96,6 +98,8 @@ function AppContent() {
           <Route path="/goals" element={<GoalsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/learning" element={<LearningPage />} />
+          <Route path="/learning/:id" element={<LearningDetailPage />} />
         </Route>
 
         {/* Admin panel */}
