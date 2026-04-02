@@ -10,6 +10,7 @@ import { authApi } from '@/api/auth';
 import { showApiError } from '@/utils/errorHandler';
 import { validateRegisterForm } from '@/utils/validation';
 import { PasswordStrength } from '@/components/ui/PasswordStrength';
+import { TelegramLoginButton, type TelegramUser } from '@/components/TelegramLoginButton';
 import { toast } from 'sonner';
 
 /** Страница регистрации нового пользователя с валидацией имени, email и пароля. */
@@ -26,6 +27,7 @@ export function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [telegramLoading, setTelegramLoading] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -52,6 +54,38 @@ export function RegisterPage() {
       showApiError(err);
     } finally {
       setGoogleLoading(false);
+    }
+  };
+
+  const handleTelegramAuth = async (telegramUser: TelegramUser) => {
+    setTelegramLoading(true);
+    try {
+      const tgData: Record<string, any> = {
+        id: telegramUser.id,
+        first_name: telegramUser.first_name,
+        auth_date: telegramUser.auth_date,
+        hash: telegramUser.hash,
+      };
+      if (telegramUser.last_name) tgData.last_name = telegramUser.last_name;
+      if (telegramUser.username) tgData.username = telegramUser.username;
+      if (telegramUser.photo_url) tgData.photo_url = telegramUser.photo_url;
+      const result = await authApi.telegramWidgetAuth(tgData);
+      localStorage.setItem('access_token', result.tokens.access);
+      localStorage.setItem('refresh_token', result.tokens.refresh);
+      const profile = await authApi.getProfile();
+      useAuthStore.setState({
+        user: profile,
+        token: result.tokens.access,
+        refreshToken: result.tokens.refresh,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+      toast.success(result.created ? t('auth.accountCreated') : t('auth.welcomeBack') + '!');
+      navigate('/dashboard');
+    } catch (err) {
+      showApiError(err);
+    } finally {
+      setTelegramLoading(false);
     }
   };
 
@@ -188,8 +222,25 @@ export function RegisterPage() {
             <div className="flex-1 h-px bg-border" />
           </div>
 
-          {/* Google Sign-In */}
+          {/* Telegram Sign-In */}
           <div className="flex justify-center">
+            {telegramLoading ? (
+              <Button loading className="w-full" variant="secondary" size="lg">
+                Telegram...
+              </Button>
+            ) : (
+              <TelegramLoginButton
+                botName="lifepilot_uzbot"
+                onAuth={handleTelegramAuth}
+                buttonSize="large"
+                cornerRadius={8}
+                lang={t('common.lang', { defaultValue: 'ru' })}
+              />
+            )}
+          </div>
+
+          {/* Google Sign-In */}
+          <div className="flex justify-center mt-3">
             {googleLoading ? (
               <Button loading className="w-full" variant="secondary" size="lg">
                 Google...

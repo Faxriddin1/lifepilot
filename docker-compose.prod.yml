@@ -92,10 +92,9 @@ services:
     restart: unless-stopped
     command: >
       celery -A config worker
-        -l warning
+        -l info
         --concurrency=2
         --max-tasks-per-child=100
-        -Q default
     env_file:
       - .env
     environment:

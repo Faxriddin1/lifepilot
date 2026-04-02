@@ -37,7 +37,7 @@ AI_METHOD_CONFIG: dict[str, MethodConfig] = {
     "generate_learning_plan": MethodConfig(
         model=MODEL_FLASH,
         temperature=0.3,
-        max_output_tokens=8192,
+        max_output_tokens=65536,
         json_mode=True,
         cache_ttl_seconds=86400,  # 24 hours
         prompt_file="generate_learning_plan.v1.txt",

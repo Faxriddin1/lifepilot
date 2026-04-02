@@ -67,10 +67,10 @@ export function LandingPage() {
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden landing-grain">
 
         {/* ═══ NAVBAR ═══ */}
-        <nav className="landing-nav fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-2xl border-b border-gray-100/50">
+        <nav className="landing-nav fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-xl border-b border-transparent">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-extrabold landing-gradient-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
@@ -79,8 +79,8 @@ export function LandingPage() {
             </div>
 
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors duration-200">{t.navFeatures}</a>
-              <a href="#how" className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors duration-200">{t.navAbout}</a>
+              <a href="#features" className="text-sm font-semibold text-foreground-secondary hover:text-accent transition-colors duration-200">{t.navFeatures}</a>
+              <a href="#how" className="text-sm font-semibold text-foreground-secondary hover:text-accent transition-colors duration-200">{t.navAbout}</a>
             </div>
 
             <div className="flex items-center gap-3">
@@ -96,14 +96,14 @@ export function LandingPage() {
                 {langOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
-                    <div className="absolute right-0 top-12 z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 w-48 overflow-hidden" style={{ animation: 'landing-scale-in 0.2s ease-out' }}>
+                    <div className="absolute right-0 top-12 z-50 bg-background rounded-2xl shadow-2xl border border-border py-2 w-48 overflow-hidden" style={{ animation: 'landing-scale-in 0.2s ease-out' }}>
                       {(Object.keys(LANG_LABELS) as LandingLang[]).map((l) => (
                         <button
                           key={l}
                           onClick={() => changeLang(l)}
                           className={clsx(
                             'w-full text-left px-5 py-3 text-sm transition-all duration-150',
-                            lang === l ? 'bg-blue-50 text-blue-600 font-bold' : 'hover:bg-gray-50 text-gray-700',
+                            lang === l ? 'bg-accent/10 text-accent font-bold' : 'hover:bg-surface text-foreground-secondary',
                           )}
                         >
                           {LANG_LABELS[l]}
@@ -115,7 +115,7 @@ export function LandingPage() {
                 )}
               </div>
 
-              <button onClick={goLogin} className="text-sm font-semibold text-foreground-secondary hover:text-blue-600 transition-colors hidden sm:block">
+              <button onClick={goLogin} className="text-sm font-semibold text-foreground-secondary hover:text-accent transition-colors hidden sm:block">
                 {t.navLogin}
               </button>
               <button
@@ -137,10 +137,10 @@ export function LandingPage() {
 
           {/* Mobile menu drawer */}
           {mobileMenuOpen && (
-            <div className="sm:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3" style={{ animation: 'landing-fade-up 0.2s ease-out' }}>
+            <div className="sm:hidden bg-background border-t border-border px-4 py-4 space-y-3" style={{ animation: 'landing-fade-up 0.2s ease-out' }}>
               <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-foreground-secondary py-2">{t.navFeatures}</a>
               <a href="#how" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold text-foreground-secondary py-2">{t.navAbout}</a>
-              <hr className="border-gray-100" />
+              <hr className="border-border" />
               <button onClick={() => { goLogin(); setMobileMenuOpen(false); }} className="block w-full text-left text-sm font-semibold text-foreground-secondary py-2">{t.navLogin}</button>
               <button
                 onClick={() => { goRegister(); setMobileMenuOpen(false); }}
@@ -153,24 +153,24 @@ export function LandingPage() {
         </nav>
 
         {/* ═══ HERO ═══ */}
-        <section className="pt-24 sm:pt-32 lg:pt-36 pb-16 sm:pb-20 lg:pb-24 px-4 sm:px-6 relative overflow-hidden">
+        <section className="pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-20 lg:pb-24 px-4 sm:px-6 relative overflow-hidden">
           {/* Animated mesh blobs — parallax layers */}
-          <div className="parallax-layer mesh-blob-1 absolute top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-gradient-to-br from-blue-200/50 via-indigo-200/30 to-purple-200/40 rounded-full blur-3xl -z-10" data-depth="1.5" />
-          <div className="parallax-layer mesh-blob-2 absolute top-[200px] right-[-200px] w-[500px] h-[500px] bg-gradient-to-br from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl -z-10" data-depth="2" />
-          <div className="parallax-layer mesh-blob-1 absolute bottom-[-100px] left-[-150px] w-[400px] h-[400px] bg-gradient-to-br from-purple-200/30 to-pink-200/20 rounded-full blur-3xl -z-10" data-depth="1" />
+          <div className="parallax-layer mesh-blob-1 absolute top-[-100px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-gradient-to-br from-blue-500/20 via-indigo-500/10 to-purple-500/15 rounded-full blur-3xl -z-10" data-depth="1.5" />
+          <div className="parallax-layer mesh-blob-2 absolute top-[200px] right-[-200px] w-[500px] h-[500px] bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-full blur-3xl -z-10" data-depth="2" />
+          <div className="parallax-layer mesh-blob-1 absolute bottom-[-100px] left-[-150px] w-[400px] h-[400px] bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -z-10" data-depth="1" />
 
-          {/* Floating geometric shapes — parallax layers */}
-          <div className="parallax-layer landing-float-1 absolute top-32 left-[10%] w-14 h-14 border-2 border-blue-300/30 rounded-2xl -z-10 hidden lg:block" data-depth="3" />
-          <div className="parallax-layer landing-float-2 absolute top-48 right-[15%] w-10 h-10 bg-indigo-300/20 rounded-full -z-10 hidden lg:block" data-depth="2.5" />
-          <div className="parallax-layer landing-float-3 absolute bottom-32 left-[20%] w-8 h-8 bg-purple-300/25 rounded-xl rotate-45 -z-10 hidden lg:block" data-depth="2" />
-          <div className="parallax-layer landing-float-2 absolute top-64 left-[5%] w-5 h-5 bg-cyan-400/20 rounded-full -z-10 hidden lg:block" data-depth="3.5" />
-          <div className="parallax-layer landing-float-1 absolute bottom-48 right-[8%] w-12 h-12 border-2 border-purple-300/20 rounded-full -z-10 hidden lg:block" data-depth="1.5" />
-          <div className="parallax-layer landing-float-3 absolute top-80 right-[25%] w-6 h-6 bg-blue-400/15 rounded-lg -z-10 hidden lg:block" data-depth="4" />
+          {/* Floating geometric shapes */}
+          <div className="parallax-layer landing-float-1 absolute top-32 left-[10%] w-14 h-14 border-2 border-blue-400/20 rounded-2xl -z-10 hidden lg:block" data-depth="3" />
+          <div className="parallax-layer landing-float-2 absolute top-48 right-[15%] w-10 h-10 bg-indigo-400/15 rounded-full -z-10 hidden lg:block" data-depth="2.5" />
+          <div className="parallax-layer landing-float-3 absolute bottom-32 left-[20%] w-8 h-8 bg-purple-400/15 rounded-xl rotate-45 -z-10 hidden lg:block" data-depth="2" />
+          <div className="parallax-layer landing-float-2 absolute top-64 left-[5%] w-5 h-5 bg-cyan-400/15 rounded-full -z-10 hidden lg:block" data-depth="3.5" />
+          <div className="parallax-layer landing-float-1 absolute bottom-48 right-[8%] w-12 h-12 border-2 border-purple-400/15 rounded-full -z-10 hidden lg:block" data-depth="1.5" />
+          <div className="parallax-layer landing-float-3 absolute top-80 right-[25%] w-6 h-6 bg-blue-400/10 rounded-lg -z-10 hidden lg:block" data-depth="4" />
 
           <div className="max-w-4xl mx-auto text-center hero-stagger">
             {/* Badge */}
             <div>
-              <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-full text-xs sm:text-sm font-bold border border-blue-100/50 shadow-sm">
+              <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-accent/10 text-accent rounded-full text-xs sm:text-sm font-bold border border-accent/20 shadow-sm">
                 <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 LifePilot — All-in-One Productivity
               </span>
@@ -183,7 +183,7 @@ export function LandingPage() {
                   {i === 0 ? (
                     <span className="landing-gradient-text bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600">{line}</span>
                   ) : (
-                    <span className="text-gray-900">{line}</span>
+                    <span className="text-foreground">{line}</span>
                   )}
                   {i === 0 && <br />}
                 </span>
@@ -208,7 +208,7 @@ export function LandingPage() {
               </div>
               <a
                 href="#how"
-                className="landing-btn-primary w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-surface border-2 border-border text-foreground text-base sm:text-lg font-bold rounded-2xl hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50/50 flex items-center justify-center gap-2"
+                className="landing-btn-primary w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-surface border-2 border-border text-foreground text-base sm:text-lg font-bold rounded-2xl hover:border-accent/50 hover:text-accent transition-all flex items-center justify-center gap-2"
               >
                 {t.heroSecondary}
               </a>
@@ -217,29 +217,29 @@ export function LandingPage() {
         </section>
 
         {/* ═══ FEATURES ═══ */}
-        <section id="features" className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 bg-gradient-to-b from-gray-50/80 to-white relative">
+        <section id="features" className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 bg-surface/50 relative">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 sm:mb-16 lg:mb-20 landing-reveal">
-              <span className="inline-block px-4 sm:px-5 py-1.5 sm:py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 rounded-full text-xs sm:text-sm font-bold border border-blue-100/50 mb-4 sm:mb-5">
+              <span className="inline-block px-4 sm:px-5 py-1.5 sm:py-2 bg-accent/10 text-accent rounded-full text-xs sm:text-sm font-bold border border-accent/20 mb-4 sm:mb-5">
                 {t.featuresTag}
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-5 tracking-tight px-2 sm:px-0">{t.featuresTitle}</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-5 tracking-tight px-2 sm:px-0">{t.featuresTitle}</h2>
               <p className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto font-medium px-2 sm:px-0">{t.featuresSubtitle}</p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {/* Tasks card */}
-              <div className="landing-reveal landing-reveal-delay-1 tilt-card bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-gray-100 group">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-7 shadow-lg shadow-blue-200 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <div className="landing-reveal landing-reveal-delay-1 tilt-card bg-background rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-border group hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-7 shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   <CheckSquare className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureTasksTitle}</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">{t.featureTasksTitle}</h3>
                 <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureTasksDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureTasksBullet1, t.featureTasksBullet2, t.featureTasksBullet3].map((b) => (
-                    <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-blue-600" />
+                    <li key={b} className="flex items-center gap-3 text-sm text-foreground-secondary font-medium">
+                      <div className="w-5 h-5 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3 h-3 text-blue-500" />
                       </div>
                       {b}
                     </li>
@@ -248,17 +248,17 @@ export function LandingPage() {
               </div>
 
               {/* Focus card */}
-              <div className="landing-reveal landing-reveal-delay-2 tilt-card bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-gray-100 group">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-7 shadow-lg shadow-emerald-200 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <div className="landing-reveal landing-reveal-delay-2 tilt-card bg-background rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-border group hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-7 shadow-lg shadow-emerald-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   <Timer className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureFocusTitle}</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">{t.featureFocusTitle}</h3>
                 <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureFocusDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureFocusBullet1, t.featureFocusBullet2, t.featureFocusBullet3].map((b) => (
-                    <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-emerald-600" />
+                    <li key={b} className="flex items-center gap-3 text-sm text-foreground-secondary font-medium">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3 h-3 text-emerald-500" />
                       </div>
                       {b}
                     </li>
@@ -267,17 +267,17 @@ export function LandingPage() {
               </div>
 
               {/* Finance card */}
-              <div className="landing-reveal landing-reveal-delay-3 tilt-card bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-gray-100 group">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-7 shadow-lg shadow-amber-200 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <div className="landing-reveal landing-reveal-delay-3 tilt-card bg-background rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border border-border group hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-7 shadow-lg shadow-amber-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   <Wallet className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t.featureFinanceTitle}</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">{t.featureFinanceTitle}</h3>
                 <p className="text-foreground-secondary mb-6 leading-relaxed">{t.featureFinanceDesc}</p>
                 <ul className="space-y-3">
                   {[t.featureFinanceBullet1, t.featureFinanceBullet2, t.featureFinanceBullet3].map((b) => (
-                    <li key={b} className="flex items-center gap-3 text-sm text-gray-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-amber-600" />
+                    <li key={b} className="flex items-center gap-3 text-sm text-foreground-secondary font-medium">
+                      <div className="w-5 h-5 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3 h-3 text-amber-500" />
                       </div>
                       {b}
                     </li>
@@ -292,10 +292,10 @@ export function LandingPage() {
         <section id="how" className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 relative">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12 sm:mb-16 lg:mb-20 landing-reveal">
-              <span className="inline-block px-4 sm:px-5 py-1.5 sm:py-2 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-600 rounded-full text-xs sm:text-sm font-bold border border-indigo-100/50 mb-4 sm:mb-5">
+              <span className="inline-block px-4 sm:px-5 py-1.5 sm:py-2 bg-brand/10 text-brand rounded-full text-xs sm:text-sm font-bold border border-brand/20 mb-4 sm:mb-5">
                 {t.howTag}
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">{t.howTitle}</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">{t.howTitle}</h2>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-8 sm:gap-10 relative">
@@ -303,9 +303,9 @@ export function LandingPage() {
               <div className="hidden md:block absolute top-12 left-[22%] right-[22%] h-1 step-connector rounded-full" />
 
               {[
-                { icon: Users, title: t.howStep1Title, desc: t.howStep1Desc, num: '1', gradient: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-200' },
-                { icon: Target, title: t.howStep2Title, desc: t.howStep2Desc, num: '2', gradient: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-200' },
-                { icon: TrendingUp, title: t.howStep3Title, desc: t.howStep3Desc, num: '3', gradient: 'from-purple-500 to-purple-600', shadow: 'shadow-purple-200' },
+                { icon: Users, title: t.howStep1Title, desc: t.howStep1Desc, num: '1', gradient: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-500/20' },
+                { icon: Target, title: t.howStep2Title, desc: t.howStep2Desc, num: '2', gradient: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-500/20' },
+                { icon: TrendingUp, title: t.howStep3Title, desc: t.howStep3Desc, num: '3', gradient: 'from-purple-500 to-purple-600', shadow: 'shadow-purple-500/20' },
               ].map((step, i) => (
                 <div key={step.num} className={`landing-reveal landing-reveal-delay-${i + 1} text-center relative`}>
                   <div className={clsx(
@@ -313,11 +313,11 @@ export function LandingPage() {
                     step.gradient, step.shadow,
                   )}>
                     <step.icon className="w-8 h-8 text-white" />
-                    <span className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center text-xs font-black text-gray-900 shadow-md border border-gray-100">
+                    <span className="absolute -top-2 -right-2 w-7 h-7 bg-background rounded-full flex items-center justify-center text-xs font-black text-foreground shadow-md border border-border">
                       {step.num}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
                   <p className="text-foreground-secondary leading-relaxed font-medium">{step.desc}</p>
                 </div>
               ))}
@@ -327,10 +327,10 @@ export function LandingPage() {
 
         {/* ═══ CTA ═══ */}
         <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 relative overflow-hidden">
-          <div className="parallax-layer mesh-blob-2 absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-gradient-to-br from-blue-100/40 via-indigo-100/30 to-purple-100/40 rounded-full blur-3xl -z-10" data-depth="1" />
+          <div className="parallax-layer mesh-blob-2 absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-purple-500/15 rounded-full blur-3xl -z-10" data-depth="1" />
 
           <div className="max-w-3xl mx-auto text-center landing-reveal px-2 sm:px-0">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-6 tracking-tight">{t.ctaTitle}</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6 tracking-tight">{t.ctaTitle}</h2>
             <p className="text-base sm:text-lg text-foreground-secondary mb-8 sm:mb-12 font-medium">{t.ctaSubtitle}</p>
             <div className="magnetic-btn inline-flex w-full sm:w-auto">
               <button
@@ -349,7 +349,7 @@ export function LandingPage() {
         </section>
 
         {/* ═══ FOOTER ═══ */}
-        <footer className="bg-gray-950 text-gray-400 py-10 sm:py-16 px-4 sm:px-6">
+        <footer className="bg-elevated border-t border-border py-10 sm:py-16 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-12">
               <div className="col-span-2 md:col-span-1">
@@ -357,34 +357,34 @@ export function LandingPage() {
                   <div className="w-9 h-9 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
                     <Zap className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-lg font-extrabold text-white">LifePilot</span>
+                  <span className="text-lg font-extrabold text-foreground">LifePilot</span>
                 </div>
-                <p className="text-sm leading-relaxed">{t.footerDesc}</p>
+                <p className="text-sm leading-relaxed text-foreground-secondary">{t.footerDesc}</p>
               </div>
               <div>
-                <h4 className="font-bold text-white mb-4 text-sm uppercase tracking-wider">{t.footerProduct}</h4>
-                <ul className="space-y-2.5 text-sm">
-                  <li><a href="#features" className="hover:text-white transition-colors duration-200">{t.navFeatures}</a></li>
-                  <li><a href="#how" className="hover:text-white transition-colors duration-200">{t.navAbout}</a></li>
+                <h4 className="font-bold text-foreground mb-4 text-sm uppercase tracking-wider">{t.footerProduct}</h4>
+                <ul className="space-y-2.5 text-sm text-foreground-secondary">
+                  <li><a href="#features" className="hover:text-foreground transition-colors duration-200">{t.navFeatures}</a></li>
+                  <li><a href="#how" className="hover:text-foreground transition-colors duration-200">{t.navAbout}</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-white mb-4 text-sm uppercase tracking-wider">{t.footerCompany}</h4>
-                <ul className="space-y-2.5 text-sm">
-                  <li><a href="/about" className="hover:text-white transition-colors duration-200">{t.footerAbout}</a></li>
-                  <li><a href="mailto:iamfakhriddin@gmail.com" className="hover:text-white transition-colors duration-200">{t.footerContact}</a></li>
-                  <li><a href="https://t.me/lifepilot_uz" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">Telegram</a></li>
+                <h4 className="font-bold text-foreground mb-4 text-sm uppercase tracking-wider">{t.footerCompany}</h4>
+                <ul className="space-y-2.5 text-sm text-foreground-secondary">
+                  <li><a href="/about" className="hover:text-foreground transition-colors duration-200">{t.footerAbout}</a></li>
+                  <li><a href="mailto:iamfakhriddin@gmail.com" className="hover:text-foreground transition-colors duration-200">{t.footerContact}</a></li>
+                  <li><a href="https://t.me/lifepilot_uz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors duration-200">Telegram</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-white mb-4 text-sm uppercase tracking-wider">{t.footerLegal}</h4>
-                <ul className="space-y-2.5 text-sm">
-                  <li><a href="/legal/privacy" className="hover:text-white transition-colors duration-200">{t.footerPrivacy}</a></li>
-                  <li><a href="/legal/terms" className="hover:text-white transition-colors duration-200">{t.footerTerms}</a></li>
+                <h4 className="font-bold text-foreground mb-4 text-sm uppercase tracking-wider">{t.footerLegal}</h4>
+                <ul className="space-y-2.5 text-sm text-foreground-secondary">
+                  <li><a href="/legal/privacy" className="hover:text-foreground transition-colors duration-200">{t.footerPrivacy}</a></li>
+                  <li><a href="/legal/terms" className="hover:text-foreground transition-colors duration-200">{t.footerTerms}</a></li>
                 </ul>
               </div>
             </div>
-            <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <div className="border-t border-border pt-8 text-center text-sm text-foreground-tertiary">
               &copy; {new Date().getFullYear()} LifePilot. {t.footerRights}
             </div>
           </div>

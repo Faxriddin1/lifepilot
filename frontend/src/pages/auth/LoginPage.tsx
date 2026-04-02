@@ -218,8 +218,25 @@ export function LoginPage() {
             <div className="flex-1 h-px bg-border" />
           </div>
 
-          {/* Google Sign-In */}
+          {/* Telegram Sign-In */}
           <div className="flex justify-center">
+            {telegramLoading ? (
+              <Button loading className="w-full" variant="secondary" size="lg">
+                Telegram...
+              </Button>
+            ) : (
+              <TelegramLoginButton
+                botName="lifepilot_uzbot"
+                onAuth={handleTelegramAuth}
+                buttonSize="large"
+                cornerRadius={8}
+                lang={t('common.lang', { defaultValue: 'ru' })}
+              />
+            )}
+          </div>
+
+          {/* Google Sign-In */}
+          <div className="flex justify-center mt-3">
             {googleLoading ? (
               <Button loading className="w-full" variant="secondary" size="lg">
                 Google...
@@ -233,23 +250,6 @@ export function LoginPage() {
                 shape="rectangular"
                 theme="outline"
                 size="large"
-              />
-            )}
-          </div>
-
-          {/* Telegram Sign-In */}
-          <div className="flex justify-center mt-3">
-            {telegramLoading ? (
-              <Button loading className="w-full" variant="secondary" size="lg">
-                Telegram...
-              </Button>
-            ) : (
-              <TelegramLoginButton
-                botName="lifepilot_uzbot"
-                onAuth={handleTelegramAuth}
-                buttonSize="large"
-                cornerRadius={8}
-                lang={t('common.lang', { defaultValue: 'ru' })}
               />
             )}
           </div>

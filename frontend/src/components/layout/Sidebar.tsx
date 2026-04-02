@@ -143,7 +143,7 @@ export function Sidebar() {
         )}
       >
         {/* Header: Logo / User + toggle/close */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-border">
+        <div className="flex items-center gap-3 px-4 h-14 border-b border-border">
           <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
             <span className="text-sm font-semibold text-foreground-inverse">
               {user?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
@@ -237,7 +237,6 @@ export function Sidebar() {
               <>
                 <ChevronsLeft className="w-5 h-5" />
                 <span className="text-sm">{t('sidebar.collapse')}</span>
-                <kbd className="ml-auto text-[10px] text-foreground-tertiary bg-surface px-1.5 py-0.5 rounded border border-border">[</kbd>
               </>
             )}
           </button>
